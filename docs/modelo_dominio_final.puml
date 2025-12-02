@@ -1,0 +1,109 @@
+@startuml Modelo_Dominio_Final
+
+    '-- ACOMODAR Y LIMPIAR EL MODELO --
+    
+    hide circle
+    hide methods
+
+    '-- CLASES -> PERSONAS --
+
+    'Clase Padre Principal
+    class Usuario {
+        cedula : String
+        nombre: String
+        email : String
+        clave : String
+    }
+
+    'Diferentes tipos de Usuarios
+    Class Estudiante {
+        carnet : String
+        constancia : String
+    }
+
+    Class Empleado {
+        id_empleado : String
+        sector : String
+    }
+
+    Class Administrador {
+        responsabilidad : String
+    }
+
+    '-- CLASES -> COMEDOR
+
+    ' Menu que rota semanalmente
+    class Menu {
+        inicio : Date
+        fin : Date
+    }
+
+    ' Insumo que llega para preparar los platillos
+    class Insumo {
+        nombre : String
+        cantidad_disponible : Integer
+        fecha_vencimiento : Integer
+        proveedor : String
+    }
+
+    ' Comida hecha de los insumos la cual se mostrará como opción en el menú
+    class Platillo {
+        contenido : String
+        disponibidilidad : Boolean
+
+    }
+
+    ' Turno en los cuales las comidas cambian y abren nuevas capacidades para personas
+    class Turno {
+        inicio : Time
+        final : Time
+        capacidad_max : Integer
+    }
+
+    ' Reporte que el Administrador realiza en donde figura consumo diario, reportes de demanda y planificación
+    class Reporte {
+        fechaGeneracion : Date
+        datos : String
+    }
+
+    ' Reserva que realiza un Usuario durante un Turno
+    class Reserva {
+        horario_reservado : Time
+        'El estado refiere si está vigente, cancelada o ya ha sido canjeada
+        estado : String
+        'Código que verifica que el usuario fue quien obtuvo el platillo
+        clave_acceso : String
+    }
+
+    ' --- RELACIONES ---
+
+    ' Herencia
+    Estudiante --|> Usuario
+    Empleado --|> Usuario
+    Administrador --|> Usuario
+
+    ' El Administrador gestiona menús semanales, insumos y genera reportes 
+    Administrador "1" --> "*" Menu : gestiona
+    Administrador "1" --> "*" Insumo : gestiona
+    Administrador "1" ..> "*" Reporte : genera
+
+    ' Un menú se compone de varios platillos disponibles para esa semana 
+    Menu "1" *-- "1..*" Platillo : contiene
+    
+    ' Un platillo requiere insumos para prepararse
+    Platillo "*" o-- "1..*" Insumo : preparado_con
+
+    ' El usuario hace la reserva 
+    Usuario "1" --> "*" Reserva : realiza
+
+    ' Una reserva corresponde a un Turno específico, controla el acceso 
+    Reserva "*" --> "1" Turno : para
+
+    ' Una reserva suele ser por un platillo
+    Reserva "*" --> "1" Platillo : incluye
+
+    ' El reporte se basa en los datos de las reservas/consumos y el inventario 
+    Reporte ..> Reserva : analiza_demanda
+    Reporte ..> Insumo : analiza_stock
+
+@enduml

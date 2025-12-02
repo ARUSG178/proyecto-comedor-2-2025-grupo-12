@@ -1,4 +1,9 @@
 @startuml Modelo_Dominio
+    
+    '-- ACOMODAR Y LIMPIAR EL MODELO --
+    
+    hide circle
+    hide methods
 
     class Usuario {
         - nombre : string
