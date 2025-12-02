@@ -93,8 +93,8 @@
     ' Un platillo requiere insumos para prepararse
     Platillo "*" o-- "1..*" Insumo : preparado_con
 
-    ' El usuario hace la reserva 
-    Usuario "1" --> "*" Reserva : realiza
+    ' El usuario hace la reserva, una por persona
+    Usuario "1" --> "1" Reserva : realiza
 
     ' Una reserva corresponde a un Turno específico, controla el acceso 
     Reserva "*" --> "1" Turno : para
