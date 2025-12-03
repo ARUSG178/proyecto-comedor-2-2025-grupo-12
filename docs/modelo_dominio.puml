@@ -1,0 +1,74 @@
+@startuml Modelo_Dominio
+
+    class Usuario {
+        - nombre : string
+        - documento : string
+
+        + registrarse() : void
+        + login() : void
+        + consultarMenu() : void
+        + reservarTurnos() : void
+    }
+
+    class Estudiante {} 
+
+    class Empleado {}
+
+    class Administrador {
+        + gestionarInventario(): void
+        + gestionarMenu(): Menu
+        + registrarConsumoDiario(): void
+        + generarReporte() : void
+    }
+
+    class Menu {
+        + ordenarRacion() : void
+        '+ verificarRacion() : void
+        ' verificacion de ordenarRacion()
+        + cancelarRacion() : void
+        
+        + verificarHorario() : void
+        + rotarMenu() : void
+        + mostrarMenu() : void
+        ' mostrarMenu se va a relacionar con Raciones de manera que Raciones
+        ' se encargue de gestionar la disponibilidad de sus raciones, y en caso
+        ' de agotarse, se eliminan del menu
+        ' Raciones.disponibles        
+    }
+
+    class Inventario{
+        - insumos : list<string> 
+    }  
+    
+    class Raciones {
+        - nombreR : string
+        - idR : string
+        - disponibles : list<string>
+        
+        + almacenarInsumo() : void
+        + getInsumos() : string
+    }
+
+
+    class Consumos{
+        + id : string
+        + fecha : string
+
+        + restarRacionesDisp() : void
+    }
+
+    ' Relaciones con multiplicidad
+
+    Estudiante --|> Usuario
+    Empleado --|> Usuario
+    Administrador --|> Usuario
+    Administrador "1..*" --o "0..*" Consumos
+    Administrador "1..*" --> "1" Inventario
+    Consumos "0..*" --* "0..*" Raciones
+    Raciones "0..*" --o "1" Menu
+    Menu "1" -- "1..*" Administrador
+    Menu "1" -- "1..*" Estudiante
+    Menu "1" -- "1..*" Empleado
+    Raciones "1..*" -- "1" Inventario 
+
+@enduml
