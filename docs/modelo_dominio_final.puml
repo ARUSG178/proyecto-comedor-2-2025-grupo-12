@@ -9,70 +9,70 @@
 
     'Clase Padre Principal
     class Usuario {
-        cedula : String
-        nombre: String
-        email : String
-        clave : String
+        cedula
+        nombr
+        email
+        clave
     }
 
     'Diferentes tipos de Usuarios
     Class Estudiante {
-        carnet : String
-        constancia : String
+        carnet
+        constancia
     }
 
     Class Empleado {
-        id_empleado : String
-        sector : String
+        id_empleado
+        sector
     }
 
     Class Administrador {
-        responsabilidad : String
+        responsabilidad
     }
 
     '-- CLASES -> COMEDOR
 
     ' Menu que rota semanalmente
     class Menu {
-        inicio : Date
-        fin : Date
+        inicio
+        fin
     }
 
     ' Insumo que llega para preparar los platillos
     class Insumo {
-        nombre : String
-        cantidad_disponible : Integer
-        fecha_vencimiento : Integer
-        proveedor : String
+        nombre
+        cantidad_disponible
+        fecha_vencimiento
+        proveedor
     }
 
     ' Comida hecha de los insumos la cual se mostrará como opción en el menú
     class Platillo {
-        contenido : String
-        disponibidilidad : Boolean
+        contenido
+        disponibidilidad
 
     }
 
     ' Turno en los cuales las comidas cambian y abren nuevas capacidades para personas
     class Turno {
-        inicio : Time
-        final : Time
-        capacidad_max : Integer
+        inicio
+        final
+        capacidad_max
     }
 
     ' Reporte que el Administrador realiza en donde figura consumo diario, reportes de demanda y planificación
     class Reporte {
-        fechaGeneracion : Date
-        datos : String
+        fechaGeneracion
+        datos
     }
 
     ' Reserva que realiza un Usuario durante un Turno
     class Reserva {
-        horario_reservado : Time
+        horario_reservado
         'El estado refiere si está vigente, cancelada o ya ha sido canjeada
-        estado : String
+        estado
         'Código que verifica que el usuario fue quien obtuvo el platillo
-        clave_acceso : String
+        clave_acceso
     }
 
     ' --- RELACIONES ---
