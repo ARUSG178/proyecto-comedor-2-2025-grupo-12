@@ -54,7 +54,7 @@
     ' Comida hecha de los insumos la cual se mostrará como opción en el menú
     class Platillo {
         nombre
-        idPlatillo
+        id_Platillo
         contenido
     }
 
@@ -69,7 +69,7 @@
 
     ' Reporte que el Administrador realiza en donde figura consumo diario, reportes de demanda y planificación
     class Reporte {
-        fechaGeneracion
+        fecha_generacion
         datos
     }
 
