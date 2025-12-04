@@ -1,0 +1,30 @@
+@startuml Comedor_UCV_CdU
+
+left to right direction
+
+'-- ACTORES DEL SYS.COMEDOR --
+
+actor Administrador as Admin
+actor Usuario as User
+Actor Estudiante as Est
+Actor Empleado as Emp
+
+'-- SISTEMA COMEDOR (Sistema de Registro y Control de Menús y Reservas del Comedor [SRCMRC])
+package SRCMRC {
+    usecase Registro
+    usecase Login
+    usecase Reservar
+    usecase Actualizar_menu
+    usecase Realizar_reporte
+}
+
+'-- INTERACCIONES
+
+Est --|> User
+Emp --|> User
+Admin --|> User
+
+User --> Login
+User --> Registro
+User --> Registro
+@enduml
