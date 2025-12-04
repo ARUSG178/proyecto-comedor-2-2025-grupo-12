@@ -1,0 +1,116 @@
+@startuml Diagrama_Clases_Comedor
+hide circle
+
+
+' --- Personas ---
+class Usuario {
+    - documento : String
+    - nombre : String
+    - email : String
+    - clave : String
+
+    + registrarse() : void
+    + login() : boolean
+    + consultarMenu(fecha: Date) : Menu
+    + reservar(turno: Turno, platillo: Platillo, cantidad: int) : Reserva
+}
+
+class Estudiante
+class Empleado
+class Administrador {
+    + gestionarMenu(menu: Menu) : void
+    + gestionarInsumo(insumo: Insumo) : void
+    + registrarConsumo(reserva: Reserva) : void
+    + generarReporte(periodoInicio: Date, periodoFin: Date) : Reporte
+}
+
+' --- Comedor ---
+class Menu {
+    - idMenu : String
+    - nombre : String
+    - fechaInicio : Date
+    - fechaFin : Date
+    'DESAYUNO|ALMUERZO|CENA
+    - tipoServicio : String 
+    'BORRADOR|PUBLICADO|ARCHIVADO 
+    - estado : String        
+
+    + mostrarPlatillos() : List<Platillo>
+    + rotar(fechaNuevaInicio: Date) : void
+}
+
+class Platillo {
+    - idPlatillo : String
+    - nombre : String
+    - descripcion : String
+    - porcionesDisponibles : int
+    - informacionNutricional : String
+
+    + calcularCostoPorcion() : Decimal
+    + consumirPorciones(cantidad: int) : void
+}
+
+class Insumo {
+    - idInsumo : String
+    - nombre : String
+    - cantidadDisponible : Decimal
+    - fechaVencimiento : Date
+    - proveedor : String
+    - costoUnitario : Decimal
+
+    + reservar(cantidad: Decimal) : boolean
+    + descontar(cantidad: Decimal) : void
+}
+
+class Turno {
+    - idTurno : String
+    - inicio : Time
+    - fin : Time
+    - capacidadMax : int
+    - estado : String
+
+    + cuposDisponibles() : int
+}
+
+class Reserva {
+    - idReserva : String
+    - fechaReserva : Date
+    - horarioReservado : Time
+    'VIGENTE|CANCELADA|CANJEADA
+    - estado : String        
+    - claveAcceso : String
+    - cantidad : int
+
+    + confirmar() : void
+    + cancelar() : void
+}
+
+class Reporte {
+    - idReporte : String
+    - fechaGeneracion : Date
+    - contenido : String
+
+    + generarResumenReservas() : String
+    + generarAnalisisStock() : String
+}
+
+' --- Relaciones ---
+Estudiante --|> Usuario
+Empleado --|> Usuario
+Administrador --|> Usuario
+
+Administrador "1" --> "*" Menu : gestiona
+Administrador "1" --> "*" Insumo : gestiona
+Administrador "1" --> "*" Reporte : genera
+
+Menu "1" *-- "1..*" Platillo : contiene
+'la receta define cantidades por porción
+Platillo "*" o-- "1..*" Insumo : preparado_con  
+Usuario "1" --> "0..*" Reserva : realiza
+Reserva "*" --> "1" Turno : para
+Reserva "*" --> "1" Platillo : incluye
+
+Reporte "0..*" ..> "0..*" Reserva : analiza
+Reporte "0..*" ..> "0..*" Insumo : analiza
+
+@enduml

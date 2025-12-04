@@ -1,30 +1,79 @@
-@startuml Comedor_UCV_CdU
-
+@startuml Comedor_UCV_CdU_Limpio
+' Layout y estilo minimalista
 left to right direction
+skinparam dpi 150
+skinparam linetype ortho
+skinparam usecaseBorderColor #6E6E6E
+skinparam usecaseFontColor #222222
+skinparam actorBackgroundColor #F0F0F0
+skinparam actorBorderColor #8A8A8A
+skinparam actorFontColor #222222
+skinparam packageBorderColor #BDBDBD
+skinparam defaultFontName "Arial"
+skinparam defaultFontSize 12
+skinparam actorFontSize 13
+skinparam usecaseFontSize 12
+skinparam roundcorner 6
+skinparam padding 12
+skinparam usecasePadding 14
 
-'-- ACTORES DEL SYS.COMEDOR --
-
-actor Administrador as Admin
+' Actores
 actor Usuario as User
-Actor Estudiante as Est
-Actor Empleado as Emp
+actor Estudiante as Est
+actor Empleado as Emp
+actor Administrador as Admin
 
-'-- SISTEMA COMEDOR (Sistema de Registro y Control de Menús y Reservas del Comedor [SRCMRC])
-package SRCMRC {
-    usecase Registro
-    usecase Login
-    usecase Reservar
-    usecase Actualizar_menu
-    usecase Realizar_reporte
+' Paquete con dos columnas: Usuarios (izq) y Administración (der)
+package "SRCMRC\n(Sistema de Registro y Control de Menús y Reservas)" {
+    rectangle {
+        usecase UC_Registro as "Registro"
+        usecase UC_Login as "Login"
+        usecase UC_ConsultarMenu as "Consultar menú"
+        usecase UC_ConsultarDisponibilidad as "Consultar vacantes disponibles"
+        usecase UC_Reservar as "Reservar"
+        usecase UC_CancelarReserva as "Cancelar reserva"
+        usecase UC_Historial as "Historial de reservas"
+    }
+    rectangle {
+        usecase UC_ActualizarMenu as "Gestionar menú"
+        usecase UC_GestionarInsumos as "Gestionar insumos y proveedores"
+        usecase UC_GestionarTurnos as "Gestionar turnos / capacidad"
+        usecase UC_GestionarUsuarios as "Gestionar usuarios y roles"
+        usecase UC_RealizarReporte as "Generar reporte"
+    }
 }
 
-'-- INTERACCIONES
-
+' Herencia actores
 Est --|> User
 Emp --|> User
-Admin --|> User
 
-User --> Login
-User --> Registro
-User --> Registro
+' Relaciones Usuarios
+User --> UC_Registro
+User --> UC_Login
+User --> UC_ConsultarMenu
+User --> UC_ConsultarDisponibilidad
+User --> UC_Reservar
+User --> UC_CancelarReserva
+User --> UC_Historial
+
+' Relaciones Administrador 
+Admin --> UC_ActualizarMenu
+Admin --> UC_GestionarInsumos
+Admin --> UC_GestionarTurnos
+Admin --> UC_GestionarUsuarios
+Admin --> UC_RealizarReporte
+
+Admin --> UC_Historial
+
+' INCLUDE
+UC_Reservar ..> UC_Login : <<include>>
+UC_Reservar .> UC_ConsultarDisponibilidad : <<include>>
+UC_ActualizarMenu .> UC_Login : <<include>>
+UC_GestionarInsumos .> UC_Login : <<include>>
+UC_GestionarUsuarios .> UC_Login : <<include>>
+UC_GestionarInsumos .> UC_ConsultarDisponibilidad : <<include>>
+
+' EXTEND
+UC_CancelarReserva .> UC_Reservar : <<extend>>
+
 @enduml
