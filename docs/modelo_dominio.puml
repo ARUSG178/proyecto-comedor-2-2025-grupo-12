@@ -82,7 +82,7 @@
         clave_acceso
     }
 
-    ' --- RELACIóNES ---
+    ' --- RELACIONES ---
 
     ' Herencia
     Estudiante --|> Usuario

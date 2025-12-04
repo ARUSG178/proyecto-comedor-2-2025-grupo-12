@@ -1,6 +1,5 @@
-@startuml Diagrama_Clases_Comedor
+@startuml Modelo_Clases
 hide circle
-
 
 ' --- Personas ---
 class Usuario {
@@ -8,20 +7,28 @@ class Usuario {
     - nombre : String
     - email : String
     - clave : String
-
     + registrarse() : void
     + login() : boolean
-    + consultarMenu(fecha: Date) : Menu
-    + reservar(turno: Turno, platillo: Platillo, cantidad: int) : Reserva
 }
 
-class Estudiante
-class Empleado
+class Estudiante {
+    - carrera : String
+    - carnet : String
+    - constancia : String
+}
+
+class Empleado {
+    - idEmpleado : String
+    - sector : String
+    - profesion : String
+}
+
 class Administrador {
+    - responsabilidad : String
     + gestionarMenu(menu: Menu) : void
     + gestionarInsumo(insumo: Insumo) : void
     + registrarConsumo(reserva: Reserva) : void
-    + generarReporte(periodoInicio: Date, periodoFin: Date) : Reporte
+    + generarReporte(inicio: Date, fin: Date) : Reporte
 }
 
 ' --- Comedor ---
@@ -30,13 +37,9 @@ class Menu {
     - nombre : String
     - fechaInicio : Date
     - fechaFin : Date
-    'DESAYUNO|ALMUERZO|CENA
-    - tipoServicio : String 
-    'BORRADOR|PUBLICADO|ARCHIVADO 
-    - estado : String        
-
+    - tipoServicio : String
+    - estado : String
     + mostrarPlatillos() : List<Platillo>
-    + rotar(fechaNuevaInicio: Date) : void
 }
 
 class Platillo {
@@ -45,7 +48,6 @@ class Platillo {
     - descripcion : String
     - porcionesDisponibles : int
     - informacionNutricional : String
-
     + calcularCostoPorcion() : Decimal
     + consumirPorciones(cantidad: int) : void
 }
@@ -57,9 +59,14 @@ class Insumo {
     - fechaVencimiento : Date
     - proveedor : String
     - costoUnitario : Decimal
-
     + reservar(cantidad: Decimal) : boolean
     + descontar(cantidad: Decimal) : void
+}
+
+class Receta {
+    - idReceta : String
+    - cantidadPorPorcion : Decimal
+    - unidad : String
 }
 
 class Turno {
@@ -68,7 +75,6 @@ class Turno {
     - fin : Time
     - capacidadMax : int
     - estado : String
-
     + cuposDisponibles() : int
 }
 
@@ -76,11 +82,9 @@ class Reserva {
     - idReserva : String
     - fechaReserva : Date
     - horarioReservado : Time
-    'VIGENTE|CANCELADA|CANJEADA
-    - estado : String        
+    - estado : String
     - claveAcceso : String
     - cantidad : int
-
     + confirmar() : void
     + cancelar() : void
 }
@@ -89,28 +93,44 @@ class Reporte {
     - idReporte : String
     - fechaGeneracion : Date
     - contenido : String
-
     + generarResumenReservas() : String
     + generarAnalisisStock() : String
 }
 
-' --- Relaciones ---
+class Notificacion {
+    - idNotificacion : String
+    - tipo : String
+    - canal : String
+    - fechaEnvio : Date
+    - contenido : String
+    + enviar(destinatario: Usuario) : boolean
+}
+
+' --- Herencia ---
 Estudiante --|> Usuario
 Empleado --|> Usuario
 Administrador --|> Usuario
 
+' --- Relaciones ---
 Administrador "1" --> "*" Menu : gestiona
 Administrador "1" --> "*" Insumo : gestiona
 Administrador "1" --> "*" Reporte : genera
 
 Menu "1" *-- "1..*" Platillo : contiene
-'la receta define cantidades por porción
-Platillo "*" o-- "1..*" Insumo : preparado_con  
+
+' Receta como entidad que relaciona Platillo e Insumo
+Platillo "1" --> "0..*" Receta : tiene
+Receta "1" --> "1" Insumo : usa
+
 Usuario "1" --> "0..*" Reserva : realiza
 Reserva "*" --> "1" Turno : para
 Reserva "*" --> "1" Platillo : incluye
 
 Reporte "0..*" ..> "0..*" Reserva : analiza
 Reporte "0..*" ..> "0..*" Insumo : analiza
+
+' Notificaciones vinculadas a acciones (registro opcional)
+Reserva "0..*" --> "0..*" Notificacion : genera
+Administrador "0..*" --> "0..*" Notificacion : recibe
 
 @enduml
