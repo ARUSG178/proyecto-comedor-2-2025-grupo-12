@@ -36,9 +36,9 @@
 
     ' Menu que rota semanalmente
     class Menu {
-        'Tipo de servicio clasifica: Desayuno, almuerzo, cena
-        tipoServicio
-        informacionNutricional
+        'Tipo de contenido clasifica: Desayuno, almuerzo, cena
+        tipo_contenido
+        informacion_nutricional
         inicio
         fin
     }
