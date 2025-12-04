@@ -92,7 +92,7 @@
     ' El Administrador gestióna menús semanales, insumos y genera reportes 
     Administrador "1" --> "*" Menu : gestióna
     Administrador "1" --> "*" Insumo : gestióna
-    Administrador "1" ..> "*" Reporte : genera
+    Administrador "1" --> "*" Reporte : genera
 
     ' Un menú se compone de varios platillos disponibles para esa semana 
     Menu "1" *-- "1..*" Platillo : contiene
@@ -110,7 +110,7 @@
     Reserva "*" --> "1" Platillo : incluye
 
     ' El reporte se basa en los datos de las reservas/consumos y el inventario 
-    Reporte ..> Reserva : analiza_demanda
-    Reporte ..> Insumo : analiza_stock
+    Reporte --> Reserva : analiza_demanda
+    Reporte --> Insumo : analiza_stock
 
 @enduml
