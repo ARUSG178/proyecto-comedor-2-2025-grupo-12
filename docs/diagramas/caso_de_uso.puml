@@ -1,5 +1,5 @@
 @startuml Comedor_UCV_CdU_Limpio
-' Layout y estilo minimalista
+' -- ESTILIZACIÓN --
 left to right direction
 skinparam dpi 150
 skinparam linetype ortho
@@ -17,19 +17,19 @@ skinparam roundcorner 6
 skinparam padding 12
 skinparam usecasePadding 14
 
-' Actores
+' -- ACTORES --
 actor Usuario as User
 actor Estudiante as Est
 actor Empleado as Emp
 actor Administrador as Admin
 
-' Paquete con dos columnas: Usuarios (izq) y Administración (der)
+' -- SISTEMA COMEDOR --
 package "SRCMRC\n(Sistema de Registro y Control de Menús y Reservas)" {
     rectangle {
         usecase UC_Registro as "Registro"
         usecase UC_Login as "Login"
         usecase UC_ConsultarMenu as "Consultar menú"
-        usecase UC_ConsultarDisponibilidad as "Consultar vacantes disponibles"
+        usecase UC_ConsultarDisponibilidad as "Consultar vacante disponible"
         usecase UC_Reservar as "Reservar"
         usecase UC_CancelarReserva as "Cancelar reserva"
         usecase UC_Historial as "Historial de reservas"
@@ -43,11 +43,13 @@ package "SRCMRC\n(Sistema de Registro y Control de Menús y Reservas)" {
     }
 }
 
-' Herencia actores
+' -- RELACIONES --
+
+' Herencia 
 Est --|> User
 Emp --|> User
 
-' Relaciones Usuarios
+' Usuarios
 User --> UC_Registro
 User --> UC_Login
 User --> UC_ConsultarMenu
@@ -56,13 +58,12 @@ User --> UC_Reservar
 User --> UC_CancelarReserva
 User --> UC_Historial
 
-' Relaciones Administrador 
+' Administrador 
 Admin --> UC_ActualizarMenu
 Admin --> UC_GestionarInsumos
 Admin --> UC_GestionarTurnos
 Admin --> UC_GestionarUsuarios
 Admin --> UC_RealizarReporte
-
 Admin --> UC_Historial
 
 ' INCLUDE
