@@ -25,22 +25,22 @@ actor Administrador as Admin
 
 ' -- SISTEMA COMEDOR --
 package "SRCMRC\n(Sistema de Registro y Control de Menús y Reservas)" {
-    rectangle {
+
         usecase UC_Registro as "Registro"
-        usecase UC_Login as "Login"
+        usecase UC_Login as "Iniciar Sesión"
         usecase UC_ConsultarMenu as "Consultar menú"
         usecase UC_ConsultarDisponibilidad as "Consultar vacante disponible"
         usecase UC_Reservar as "Reservar"
         usecase UC_CancelarReserva as "Cancelar reserva"
         usecase UC_Historial as "Historial de reservas"
-    }
-    rectangle {
+    
+
         usecase UC_ActualizarMenu as "Gestionar menú"
-        usecase UC_GestionarInsumos as "Gestionar insumos y proveedores"
-        usecase UC_GestionarTurnos as "Gestionar turnos / capacidad"
-        usecase UC_GestionarUsuarios as "Gestionar usuarios y roles"
+        usecase UC_GestionarInsumos as "Gestionar insumos"
+        usecase UC_GestionarTurnos as "Gestionar turnos"
+        usecase UC_GestionarUsuarios as "Gestionar usuarios"
         usecase UC_RealizarReporte as "Generar reporte"
-    }
+    
 }
 
 ' -- RELACIONES --
@@ -53,7 +53,6 @@ Emp --|> User
 User --> UC_Registro
 User --> UC_Login
 User --> UC_ConsultarMenu
-User --> UC_ConsultarDisponibilidad
 User --> UC_Reservar
 User --> UC_CancelarReserva
 User --> UC_Historial
@@ -67,11 +66,8 @@ Admin --> UC_RealizarReporte
 Admin --> UC_Historial
 
 ' INCLUDE
-UC_Reservar ..> UC_Login : <<include>>
+UC_ActualizarMenu .> UC_GestionarInsumos : <<include>>
 UC_Reservar .> UC_ConsultarDisponibilidad : <<include>>
-UC_ActualizarMenu .> UC_Login : <<include>>
-UC_GestionarInsumos .> UC_Login : <<include>>
-UC_GestionarUsuarios .> UC_Login : <<include>>
 UC_GestionarInsumos .> UC_ConsultarDisponibilidad : <<include>>
 
 ' EXTEND
