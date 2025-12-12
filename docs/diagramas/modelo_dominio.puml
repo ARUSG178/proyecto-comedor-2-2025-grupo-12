@@ -24,6 +24,7 @@
 
     Class Empleado {
         id_empleado
+        cargo
         sector
         profesión
     }
@@ -89,9 +90,9 @@
     Empleado --|> Usuario
     Administrador --|> Usuario
 
-    ' El Administrador gestióna menús semanales, insumos y genera reportes 
-    Administrador "1" --> "*" Menu : gestióna
-    Administrador "1" --> "*" Insumo : gestióna
+    ' El Administrador gestiona menús semanales, insumos y genera reportes 
+    Administrador "1" --> "*" Menu : gestiona
+    Administrador "1" --> "*" Insumo : gestiona
     Administrador "1" --> "*" Reporte : genera
 
     ' Un menú se compone de varios platillos disponibles para esa semana 

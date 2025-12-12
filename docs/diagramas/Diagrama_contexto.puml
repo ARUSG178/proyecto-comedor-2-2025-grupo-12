@@ -1,0 +1,20 @@
+@startuml Diagrama_contexto
+skinparam monochrome true
+skinparam shadowing false
+left to right direction
+
+title Diagrama de Contexto del Sistema (SAGC)
+
+actor "Estudiante" as Estudiante
+actor "Empleado" as Empleado
+actor "Administrador" as Admin
+
+rectangle "SAGC\n(Sistema de Asignación y Gestión de Comedor)" as Sistema
+Estudiante --> Sistema : Datos de Registro, Credenciales, Solicitud de Reserva.
+Empleado --> Sistema : Datos de Registro, Credenciales, Solicitud de Reserva.
+Sistema --> Estudiante : Menú Semanal, Ticket de Reserva.
+Sistema --> Empleado : Menú Semanal, Ticket de Reserva.
+Admin --> Sistema : Planificación del Menú, Rango de Fechas, Solicitud de Reportes, Gestión Usuario.
+Sistema --> Admin : Reportes Estadísticos (PDF/Formatos), Alertas de Inventario.
+
+@enduml 
