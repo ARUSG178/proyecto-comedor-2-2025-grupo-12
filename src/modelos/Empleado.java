@@ -7,9 +7,9 @@ public class Empleado extends Usuario {
 
     public Empleado(String cedula, String nombre, String apellido, String email, String contraseña,String cargo, String departamento, String codigoEmpleado) {
         super(cedula, nombre, apellido, email, contraseña);
-        this.cargo = cargo;
-        this.departamento = departamento;
-        this.codigoEmpleado = codigoEmpleado;
+        setCargo(cargo);
+        setDepartamento(departamento);
+        setCodigoEmpleado(codigoEmpleado);
     }
 
     @Override

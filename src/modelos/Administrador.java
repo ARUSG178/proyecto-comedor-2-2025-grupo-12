@@ -1,21 +1,22 @@
 package modelos;
 
 public class Administrador extends Usuario {
+    private String responsabilidad;
 
-    public Administrador(String cedula, String nombre, String apellido, String email, String contraseña) {
+    public Administrador(String cedula, String nombre, String apellido, String email, String contraseña, String responsabilidad) {
         super(cedula, nombre, apellido, email, contraseña);
+        setResposabilidad(responsabilidad);
     }
 
     @Override
-    public String getTipo() {
-        return "Administrador";
-    }
+    public String getTipo() { return "Administrador"; }
 
-    public void gestionarUsuarios() {
-        // lógica 
-    }
+    // Getter
+    public String getResponsabilidad() { return responsabilidad; }
+    // Setter
+    public void setResposabilidad(String responsabilidad) { this.responsabilidad = responsabilidad; } 
 
-    public void gestionarReservas() {
-        // lógica 
-    }
+    // Por poner algo
+    public void gestionarUsuarios() { }
+    public void gestionarReservas() { }
 }
