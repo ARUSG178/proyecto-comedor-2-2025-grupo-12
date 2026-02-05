@@ -12,7 +12,7 @@ public class ServicioRegistro {//Servicio para registrar nuevos usuarios en el s
     private final RepositorioUsuarios repositorio;//Repositorio para manejar el almacenamiento de usuarios
 
     public ServicioRegistro() {//Constructor que inicializa el repositorio de usuarios
-        this.repositorio = new RepositorioUsuarios();//Instancia del repositorio de usuarios
+        this.repositorio = new RepositorioUsuarios(); //Instancia del repositorio de usuarios
     }
 
     public void registrarUsuario(Usuario nuevoUsuario) throws InvalidEmailFormatException, InvalidCredentialsException, DuplicateUserException, IOException {//Metodo para registrar un nuevo usuario, lanza varias excepciones en caso de errores

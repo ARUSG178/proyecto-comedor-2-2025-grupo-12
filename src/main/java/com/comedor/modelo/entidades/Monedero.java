@@ -11,8 +11,6 @@ public class Monedero {// clase publica Monedero
     public Usuario getPropietario() { return propietario; }// metodo publico para obtener el propietario del monedero
     public double getSaldo() { return propietario.getSaldo(); }// obtiene el saldo directamente del usuario
 
-    
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Permite aumentar el saldo
     public void recargar(double monto) {
         if (monto > 0) {

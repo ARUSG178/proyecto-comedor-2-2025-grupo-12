@@ -1,4 +1,4 @@
-package com.comedor.modelo.validaciones; // Fix: Corrected package declaration
+package com.comedor.modelo.validaciones; 
 
 import com.comedor.modelo.entidades.Empleado;
 import com.comedor.modelo.entidades.Estudiante;
