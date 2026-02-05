@@ -1,13 +1,14 @@
 package com.comedor.modelo.entidades;
 
 public class Estudiante extends Usuario {
+    private String facultad;
     private String carrera;
-    private String codigoEstudiante;
+   
 
-    public Estudiante(String cedula, String nombre, String apellido, String email, String contraseña, String carrera, int semestre, String codigoEstudiante) {
+    public Estudiante(String cedula, String nombre, String apellido, String email, String contraseña, String carrera, String facultad) {
         super(cedula, nombre, apellido, email, contraseña);
         setCarrera(carrera);
-        setCodigoEstudiante(codigoEstudiante);
+        setFacultad(facultad);
     }
 
     @Override
@@ -15,11 +16,11 @@ public class Estudiante extends Usuario {
 
     // Getters
     public String getCarrera() { return carrera; }
-    public String getCodigoEstudiante() { return codigoEstudiante; }
+    public String getFacultad() { return facultad; }
     
     // Setters
     public void setCarrera(String carrera) { this.carrera = carrera; }
-    public void setCodigoEstudiante(String codigoEstudiante) { this.codigoEstudiante = codigoEstudiante; }
+    public void setFacultad(String facultad) { this.facultad = facultad; }
     
 
 }
