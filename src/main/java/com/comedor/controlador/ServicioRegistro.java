@@ -1,31 +1,31 @@
-package com.comedor.controlador;
+package com.comedor.controlador;// paquete del controlador
 
-import com.comedor.modelo.entidades.Usuario;
-import com.comedor.modelo.excepciones.*;
-import com.comedor.modelo.persistencia.RepositorioUsuarios;
-import com.comedor.modelo.validaciones.VRegistro;
+import com.comedor.modelo.entidades.Usuario;// importa entidad usuario
+import com.comedor.modelo.excepciones.*;// importa excepciones
+import com.comedor.modelo.persistencia.RepositorioUsuarios;// importa repositorio
+import com.comedor.modelo.validaciones.VRegistro;// importa validador
 
-import java.io.IOException;
-import java.util.List;
+import java.io.IOException;// importa excepcion de entrada salida
+import java.util.List;// importa lista
 
-public class ServicioRegistro {//Servicio para registrar nuevos usuarios en el sistema
-    private final RepositorioUsuarios repositorio;//Repositorio para manejar el almacenamiento de usuarios
+public class ServicioRegistro {// servicio para registrar usuarios
+    private final RepositorioUsuarios repositorio;// repositorio de usuarios
 
-    public ServicioRegistro() {//Constructor que inicializa el repositorio de usuarios
-        this.repositorio = new RepositorioUsuarios(); //Instancia del repositorio de usuarios
+    public ServicioRegistro() {// constructor de la clase
+        this.repositorio = new RepositorioUsuarios(); // inicializa el repositorio
     }
 
-    public void registrarUsuario(Usuario nuevoUsuario) throws InvalidEmailFormatException, InvalidCredentialsException, DuplicateUserException, IOException {//Metodo para registrar un nuevo usuario, lanza varias excepciones en caso de errores
-        // 1. Cargar usuarios desde el TXT para verificar duplicados
-        List<Usuario> usuariosRegistrados = repositorio.listarUsuarios();//Carga la lista de usuarios ya registrados desde el archivo TXT
+    public void registrarUsuario(Usuario nuevoUsuario) throws InvalidEmailFormatException, InvalidCredentialsException, DuplicateUserException, IOException {// registra usuario con validaciones
+        // 1. cargar usuarios para verificar duplicados
+        List<Usuario> usuariosRegistrados = repositorio.listarUsuarios();// obtiene usuarios actuales
 
-        // 2. Instanciar el validador existente y ejecutar validaciones
-        VRegistro validador = new VRegistro(nuevoUsuario, usuariosRegistrados);//Crea una instancia del validador de registro con el nuevo usuario y la lista de usuarios existentes
-        validador.validar();//Ejecuta las validaciones definidas en el validador
+        // 2. preparar validacion
+        VRegistro validador = new VRegistro(nuevoUsuario, usuariosRegistrados);// crea el validador
+        validador.validar();// ejecuta las validaciones
 
-        // 3. Si pasa las validaciones, guardar en el archivo TXT
-        repositorio.guardarUsuario(nuevoUsuario);//Guarda el nuevo usuario en el archivo TXT si pasa todas las validaciones
+        // 3. si todo esta bien guardar
+        repositorio.guardarUsuario(nuevoUsuario);// guarda en el archivo
         
-        System.out.println("Usuario registrado exitosamente en el sistema: " + nuevoUsuario.getEmail());//Mensaje de confirmacion de registro exitoso
+        System.out.println("Usuario registrado exitosamente en el sistema: " + nuevoUsuario.getEmail());// mensaje de exito
     }
 }

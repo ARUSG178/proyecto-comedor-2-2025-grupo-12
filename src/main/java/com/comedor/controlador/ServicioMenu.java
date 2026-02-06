@@ -1,50 +1,26 @@
-package com.comedor.controlador;
+package com.comedor.controlador;// paquete del controlador
 
-import com.comedor.modelo.entidades.Menu;
-import com.comedor.modelo.entidades.Platillo;
+import com.comedor.modelo.MenuDiario;// importa la clase menu diario
+import java.time.LocalDate;// importa clase para fechas
+import java.util.HashMap;// importa hashmap
+import java.util.List;// importa lista
+import java.util.Map;// importa mapa
 
-import java.time.LocalDate;
-import java.util.List;
+public class ServicioMenu {// clase para gestionar los menus
+    private Map<LocalDate, MenuDiario> menus = new HashMap<>();// mapa para guardar menus por fecha
 
-/**
- * Esta clase de servicio se encarga de toda la lógica de negocio
- * relacionada con la gestión del menú.
- */
-public class ServicioMenu {
-
-    /**
-     * Actualiza los datos del menú semanal.
-     * Este método será llamado desde la interfaz de usuario del administrador.
-     * @param nombre El nuevo nombre para el menú (ej. "Menú Semana 3")
-     * @param fechaInicio La fecha en que el menú se activa.
-     * @param fechaFin La fecha en que el menú termina.
-     * @param platillos La lista de platillos para ese menú.
-     */
-    public void actualizarMenuSemanal(String nombre, LocalDate fechaInicio, LocalDate fechaFin, List<Platillo> platillos) {
-        // 1. Obtener la instancia única del menú.
-        Menu menu = Menu.getInstance();
-
-        // 2. Usar los setters para actualizar toda su información.
-        menu.setNombre(nombre);
-        menu.setFechaInicio(fechaInicio);
-        menu.setFechaFin(fechaFin);
-        menu.setEstado(true); // Se asume que al actualizarlo, se quiere activar.
-
-        // 3. Limpiar la lista de platillos anterior y agregar los nuevos.
-        menu.getPlatillos().clear();
-        for (Platillo platillo : platillos) {
-            menu.agregarPlatillo(platillo);
-        }
-
-        System.out.println("Menú actualizado correctamente: " + menu.getNombre());
-        // Aquí podrías agregar lógica para guardar los cambios en un archivo si fuera necesario.
+    public void configurarMenu(LocalDate fecha, List<String> platos, double precio) {// metodo para crear un menu
+        MenuDiario menu = new MenuDiario(fecha, platos, precio);// crea el objeto menu
+        menus.put(fecha, menu);// lo guarda en el mapa
+        System.out.println("Menú configurado para la fecha: " + fecha);// confirma la accion
     }
 
-    /**
-     * Obtiene el menú actual para que otras partes de la aplicación lo muestren.
-     * @return La instancia única y ya configurada del menú.
-     */
-    public Menu getMenuActual() {
-        return Menu.getInstance();
+    public void visualizarMenu(LocalDate fecha) {// metodo para ver un menu
+        MenuDiario menu = menus.get(fecha);// busca el menu por fecha
+        if (menu != null) {// si existe el menu
+            System.out.println(menu);// lo imprime
+        } else {// si no existe
+            System.out.println("No hay menú configurado para el " + fecha);// avisa que no hay menu
+        }
     }
 }

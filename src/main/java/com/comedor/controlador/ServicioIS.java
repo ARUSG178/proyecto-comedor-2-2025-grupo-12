@@ -5,8 +5,8 @@ import com.comedor.modelo.excepciones.*;
 import com.comedor.modelo.validaciones.VSesion;
 
 public class ServicioIS {
-    public void IniciarSesion(Usuario uIgresado, Usuario uBD) throws InvalidCredentialsException, InvalidEmailFormatException {
-        VSesion persona = new VSesion(uIgresado, uBD);
+    public void IniciarSesion(Usuario uIngresado, Usuario uBD) throws InvalidCredentialsException, InvalidEmailFormatException {
+        VSesion persona = new VSesion(uIngresado, uBD);
         persona.validar();
 
         // temporal, no veo aún
