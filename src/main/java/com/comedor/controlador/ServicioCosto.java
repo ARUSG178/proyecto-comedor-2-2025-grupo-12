@@ -1,11 +1,12 @@
 package com.comedor.controlador;// paquete del controlador
 
-import com.comedor.modelo.RegistroCosto;// importa el modelo de costos
 import java.util.ArrayList;// importa arraylist
 import java.util.HashMap;// importa hashmap
 import java.util.List;// importa lista
 import java.util.Map;// importa mapa
 import java.util.stream.Collectors;// importa collectors para streams
+
+import com.comedor.modelo.entidades.RegistroCosto;
 
 public class ServicioCosto {// clase para gestionar costos
     private List<RegistroCosto> costos = new ArrayList<>();// lista de costos registrados
@@ -40,5 +41,15 @@ public class ServicioCosto {// clase para gestionar costos
             return 0.0;// retorna cero para evitar error
         }
         return totalCostos / cantidad;// calcula costo unitario
+    }
+
+    // Registra un cambio de precio de un platillo como un costo variable.
+    // Se guarda el nuevo precio y se incluye una descripción con el platillo, actor y cambio.
+    public void registrarCambioPrecio(String nombrePlatillo, double precioAnterior, double precioNuevo, String actor) {
+        String periodo = java.time.LocalDate.now().getYear() + "-" + String.format("%02d", java.time.LocalDate.now().getMonthValue());
+        double diferencia = precioNuevo - precioAnterior;
+        String descripcion = String.format("Cambio precio %s por %s: %.2f -> %.2f (diff %.2f)", nombrePlatillo, actor, precioAnterior, precioNuevo, diferencia);
+        agregarCosto(periodo, RegistroCosto.TipoCosto.VARIABLE, descripcion, precioNuevo);
+        System.out.println("Registro de cambio de precio creado: " + descripcion);
     }
 }

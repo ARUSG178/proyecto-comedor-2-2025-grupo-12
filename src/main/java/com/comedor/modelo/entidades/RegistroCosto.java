@@ -1,4 +1,4 @@
-package com.comedor.modelo;
+package com.comedor.modelo.entidades;
 
 public class RegistroCosto {
     public enum TipoCosto { FIJO, VARIABLE }

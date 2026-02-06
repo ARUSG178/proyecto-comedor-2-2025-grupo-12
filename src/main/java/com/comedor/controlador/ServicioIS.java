@@ -9,12 +9,6 @@ import java.io.IOException;
 import java.util.List;
 
 public class ServicioIS {
-<<<<<<< HEAD
-    public void IniciarSesion(Usuario uIngresado, Usuario uBD) throws InvalidCredentialsException, InvalidEmailFormatException {
-        VSesion persona = new VSesion(uIngresado, uBD);
-        persona.validar();
-=======
->>>>>>> 6959cdca3baeb7b6d2fb95dc2c71d36cd1d9c6b2
 
     public void IniciarSesion(Usuario uIngresado)
             throws InvalidCredentialsException, InvalidEmailFormatException, IOException {

@@ -7,8 +7,8 @@ import java.util.List;
 //clase que representa el menú diario del comedor
 public class Menu {
     private static Menu instance;
-    private String menuID;
     private String nombre;
+    private String menuID;
     private boolean estado;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
