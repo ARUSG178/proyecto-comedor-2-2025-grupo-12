@@ -1,1 +1,2 @@
 Estudiante;29617475;Jesús Soto;;culodemono@ciencs.ucv.ve;123456;true;0;0.0;Computación;Ciencias
+Estudiante;123456;uwu;;a@ciencs.ucv.ve;123456;true;0;0.0;uwu;uwu

@@ -1,20 +1,18 @@
 package com.comedor.modelo.entidades;
 
 public class Administrador extends Usuario {
-    private String responsabilidad;
+    private String codigoAdministrador; // código de verificación para registro
 
-    public Administrador(String cedula, String nombre, String apellido, String email, String contraseña, String responsabilidad) {
+    public Administrador(String cedula, String nombre, String apellido, String email, String contraseña, String codigoAdministrador) {
         super(cedula, nombre, apellido, email, contraseña);
-        setResposabilidad(responsabilidad);
+        this.codigoAdministrador = codigoAdministrador;
     }
 
     @Override
     public String getTipo() { return "Administrador"; }
 
-    // Getter
-    public String getResponsabilidad() { return responsabilidad; }
-    // Setter
-    public void setResposabilidad(String responsabilidad) { this.responsabilidad = responsabilidad; } 
+    public String getCodigoAdministrador() { return codigoAdministrador; }
+    public void setCodigoAdministrador(String codigoAdministrador) { this.codigoAdministrador = codigoAdministrador; }
 
     // Por poner algo
     public void gestionarUsuarios() { }
