@@ -3,6 +3,7 @@ package com.comedor.controlador;
 import com.comedor.modelo.entidades.Usuario;
 import com.comedor.modelo.excepciones.*;
 import com.comedor.modelo.persistencia.RepositorioUsuarios;
+import com.comedor.modelo.entidades.Administrador;
 import com.comedor.modelo.validaciones.VRegistro;
 
 import java.io.IOException;
@@ -25,7 +26,18 @@ public class ServicioRegistro {//Servicio para registrar nuevos usuarios en el s
 
         // 3. Si pasa las validaciones, guardar en el archivo TXT
         repositorio.guardarUsuario(nuevoUsuario);//Guarda el nuevo usuario en el archivo TXT si pasa todas las validaciones
-        
+        // Si era administrador y se guardó correctamente, pedir al validador que consuma el código
+        if (nuevoUsuario instanceof Administrador) {
+            try {
+                validador.consumirCodigoAdministrador();
+            } catch (IOException ex) {
+                // No detener el registro por fallo al actualizar el archivo de códigos
+                System.err.println("Advertencia: no se pudo actualizar codigos_admin.txt: " + ex.getMessage());
+            }
+        }
+
         System.out.println("Usuario registrado exitosamente en el sistema: " + nuevoUsuario.getEmail());//Mensaje de confirmacion de registro exitoso
     }
+
+    
 }

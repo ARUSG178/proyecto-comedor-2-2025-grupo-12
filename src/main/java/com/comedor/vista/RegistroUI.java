@@ -13,15 +13,16 @@ import com.comedor.controlador.ServicioRegistro;
 import com.comedor.modelo.entidades.Usuario;
 import com.comedor.modelo.entidades.Estudiante;
 import com.comedor.modelo.entidades.Empleado;
+import com.comedor.modelo.entidades.Administrador;
 import com.comedor.modelo.excepciones.DuplicateUserException;
 import com.comedor.modelo.excepciones.InvalidEmailFormatException;
 import com.comedor.modelo.excepciones.InvalidCredentialsException;
 
 /**
- * Interfaz de Registro de Usuario - SAGC UCV.
- * Este código replica el prototipo visual centrado y estilizado.
+ * Interfaz gráfica para el registro de usuarios del sistema SAGC UCV.
+ * Recopila datos del formulario y delega las validaciones al servicio.
  */
-public class RegistroFrameUI extends JFrame {
+public class RegistroUI extends JFrame {
 
     // --- PALETA DE COLORES (Basada en el diseño institucional) ---
     private static final Color COLOR_TERRACOTA = new Color(160, 70, 40);            // Barras y Títulos
@@ -47,9 +48,13 @@ public class RegistroFrameUI extends JFrame {
 
     private ModernTextField txtCargo;
     private ModernTextField txtDepartamento;
+    private ModernTextField txtAdminCodigo;
 
-    public RegistroFrameUI() {
-        // Intenta cargar la imagen de fondo desde la ruta especificada en tu proyecto
+    /**
+     * Inicializa la interfaz de registro y carga recursos (imagen de fondo).
+     * Configura la ventana y construye los componentes del formulario.
+     */
+    public RegistroUI() {
         try {
             URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_reg_bg.jpg");
             if (imageUrl != null) backgroundImage = ImageIO.read(imageUrl);
@@ -61,6 +66,10 @@ public class RegistroFrameUI extends JFrame {
         initUI();
     }
 
+    /**
+     * Configura propiedades básicas de la ventana de registro.
+     * Define título, tamaño, tamaño mínimo y comportamiento al cerrar.
+     */
     private void configurarVentana() {
         setTitle("Registro de Usuario - SAGC UCV");
         setSize(1400, 950);
@@ -69,7 +78,12 @@ public class RegistroFrameUI extends JFrame {
         setLocationRelativeTo(null); // Centra la ventana al abrirse
     }
 
+    /**
+     * Construye y organiza los componentes del formulario de registro.
+     * Crea paneles, campos por tipo de usuario, y enlaza los listeners necesarios.
+     */
     private void initUI() {
+        
         // 1. PANEL DE FONDO: Dibuja la imagen, el filtro y las barras
         JPanel backgroundPanel = new JPanel() {
             @Override
@@ -98,9 +112,10 @@ public class RegistroFrameUI extends JFrame {
         GridBagConstraints gbcMain = new GridBagConstraints();
 
         // --- LOGO ESTILIZADO (< SAGC) ---
-        JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 60, 25));
+        JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setOpaque(false);
-        JLabel brandLabel = new JLabel("< SAGC") {
+        headerPanel.setBorder(new EmptyBorder(25, 0, 25, 0));
+        JLabel brandLabel = new JLabel("< SAGC", SwingConstants.CENTER) {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
@@ -116,11 +131,28 @@ public class RegistroFrameUI extends JFrame {
             }
         };
         brandLabel.setFont(new Font("Segoe UI Semibold", Font.BOLD, 52));
-        brandLabel.setPreferredSize(new Dimension(300, 60));
-        headerPanel.add(brandLabel);
+        brandLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        brandLabel.setFocusable(true);
+        brandLabel.addMouseListener(new MouseAdapter() {
+            @Override public void mouseClicked(MouseEvent e) {
+                new ISUI().setVisible(true);
+                RegistroUI.this.dispose();
+            }
+        });
+        brandLabel.addKeyListener(new KeyAdapter() {
+            @Override public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_UP) {
+                    new ISUI().setVisible(true);
+                    RegistroUI.this.dispose();
+                }
+            }
+        });
+        headerPanel.add(brandLabel, BorderLayout.CENTER);
+
+        // subtitle removed per request (kept only in ISUI)
 
         gbcMain.gridx = 0; gbcMain.gridy = 0;
-        gbcMain.weightx = 1.0; gbcMain.anchor = GridBagConstraints.NORTHWEST;
+        gbcMain.weightx = 1.0; gbcMain.anchor = GridBagConstraints.NORTH; gbcMain.fill = GridBagConstraints.HORIZONTAL;
         contentHost.add(headerPanel, gbcMain);
 
         // --- ÁREA CENTRAL (Formulario) ---
@@ -163,10 +195,11 @@ public class RegistroFrameUI extends JFrame {
         radioPanel.setOpaque(false);
         JRadioButton studentRadio = createCustomRadio("Estudiante");
         JRadioButton employeeRadio = createCustomRadio("Empleado");
+        JRadioButton adminRadio = createCustomRadio("Administrador");
         ButtonGroup group = new ButtonGroup();
-        group.add(studentRadio); group.add(employeeRadio);
+        group.add(studentRadio); group.add(employeeRadio); group.add(adminRadio);
         studentRadio.setSelected(true);
-        radioPanel.add(studentRadio); radioPanel.add(employeeRadio);
+        radioPanel.add(studentRadio); radioPanel.add(employeeRadio); radioPanel.add(adminRadio);
         gbc.gridy = 5; gbc.insets = new Insets(15, 0, 15, 0);
         formCard.add(radioPanel, gbc);
 
@@ -192,8 +225,14 @@ public class RegistroFrameUI extends JFrame {
         txtDepartamento = new ModernTextField("Ej. Docencia");
         addLabelAndField(pEmp, "Departamento:", txtDepartamento, gbcSub, 1);
 
+        // Panel Administrador
+        JPanel pAdm = new JPanel(new GridBagLayout()); pAdm.setOpaque(false);
+        txtAdminCodigo = new ModernTextField("8 caracteres alfanum.");
+        addLabelAndField(pAdm, "Código Admin:", txtAdminCodigo, gbcSub, 0);
+
         specificFieldsPanel.add(pEst, "Estudiante");
         specificFieldsPanel.add(pEmp, "Empleado");
+        specificFieldsPanel.add(pAdm, "Administrador");
         gbc.gridy = 6; gbc.insets = new Insets(0, 0, 25, 0);
         formCard.add(specificFieldsPanel, gbc);
 
@@ -221,7 +260,7 @@ public class RegistroFrameUI extends JFrame {
                     return;
                 }
                 nuevo = new Estudiante(cedula, nombre, "", email, contr, carrera, facultad);
-            } else {
+            } else if (employeeRadio.isSelected()) {
                 String cargo = txtCargo.getText().trim();
                 String departamento = txtDepartamento.getText().trim();
                 if (cargo.isEmpty() || departamento.isEmpty()) {
@@ -229,6 +268,13 @@ public class RegistroFrameUI extends JFrame {
                     return;
                 }
                 nuevo = new Empleado(cedula, nombre, "", email, contr, cargo, departamento, "0000");
+            } else { // Administrador
+                String codigo = txtAdminCodigo.getText().trim();
+                if (codigo.isEmpty() || !codigo.matches("[A-Za-z0-9]{8}")) {
+                    JOptionPane.showMessageDialog(this, "Ingrese un código de administrador válido (8 caracteres alfanum.).", "Código inválido", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                nuevo = new Administrador(cedula, nombre, "", email, contr, codigo);
             }
 
             ServicioRegistro servicio = new ServicioRegistro();
@@ -258,6 +304,7 @@ public class RegistroFrameUI extends JFrame {
         // Cambio de campos según el Radio seleccionado
         studentRadio.addActionListener(e -> cardLayout.show(specificFieldsPanel, "Estudiante"));
         employeeRadio.addActionListener(e -> cardLayout.show(specificFieldsPanel, "Empleado"));
+        adminRadio.addActionListener(e -> cardLayout.show(specificFieldsPanel, "Administrador"));
     }
 
     // --- COMPONENTES PERSONALIZADOS ---
@@ -357,6 +404,6 @@ public class RegistroFrameUI extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new RegistroFrameUI().setVisible(true));
+        SwingUtilities.invokeLater(() -> new RegistroUI().setVisible(true));
     }
 }

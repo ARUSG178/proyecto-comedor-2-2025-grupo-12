@@ -1,5 +1,5 @@
 package com.comedor.vista;
 
-public class InicioSesionUI {
+public class MainUI {
     
 }
