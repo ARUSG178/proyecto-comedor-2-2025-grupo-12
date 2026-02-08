@@ -76,6 +76,7 @@ public class RegistroUI extends JFrame {
         setMinimumSize(new Dimension(900, 800));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Centra la ventana al abrirse
+        setExtendedState(JFrame.MAXIMIZED_BOTH); // Inicia en pantalla completa
     }
 
     /**
@@ -111,11 +112,8 @@ public class RegistroUI extends JFrame {
         contentHost.setOpaque(false);
         GridBagConstraints gbcMain = new GridBagConstraints();
 
-        // --- LOGO ESTILIZADO (< SAGC) ---
-        JPanel headerPanel = new JPanel(new BorderLayout());
-        headerPanel.setOpaque(false);
-        headerPanel.setBorder(new EmptyBorder(25, 0, 25, 0));
-        JLabel brandLabel = new JLabel("< SAGC", SwingConstants.CENTER) {
+        // --- LOGO ESTILIZADO (< SAGC)
+        JLabel brandLabel = new JLabel("< SAGC") {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
@@ -131,29 +129,60 @@ public class RegistroUI extends JFrame {
             }
         };
         brandLabel.setFont(new Font("Segoe UI Semibold", Font.BOLD, 52));
+        brandLabel.setForeground(Color.WHITE);
         brandLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         brandLabel.setFocusable(true);
+
+        // Listener para redirigir a RegistroUI
         brandLabel.addMouseListener(new MouseAdapter() {
-            @Override public void mouseClicked(MouseEvent e) {
+            @Override 
+            public void mouseClicked(MouseEvent e) {
                 new ISUI().setVisible(true);
                 RegistroUI.this.dispose();
             }
         });
+
         brandLabel.addKeyListener(new KeyAdapter() {
-            @Override public void keyPressed(KeyEvent e) {
+            @Override 
+            public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_UP) {
                     new ISUI().setVisible(true);
                     RegistroUI.this.dispose();
                 }
             }
         });
-        headerPanel.add(brandLabel, BorderLayout.CENTER);
 
-        // subtitle removed per request (kept only in ISUI)
+        // Crear un panel con BoxLayout para control preciso
+        JPanel topBarContainer = new JPanel();
+        topBarContainer.setOpaque(false);
+        topBarContainer.setPreferredSize(new Dimension(getWidth(), 135));
+        topBarContainer.setLayout(new BoxLayout(topBarContainer, BoxLayout.X_AXIS));
 
-        gbcMain.gridx = 0; gbcMain.gridy = 0;
-        gbcMain.weightx = 1.0; gbcMain.anchor = GridBagConstraints.NORTH; gbcMain.fill = GridBagConstraints.HORIZONTAL;
-        contentHost.add(headerPanel, gbcMain);
+        // Margen izquierdo
+        topBarContainer.add(Box.createRigidArea(new Dimension(20, 0)));
+
+        // Contenedor interno para centrar verticalmente
+        JPanel verticalCenterPanel = new JPanel();
+        verticalCenterPanel.setOpaque(false);
+        verticalCenterPanel.setLayout(new BoxLayout(verticalCenterPanel, BoxLayout.Y_AXIS));
+
+        // Espacio flexible arriba
+        verticalCenterPanel.add(Box.createVerticalGlue());
+
+        // Agregar el logo
+        verticalCenterPanel.add(brandLabel);
+
+        // Espacio flexible abajo
+        verticalCenterPanel.add(Box.createVerticalGlue());
+
+        // Agregar el contenedor de centrado vertical al contenedor principal
+        topBarContainer.add(verticalCenterPanel);
+
+        // Empujar todo hacia la izquierda
+        topBarContainer.add(Box.createHorizontalGlue());
+
+        // Agregar el contenedor directamente a la parte norte del backgroundPanel
+        backgroundPanel.add(topBarContainer, BorderLayout.NORTH);
 
         // --- ÁREA CENTRAL (Formulario) ---
         JPanel centeringSpace = new JPanel(new GridBagLayout());
@@ -281,7 +310,10 @@ public class RegistroUI extends JFrame {
             try {
                 servicio.registrarUsuario(nuevo);
                 JOptionPane.showMessageDialog(this, "Usuario registrado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                dispose();
+                SwingUtilities.invokeLater(() -> {
+                    new ISUI().setVisible(true);
+                    dispose();
+                });
             } catch (DuplicateUserException | InvalidEmailFormatException | InvalidCredentialsException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error de validación", JOptionPane.ERROR_MESSAGE);
             } catch (IOException ex) {

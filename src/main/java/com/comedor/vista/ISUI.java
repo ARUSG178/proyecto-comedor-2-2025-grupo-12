@@ -10,9 +10,13 @@ import java.io.IOException;
 import java.net.URL;
 
 import com.comedor.controlador.ServicioIS;
-import com.comedor.modelo.entidades.Estudiante; 
+import com.comedor.modelo.entidades.Administrador;
+import com.comedor.modelo.entidades.Estudiante;
+import com.comedor.modelo.entidades.Usuario;
 import com.comedor.modelo.excepciones.InvalidCredentialsException;
 import com.comedor.modelo.excepciones.InvalidEmailFormatException;
+import com.comedor.vista.admin.MainAdminUI;
+import com.comedor.vista.usuario.MainUserUI;
 
 /**
  * Interfaz gráfica principal para el inicio de sesión del sistema SAGC UCV.
@@ -26,10 +30,13 @@ public class ISUI extends JFrame {
     private static final Color COLOR_INPUT_BG = new Color(175, 125, 95);
     private static final Color COLOR_BTN_VERDE = new Color(75, 105, 50);
     private static final Color COLOR_TEXTO = new Color(60, 40, 30);
+    private static final Color COLOR_RADIO_GOLD = new Color(210, 160, 30); // Color dorado para radios
 
     private BufferedImage backgroundImage;
     private ModernTextField txtEmail;
     private ModernPasswordField txtClave;
+    private JRadioButton usuarioRadio;
+    private JRadioButton adminRadio;
 
     /**
      * Constructor de la interfaz. Carga los recursos gráficos iniciales
@@ -52,11 +59,12 @@ public class ISUI extends JFrame {
      * dimensiones predeterminadas y la ubicación central en pantalla.
      */
     private void configurarVentana() {
-        setTitle("Iniciar Sesión - SAGC UCV");
-        setSize(1200, 800);
-        setMinimumSize(new Dimension(900, 600));
+        setTitle("Iniciar Sesión - SAGC UCV"); 
+        setSize(1400, 950);
+        setMinimumSize(new Dimension(900, 800));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);    
     }
 
     /**
@@ -112,7 +120,7 @@ public class ISUI extends JFrame {
         ShadowRoundedPanel card = new ShadowRoundedPanel(new GridBagLayout());
         card.setBackground(COLOR_FORM_BG);
         card.setBorder(new EmptyBorder(50, 50, 50, 50));
-        card.setPreferredSize(new Dimension(450, 550));
+        card.setPreferredSize(new Dimension(450, 600)); // Aumentado para incluir radios
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -130,11 +138,30 @@ public class ISUI extends JFrame {
         txtClave = new ModernPasswordField("••••••••");
         addLabelAndField(card, "Contraseña:", txtClave, gbc, 2);
 
+        // --- SECCIÓN DE RADIO BUTTONS PERSONALIZADOS ---
+        JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 0));
+        radioPanel.setOpaque(false);
+        
+        // Crear radio buttons
+        usuarioRadio = createCustomRadio("Usuario");
+        adminRadio = createCustomRadio("Administrador");
+        
+        ButtonGroup group = new ButtonGroup();
+        group.add(usuarioRadio);
+        group.add(adminRadio);
+        usuarioRadio.setSelected(true); // Por defecto es usuario
+        
+        radioPanel.add(usuarioRadio);
+        radioPanel.add(adminRadio);
+        
+        gbc.gridy = 3; gbc.insets = new Insets(15, 0, 15, 0);
+        card.add(radioPanel, gbc);
+
         JButton btnEntrar = new JButton("Entrar");
         styleButton(btnEntrar);
         btnEntrar.addActionListener(e -> ejecutarLogin());
         
-        gbc.gridy = 3; gbc.insets = new Insets(30, 0, 10, 0);
+        gbc.gridy = 4; gbc.insets = new Insets(30, 0, 10, 0);
         card.add(btnEntrar, gbc);
 
         JButton btnIrRegistro = new JButton("¿No tienes cuenta? Regístrate");
@@ -146,7 +173,7 @@ public class ISUI extends JFrame {
             new RegistroUI().setVisible(true);
             this.dispose();
         });
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         card.add(btnIrRegistro, gbc);
 
         rightPanel.add(card);
@@ -164,27 +191,72 @@ public class ISUI extends JFrame {
         String clave = new String(txtClave.getPassword());
         
         if (email.isEmpty() || clave.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Por favor ingrese correo y contraseña", "Datos incompletos", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, 
+                "Por favor ingrese correo y contraseña", 
+                "Datos incompletos", 
+                JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        Estudiante userIngresado = new Estudiante("", "", "", email, clave, "", "");
         ServicioIS servicio = new ServicioIS();
         
         try {
-            servicio.IniciarSesion(userIngresado);
-            JOptionPane.showMessageDialog(this, "¡Bienvenido al sistema!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-        } catch (InvalidCredentialsException | InvalidEmailFormatException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error de Acceso", JOptionPane.ERROR_MESSAGE);
+            // Crear instancia Usuario según selección
+            Usuario usuarioIngresado;
+            if (adminRadio.isSelected()) {
+                usuarioIngresado = new Administrador("", "", "", email, clave, "");
+            } else {
+                usuarioIngresado = new Estudiante("", "", "", email, clave, "", "");
+            }
+            
+            // Ahora IniciarSesion retorna el usuario REAL de la BD
+            Usuario usuarioReal = servicio.IniciarSesion(usuarioIngresado);
+            
+            // Verificar tipo y redirigir
+            if (usuarioReal instanceof Administrador) {
+                JOptionPane.showMessageDialog(this, 
+                    "¡Bienvenido Administrador!", 
+                    "Éxito", 
+                    JOptionPane.INFORMATION_MESSAGE);
+                SwingUtilities.invokeLater(() -> {
+                    this.dispose();
+                    new MainAdminUI().setVisible(true);
+                });
+                
+            } else if (usuarioReal instanceof Estudiante) {
+                JOptionPane.showMessageDialog(this, 
+                    "¡Bienvenido Estudiante!", 
+                    "Éxito", 
+                    JOptionPane.INFORMATION_MESSAGE);
+                
+                // Redirigir a MainUserUI
+                SwingUtilities.invokeLater(() -> {
+                    this.dispose();
+                    new MainUserUI().setVisible(true);
+                });
+            }
+            
+        } catch (InvalidCredentialsException ex) {
+            // Este error ahora incluirá mensajes específicos sobre tipo de usuario
+            JOptionPane.showMessageDialog(this, ex.getMessage(), 
+                "Error de Acceso", JOptionPane.ERROR_MESSAGE);
+        } catch (InvalidEmailFormatException ex) {
+            JOptionPane.showMessageDialog(this, 
+                "Formato de correo inválido.\nUse el formato: usuario@dominio.ucv.ve", 
+                "Error de Formato", 
+                JOptionPane.ERROR_MESSAGE);
         } catch (java.io.IOException ioEx) {
-            JOptionPane.showMessageDialog(this, "Error accediendo a la base de datos de usuarios", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, 
+                "Error accediendo a la base de datos", 
+                "Error del Sistema", 
+                JOptionPane.ERROR_MESSAGE);
         }
     }
 
     /**
      * Crea una agrupación vertical compuesta por una etiqueta descriptiva 
      * y su respectivo campo de entrada, insertándola en el panel destino.
-     * * @param p Panel contenedor.
+     * @param p Panel contenedor.
      * @param t Texto de la etiqueta.
      * @param f Componente de entrada de texto.
      * @param g Restricciones de GridBagLayout.
@@ -205,7 +277,7 @@ public class ISUI extends JFrame {
     /**
      * Define la apariencia visual de los botones de acción, configurando
      * tipografía, colores de fondo y bordes de relleno (padding).
-     * * @param b Botón a estilizar.
+     * @param b Botón a estilizar.
      */
     private void styleButton(JButton b) {
         b.setFont(new Font("Segoe UI", Font.BOLD, 18));
@@ -217,19 +289,77 @@ public class ISUI extends JFrame {
     }
 
     /**
+     * Crea un RadioButton sin el borde azul y con iconos personalizados.
+     * Mismo estilo que en RegistroUI.
+     */
+    private JRadioButton createCustomRadio(String texto) {
+        JRadioButton radio = new JRadioButton(texto);
+        radio.setOpaque(false);
+        radio.setFocusPainted(false); // ESTO ELIMINA EL RECUADRO AZUL
+        radio.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        radio.setForeground(new Color(60, 40, 30));
+        radio.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        // Aplicamos los círculos dibujados manualmente (mismo que RegistroUI)
+        radio.setIcon(new CustomRadioIcon(false));
+        radio.setSelectedIcon(new CustomRadioIcon(true));
+        return radio;
+    }
+
+    /**
+     * Dibuja los círculos de los RadioButtons al estilo UCV.
+     * Mismo que en RegistroUI.
+     */
+    private static class CustomRadioIcon implements Icon {
+        private boolean sel;
+        public CustomRadioIcon(boolean sel) { this.sel = sel; }
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(COLOR_RADIO_GOLD);
+            g2.setStroke(new BasicStroke(2.0f));
+            g2.drawOval(x, y + 2, 16, 16); // Círculo exterior
+            if (sel) g2.fillOval(x + 4, y + 6, 9, 9); // Punto interior
+            g2.dispose();
+        }
+        @Override public int getIconWidth() { return 25; }
+        @Override public int getIconHeight() { return 20; }
+    }
+
+    /**
      * Componente personalizado de entrada de texto que implementa 
      * bordes redondeados y una estética coherente con el manual de marca.
      */
     private class ModernTextField extends JTextField {
+        private static final Color COLOR_PLACEHOLDER = new Color(255, 255, 255, 160);
+        private String hint;
+        
         public ModernTextField(String h) { 
-            setOpaque(false); setForeground(Color.WHITE); 
-            setCaretColor(Color.WHITE); setBorder(new EmptyBorder(10, 15, 10, 15));
+            this.hint = h; 
+            setOpaque(false); 
+            setForeground(Color.WHITE); 
+            setCaretColor(Color.WHITE); 
+            setBorder(new EmptyBorder(10, 15, 10, 15));
+            setFont(new Font("Segoe UI", Font.PLAIN, 14));
         }
-        @Override protected void paintComponent(Graphics g) {
+        
+        @Override 
+        protected void paintComponent(Graphics g) {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setColor(COLOR_INPUT_BG);
             g2.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, 15, 15);
+            
+            // Texto placeholder si está vacío
+            if (getText().isEmpty()) {
+                g2.setColor(COLOR_PLACEHOLDER);
+                g2.setFont(getFont().deriveFont(Font.ITALIC));
+                FontMetrics fm = g2.getFontMetrics();
+                int y = (getHeight() - fm.getHeight()) / 2 + fm.getAscent();
+                g2.drawString(hint, 15, y);
+            }
+            
             super.paintComponent(g);
             g2.dispose();
         }
@@ -240,15 +370,34 @@ public class ISUI extends JFrame {
      * manteniendo el renderizado redondeado pero ocultando el contenido.
      */
     private class ModernPasswordField extends JPasswordField {
+        private static final Color COLOR_PLACEHOLDER = new Color(255, 255, 255, 160);
+        private String hint;
+        
         public ModernPasswordField(String h) { 
-            setOpaque(false); setForeground(Color.WHITE); 
-            setCaretColor(Color.WHITE); setBorder(new EmptyBorder(10, 15, 10, 15));
+            this.hint = h;
+            setOpaque(false); 
+            setForeground(Color.WHITE); 
+            setCaretColor(Color.WHITE); 
+            setBorder(new EmptyBorder(10, 15, 10, 15));
+            setFont(new Font("Segoe UI", Font.PLAIN, 14));
         }
-        @Override protected void paintComponent(Graphics g) {
+        
+        @Override 
+        protected void paintComponent(Graphics g) {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setColor(COLOR_INPUT_BG);
             g2.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, 15, 15);
+            
+            // Texto placeholder si está vacío
+            if (getPassword().length == 0) {
+                g2.setColor(COLOR_PLACEHOLDER);
+                g2.setFont(getFont().deriveFont(Font.ITALIC));
+                FontMetrics fm = g2.getFontMetrics();
+                int y = (getHeight() - fm.getHeight()) / 2 + fm.getAscent();
+                g2.drawString(hint, 15, y);
+            }
+            
             super.paintComponent(g);
             g2.dispose();
         }
@@ -260,7 +409,8 @@ public class ISUI extends JFrame {
      */
     private class ShadowRoundedPanel extends JPanel {
         public ShadowRoundedPanel(LayoutManager lm) { super(lm); setOpaque(false); }
-        @Override protected void paintComponent(Graphics g) {
+        @Override 
+        protected void paintComponent(Graphics g) {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setColor(new Color(0, 0, 0, 50));

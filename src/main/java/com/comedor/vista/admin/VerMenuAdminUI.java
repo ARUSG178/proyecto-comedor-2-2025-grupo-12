@@ -1,4 +1,4 @@
-package com.comedor.vista.usuario;
+package com.comedor.vista.admin;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -12,7 +12,7 @@ import java.net.URL;
 /**
  * Interfaz gráfica para el Menú del Comedor del sistema SAGC UCV.
  */
-public class MenuUserUI extends JFrame {
+public class VerMenuAdminUI extends JFrame {
 
     // --- PALETA DE COLORES (Basada en el diseño institucional) ---
     private static final Color COLOR_TERRACOTA = new Color(160, 70, 40);            // Barras y Títulos
@@ -23,7 +23,7 @@ public class MenuUserUI extends JFrame {
     /**
      * Inicializa la interfaz del menú del comedor y carga recursos.
      */
-    public MenuUserUI() {
+    public VerMenuAdminUI() {
         try {
             URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_reg_bg.jpg");
             if (imageUrl != null) backgroundImage = ImageIO.read(imageUrl);
@@ -193,8 +193,8 @@ public class MenuUserUI extends JFrame {
         brandLabel.addMouseListener(new MouseAdapter() {
             @Override 
             public void mouseClicked(MouseEvent e) {
-                new MainUserUI().setVisible(true);
-                MenuUserUI.this.dispose();
+                new MainAdminUI().setVisible(true);
+                VerMenuAdminUI.this.dispose();
             }
         });
 
@@ -202,8 +202,8 @@ public class MenuUserUI extends JFrame {
             @Override 
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_UP) {
-                    new MainUserUI().setVisible(true);
-                    MenuUserUI.this.dispose();
+                    new MainAdminUI().setVisible(true);
+                    VerMenuAdminUI.this.dispose();
                 }
             }
         });
@@ -294,6 +294,6 @@ public class MenuUserUI extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new MenuUserUI().setVisible(true));
+        SwingUtilities.invokeLater(() -> new VerMenuAdminUI().setVisible(true));
     }
 }
