@@ -80,7 +80,7 @@ public class MainAdminUI extends JFrame {
         contentHost.setOpaque(false);
 
         // --- LOGO ESTILIZADO (SAGC) Y PESTAÑAS DE NAVEGACIÓN ---
-        JLabel brandLabel = new JLabel("SAGC | Admin") {
+        JLabel brandLabel = new JLabel("Admin - SAGC UCV") {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();

@@ -39,7 +39,7 @@ public class VerMenuAdminUI extends JFrame {
      * Configura propiedades básicas de la ventana.
      */
     private void configurarVentana() {
-        setTitle("Menú del Comedor - SAGC UCV");
+        setTitle("Vista del Menú del Comedor | Admin - SAGC UCV");
         setSize(1400, 950);
         setMinimumSize(new Dimension(900, 800));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
