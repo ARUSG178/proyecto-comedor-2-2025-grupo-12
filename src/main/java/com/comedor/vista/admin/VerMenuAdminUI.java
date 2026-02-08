@@ -142,6 +142,30 @@ public class VerMenuAdminUI extends JFrame {
         return platilloPanel;
     }
 
+    private JLabel createTabLabel(String text) {
+        JLabel tab = new JLabel(text);
+        tab.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        tab.setForeground(Color.WHITE);
+        tab.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        // Efecto hover
+        tab.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                tab.setForeground(new Color(255, 255, 255, 220));
+                tab.setFont(new Font("Segoe UI", Font.BOLD, 19));
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+                tab.setForeground(Color.WHITE);
+                tab.setFont(new Font("Segoe UI", Font.BOLD, 18));
+            }
+        });
+        
+        return tab;
+    }
+
     /**
      * Construye y organiza los componentes del menú.
      */
@@ -209,10 +233,9 @@ public class VerMenuAdminUI extends JFrame {
         });
 
         // Crear un panel con BoxLayout para control preciso
-        JPanel topBarContainer = new JPanel();
+        JPanel topBarContainer = new JPanel(new BorderLayout());
         topBarContainer.setOpaque(false);
         topBarContainer.setPreferredSize(new Dimension(getWidth(), 135));
-        topBarContainer.setLayout(new BoxLayout(topBarContainer, BoxLayout.X_AXIS));
 
         // Margen izquierdo
         topBarContainer.add(Box.createRigidArea(new Dimension(20, 0)));
@@ -239,6 +262,80 @@ public class VerMenuAdminUI extends JFrame {
 
         // Agregar el contenedor directamente a la parte norte del backgroundPanel
         backgroundPanel.add(topBarContainer, BorderLayout.NORTH);
+
+        // --- PESTAÑAS DE FUNCIONALIDADES ---
+        JPanel tabsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 30, 0));
+        tabsPanel.setOpaque(false);
+        
+        // Crear pestañas
+        JLabel usuarioTab = createTabLabel("Usuario");
+        JLabel menuTab = createTabLabel("Visualizar menú");
+        JLabel reservasTab = createTabLabel("Reservas");
+        JLabel historialTab = createTabLabel("Historial");
+        
+        // Añadir pestañas al panel
+        tabsPanel.add(usuarioTab);
+        tabsPanel.add(menuTab);
+        tabsPanel.add(reservasTab);
+        tabsPanel.add(historialTab);
+        
+        // Pestañas de redireccionamiento
+            // Pestañas de redireccionamiento para las funcionalidades
+            usuarioTab.addMouseListener(new MouseAdapter() {
+            @Override 
+            public void mouseClicked(MouseEvent e) {
+                // Redirigir a Usuario 
+                // new HistorialUI().setVisible(true);
+                // MainAdminUI.this.dispose();
+                JOptionPane.showMessageDialog(VerMenuAdminUI.this, 
+                    "Funcionalidad no implementada.", 
+                    "Gestión de Usuarios", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+
+        reservasTab.addMouseListener(new MouseAdapter() {
+            @Override 
+            public void mouseClicked(MouseEvent e) {
+                // Redirigir a Reservas
+                // new ReservasUI().setVisible(true);
+                // MainAdminUI.this.dispose();
+                JOptionPane.showMessageDialog(VerMenuAdminUI.this, 
+                    "Funcionalidad no implementada.", 
+                    "Reservas", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        historialTab.addMouseListener(new MouseAdapter() {
+            @Override 
+            public void mouseClicked(MouseEvent e) {
+                // Redirigir a Historial
+                // new HistorialUI().setVisible(true);
+                // MainAdminUI.this.dispose();
+                JOptionPane.showMessageDialog(VerMenuAdminUI.this, 
+                    "Funcionalidad no implementada.", 
+                    "Historial", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        // Panel para las pestañas (derecha)
+        JPanel tabsContainer = new JPanel(new GridBagLayout());
+        tabsContainer.setOpaque(false);
+        
+        GridBagConstraints gbcTabs = new GridBagConstraints();
+        gbcTabs.gridx = 0;
+        gbcTabs.gridy = 0;
+        gbcTabs.weighty = 1.0;
+        gbcTabs.anchor = GridBagConstraints.CENTER;
+        
+        JPanel tabsVerticalCenter = new JPanel(new BorderLayout());
+        tabsVerticalCenter.setOpaque(false);
+        tabsVerticalCenter.add(tabsPanel, BorderLayout.CENTER);
+  
+        tabsContainer.add(tabsVerticalCenter, gbcTabs);
 
         // --- CONTENIDO CENTRAL CON LOS 4 PLATILLOS EN HORIZONTAL ---
         // Usamos un JPanel con BoxLayout para mejor control del centrado vertical
@@ -285,6 +382,12 @@ public class VerMenuAdminUI extends JFrame {
         
         // Añadir el contentPanel al centroPanel
         centerPanel.add(contentPanel);
+
+        topBarContainer.add(brandLabel, BorderLayout.WEST);     // Logo a la izquierda
+        topBarContainer.add(tabsContainer, BorderLayout.EAST); // Pestañas a la derecha
+        
+        // 5. Agregar al fondo
+        backgroundPanel.add(topBarContainer, BorderLayout.NORTH);
         
         // Espacio flexible abajo para empujar el contenido hacia arriba desde la barra inferior
         centerPanel.add(Box.createVerticalGlue());

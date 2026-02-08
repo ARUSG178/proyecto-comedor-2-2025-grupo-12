@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+import com.comedor.controlador.ServicioMenu;
 
 /**
  * Interfaz gráfica para la administración del Menú del Comedor.
@@ -25,10 +26,12 @@ public class MenuAdminUI extends JFrame {
     // Rutas de imágenes
     private String[] rutasImagenes = new String[4];
     private String[] nombresPlatillos = new String[4];
-    
+    private String[] preciosPlatillos = new String[4];
+
     // Componentes para los platillos
     private JLabel[] labelsImagen = new JLabel[4];
     private JTextField[] fieldsNombre = new JTextField[4];
+    private JTextField[] fieldsPrecio = new JTextField[4];
 
     /**
      * Inicializa la interfaz de administración del menú.
@@ -55,6 +58,7 @@ public class MenuAdminUI extends JFrame {
         for (int i = 0; i < 4; i++) {
             rutasImagenes[i] = "/com/comedor/resources/images/menu/base.jpg";
             nombresPlatillos[i] = "Platillo " + (i + 1);
+            preciosPlatillos[i] = "Bs. 0,00"; //
         }
     }
 
@@ -186,14 +190,16 @@ public class MenuAdminUI extends JFrame {
             }
         });
         
-        panelImagen.add(labelsImagen[indice]);
+        // Panel para el nombre y precio
+        JPanel panelInfo = new JPanel(new BorderLayout(5, 5));
+        panelInfo.setOpaque(false);
+        panelInfo.setBorder(new EmptyBorder(8, 0, 0, 0));
         
-        // Panel para el nombre
-        JPanel panelNombre = new JPanel(new BorderLayout(5, 5));
+        // Panel para nombre
+        JPanel panelNombre = new JPanel(new BorderLayout(2, 2));
         panelNombre.setOpaque(false);
-        panelNombre.setBorder(new EmptyBorder(8, 0, 0, 0));
         
-        JLabel labelNombre = new JLabel("Platillo " + (indice + 1) + ":");
+        JLabel labelNombre = new JLabel("Nombre Platillo " + (indice + 1) + ":");
         labelNombre.setFont(new Font("Segoe UI", Font.BOLD, 13));
         labelNombre.setForeground(Color.WHITE);
         
@@ -202,16 +208,44 @@ public class MenuAdminUI extends JFrame {
         fieldsNombre[indice].setBackground(new Color(255, 255, 255, 230));
         fieldsNombre[indice].setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(COLOR_TERRACOTA, 1),
-            new EmptyBorder(6, 8, 6, 8)
+            new EmptyBorder(4, 8, 4, 8)
         ));
-        fieldsNombre[indice].setPreferredSize(new Dimension(220, 32));
+        fieldsNombre[indice].setPreferredSize(new Dimension(220, 28));
         
         panelNombre.add(labelNombre, BorderLayout.NORTH);
         panelNombre.add(fieldsNombre[indice], BorderLayout.CENTER);
         
+        // Panel para precio (NUEVO)
+        JPanel panelPrecio = new JPanel(new BorderLayout(2, 2));
+        panelPrecio.setOpaque(false);
+        panelPrecio.setBorder(new EmptyBorder(5, 0, 0, 0));
+        
+        JLabel labelPrecio = new JLabel("Precio Platillo " + (indice + 1) + ":");
+        labelPrecio.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        labelPrecio.setForeground(Color.WHITE);
+        
+        fieldsPrecio[indice] = new JTextField(preciosPlatillos[indice], 10);
+        fieldsPrecio[indice].setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        fieldsPrecio[indice].setBackground(new Color(255, 255, 255, 230));
+        fieldsPrecio[indice].setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(75, 105, 50), 1), // Verde diferente
+            new EmptyBorder(4, 8, 4, 8)
+        ));
+        fieldsPrecio[indice].setPreferredSize(new Dimension(220, 28));
+        
+        // Placeholder para formato de precio
+        fieldsPrecio[indice].setToolTipText("Formato: Bs. 0,00 o 0.00");
+        
+        panelPrecio.add(labelPrecio, BorderLayout.NORTH);
+        panelPrecio.add(fieldsPrecio[indice], BorderLayout.CENTER);
+        
+        // Agregar nombre y precio al panel de info
+        panelInfo.add(panelNombre, BorderLayout.NORTH);
+        panelInfo.add(panelPrecio, BorderLayout.CENTER);
+        
         // Agregar componentes al panel principal
         panel.add(panelImagen, BorderLayout.CENTER);
-        panel.add(panelNombre, BorderLayout.SOUTH);
+        panel.add(panelInfo, BorderLayout.SOUTH);
         
         return panel;
     }
@@ -263,20 +297,43 @@ public class MenuAdminUI extends JFrame {
      * Guarda los cambios realizados en los platillos.
      */
     private void guardarCambios() {
-        // Actualizar nombres
+        // Validar y actualizar nombres
         for (int i = 0; i < 4; i++) {
             nombresPlatillos[i] = fieldsNombre[i].getText().trim();
             if (nombresPlatillos[i].isEmpty()) {
                 nombresPlatillos[i] = "Platillo " + (i + 1);
                 fieldsNombre[i].setText(nombresPlatillos[i]);
             }
+            
+            // Validar y actualizar precios (NUEVO)
+            preciosPlatillos[i] = fieldsPrecio[i].getText().trim();
+            if (preciosPlatillos[i].isEmpty()) {
+                preciosPlatillos[i] = "Bs. 0,00";
+                fieldsPrecio[i].setText(preciosPlatillos[i]);
+            } else {
+                // Formatear precio si es necesario
+                if (!preciosPlatillos[i].startsWith("Bs.")) {
+                    preciosPlatillos[i] = "Bs. " + preciosPlatillos[i];
+                    fieldsPrecio[i].setText(preciosPlatillos[i]);
+                }
+            }
         }
         
-        // Aquí iría la lógica para guardar en archivo/BD
-        // Por ahora solo mostramos un mensaje
+        // Aquí iría la lógica para guardar en la Base de Datos
+        StringBuilder mensaje = new StringBuilder();
+        mensaje.append("FUNCIÓN REAL NO IMPLEMENTADA\n\n");
+        mensaje.append("✅ Configuración guardada exitosamente.\n\n");
+        mensaje.append("Platillos configurados:\n");
+        
+        for (int i = 0; i < 4; i++) {
+            mensaje.append("\n").append(i + 1).append(". ")
+                   .append(nombresPlatillos[i])
+                   .append(" - ")
+                   .append(preciosPlatillos[i]);
+        }
+        
         JOptionPane.showMessageDialog(this,
-            "✅ Configuración guardada exitosamente.\n\n" +
-            "Los cambios se han aplicado a los 4 platillos.",
+            mensaje.toString(),
             "Cambios Guardados",
             JOptionPane.INFORMATION_MESSAGE);
     }
@@ -474,7 +531,7 @@ public class MenuAdminUI extends JFrame {
         GridBagConstraints gbcLogoInner = new GridBagConstraints();
         gbcLogoInner.gridx = 0;
         gbcLogoInner.gridy = 0;
-        gbcLogoInner.anchor = GridBagConstraints.WEST; // Alineado a la izquierda dentro de su contenedor
+        gbcLogoInner.anchor = GridBagConstraints.WEST;
 
         logoInnerContainer.add(brandLabel, gbcLogoInner);
         logoPanel.add(logoInnerContainer, gbcLogo);
@@ -516,7 +573,7 @@ public class MenuAdminUI extends JFrame {
         JPanel platillosContainer = new JPanel();
         platillosContainer.setLayout(new BoxLayout(platillosContainer, BoxLayout.X_AXIS));
         platillosContainer.setOpaque(false);
-        platillosContainer.setMaximumSize(new Dimension(1050, 350));
+        platillosContainer.setMaximumSize(new Dimension(1100, 400));
         platillosContainer.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         // Crear los 4 paneles de configuración
@@ -537,7 +594,7 @@ public class MenuAdminUI extends JFrame {
         botonesContainer.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         // Botón Guardar
-        JButton btnGuardar = new JButton("💾 GUARDAR CAMBIOS");
+        JButton btnGuardar = new JButton("GUARDAR CAMBIOS");
         btnGuardar.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnGuardar.setBackground(new Color(75, 105, 50));
         btnGuardar.setForeground(Color.WHITE);
@@ -549,8 +606,9 @@ public class MenuAdminUI extends JFrame {
         btnGuardar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnGuardar.addActionListener(e -> guardarCambios());
         
+        
         // Botón Cerrar
-        JButton btnCerrar = new JButton("✖️ CERRAR");
+        JButton btnCerrar = new JButton("CERRAR");
         btnCerrar.setFont(new Font("Segoe UI", Font.BOLD, 16));
         btnCerrar.setBackground(new Color(180, 70, 70));
         btnCerrar.setForeground(Color.WHITE);
@@ -560,7 +618,13 @@ public class MenuAdminUI extends JFrame {
             new EmptyBorder(12, 25, 12, 25)
         ));
         btnCerrar.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnCerrar.addActionListener(e -> this.dispose());
+        btnCerrar.addActionListener(e -> {
+            // Redirigir a MainAdminUI
+            SwingUtilities.invokeLater(() -> {
+                new MainAdminUI().setVisible(true);
+                MenuAdminUI.this.dispose();
+            });
+        });
         
         botonesContainer.add(btnGuardar);
         botonesContainer.add(btnCerrar);

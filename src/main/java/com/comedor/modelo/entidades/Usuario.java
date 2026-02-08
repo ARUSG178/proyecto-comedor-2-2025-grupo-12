@@ -14,6 +14,14 @@ public abstract class Usuario {
 
 // Constructor de la clase Usuario
 
+    public Usuario() {
+        this.cedula = "";
+        this.nombre = "";
+        this.apellido = "";
+        this.email = "";
+        this.contraseña = "";
+    }
+    
     public Usuario(String cedula, String nombre, String apellido, String email, String contraseña) {
         this.cedula = cedula;
         setNombre(nombre);
@@ -23,8 +31,8 @@ public abstract class Usuario {
         this.estado = true;      
         this.intentosFallidos = 0;
         this.saldo = 0.0;
-
     }
+
     // Getters
     public String getCedula() { return cedula; }
     public String getNombre() { return nombre; }

@@ -1,13 +1,43 @@
 package com.comedor.vista;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.LayoutManager;
+import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+
+import javax.imageio.ImageIO;
+import javax.swing.ButtonGroup;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 
 import com.comedor.controlador.ServicioIS;
 import com.comedor.modelo.entidades.Administrador;
@@ -332,7 +362,7 @@ public class ISUI extends JFrame {
      * bordes redondeados y una estética coherente con el manual de marca.
      */
     private class ModernTextField extends JTextField {
-        private static final Color COLOR_PLACEHOLDER = new Color(255, 255, 255, 160);
+        private final Color COLOR_PLACEHOLDER = new Color(255, 255, 255, 160);
         private String hint;
         
         public ModernTextField(String h) { 
@@ -370,7 +400,7 @@ public class ISUI extends JFrame {
      * manteniendo el renderizado redondeado pero ocultando el contenido.
      */
     private class ModernPasswordField extends JPasswordField {
-        private static final Color COLOR_PLACEHOLDER = new Color(255, 255, 255, 160);
+        private final Color COLOR_PLACEHOLDER = new Color(255, 255, 255, 160);
         private String hint;
         
         public ModernPasswordField(String h) { 
