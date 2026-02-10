@@ -1,0 +1,4 @@
+Estudiante;29617475;Jesús Soto;;culodemono@ciencs.ucv.ve;123456;true;0;0.0;Computación;Ciencias
+Estudiante;123456;uwu;;a@ciencs.ucv.ve;123456;true;0;0.0;uwu;uwu
+Estudiante;29508052;Juan Dos Ramos;;j@ciens.ucv.ve;123456;false;0;0.0;Computacion;Ciencias
+Administrador;222222222;Pedrito;;u@ciens.ucv.ve;a#3456;false;2;0.0;A1B2C3D4
