@@ -1,22 +1,56 @@
 package com.comedor.vista;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.LayoutManager;
+import java.awt.RenderingHints;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 
+import javax.imageio.ImageIO;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+
 import com.comedor.controlador.ServicioRegistro;
-import com.comedor.modelo.entidades.Usuario;
-import com.comedor.modelo.entidades.Estudiante;
-import com.comedor.modelo.entidades.Empleado;
 import com.comedor.modelo.entidades.Administrador;
+import com.comedor.modelo.entidades.Empleado;
+import com.comedor.modelo.entidades.Estudiante;
+import com.comedor.modelo.entidades.Usuario;
 import com.comedor.modelo.excepciones.DuplicateUserException;
-import com.comedor.modelo.excepciones.InvalidEmailFormatException;
 import com.comedor.modelo.excepciones.InvalidCredentialsException;
+import com.comedor.modelo.excepciones.InvalidEmailFormatException;
 
 /**
  * Interfaz gráfica para el registro de usuarios del sistema SAGC UCV.
@@ -24,7 +58,6 @@ import com.comedor.modelo.excepciones.InvalidCredentialsException;
  */
 public class RegistroUI extends JFrame {
 
-    // --- PALETA DE COLORES (Basada en el diseño institucional) ---
     private static final Color COLOR_TERRACOTA = new Color(160, 70, 40);            // Barras y Títulos
     private static final Color COLOR_OVERLAY = new Color(160, 70, 40, 140);      // Filtro sobre imagen
     private static final Color COLOR_FORM_BG = new Color(248, 245, 235);            // Fondo crema de la tarjeta
@@ -37,7 +70,6 @@ public class RegistroUI extends JFrame {
     private CardLayout cardLayout;
     private JPanel specificFieldsPanel;
 
-    // { changed code } -- campos accesibles por el listener
     private ModernTextField txtNombre;
     private ModernTextField txtCedula;
     private ModernTextField txtEmail;
@@ -50,10 +82,6 @@ public class RegistroUI extends JFrame {
     private ModernTextField txtDepartamento;
     private ModernTextField txtAdminCodigo;
 
-    /**
-     * Inicializa la interfaz de registro y carga recursos (imagen de fondo).
-     * Configura la ventana y construye los componentes del formulario.
-     */
     public RegistroUI() {
         try {
             URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_reg_bg.jpg");
@@ -66,10 +94,6 @@ public class RegistroUI extends JFrame {
         initUI();
     }
 
-    /**
-     * Configura propiedades básicas de la ventana de registro.
-     * Define título, tamaño, tamaño mínimo y comportamiento al cerrar.
-     */
     private void configurarVentana() {
         setTitle("Registro de Usuario - SAGC UCV");
         setSize(1400, 950);
@@ -79,13 +103,8 @@ public class RegistroUI extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Inicia en pantalla completa
     }
 
-    /**
-     * Construye y organiza los componentes del formulario de registro.
-     * Crea paneles, campos por tipo de usuario, y enlaza los listeners necesarios.
-     */
     private void initUI() {
         
-        // 1. PANEL DE FONDO: Dibuja la imagen, el filtro y las barras
         JPanel backgroundPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -107,22 +126,18 @@ public class RegistroUI extends JFrame {
         backgroundPanel.setLayout(new BorderLayout());
         setContentPane(backgroundPanel);
 
-        // 2. CONTENEDOR DE CONTENIDO (GridBagLayout para el centrado)
         JPanel contentHost = new JPanel(new GridBagLayout());
         contentHost.setOpaque(false);
         GridBagConstraints gbcMain = new GridBagConstraints();
 
-        // --- LOGO ESTILIZADO (< SAGC)
         JLabel brandLabel = new JLabel("< SAGC") {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-                // Sombra
                 g2.setFont(getFont());
                 g2.setColor(new Color(0, 0, 0, 80));
                 g2.drawString(getText(), 3, 43);
-                // Degradado metálico
                 g2.setPaint(new GradientPaint(0, 0, Color.WHITE, 0, getHeight(), new Color(220, 220, 220)));
                 g2.drawString(getText(), 0, 40);
                 g2.dispose();
@@ -133,7 +148,6 @@ public class RegistroUI extends JFrame {
         brandLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         brandLabel.setFocusable(true);
 
-        // Listener para redirigir a RegistroUI
         brandLabel.addMouseListener(new MouseAdapter() {
             @Override 
             public void mouseClicked(MouseEvent e) {
@@ -152,43 +166,33 @@ public class RegistroUI extends JFrame {
             }
         });
 
-        // Crear un panel con BoxLayout para control preciso
         JPanel topBarContainer = new JPanel();
         topBarContainer.setOpaque(false);
         topBarContainer.setPreferredSize(new Dimension(getWidth(), 135));
         topBarContainer.setLayout(new BoxLayout(topBarContainer, BoxLayout.X_AXIS));
 
-        // Margen izquierdo
         topBarContainer.add(Box.createRigidArea(new Dimension(20, 0)));
 
-        // Contenedor interno para centrar verticalmente
         JPanel verticalCenterPanel = new JPanel();
         verticalCenterPanel.setOpaque(false);
         verticalCenterPanel.setLayout(new BoxLayout(verticalCenterPanel, BoxLayout.Y_AXIS));
 
-        // Espacio flexible arriba
         verticalCenterPanel.add(Box.createVerticalGlue());
 
-        // Agregar el logo
         verticalCenterPanel.add(brandLabel);
 
-        // Espacio flexible abajo
         verticalCenterPanel.add(Box.createVerticalGlue());
 
-        // Agregar el contenedor de centrado vertical al contenedor principal
         topBarContainer.add(verticalCenterPanel);
 
-        // Empujar todo hacia la izquierda
         topBarContainer.add(Box.createHorizontalGlue());
 
-        // Agregar el contenedor directamente a la parte norte del backgroundPanel
         backgroundPanel.add(topBarContainer, BorderLayout.NORTH);
 
         // --- ÁREA CENTRAL (Formulario) ---
         JPanel centeringSpace = new JPanel(new GridBagLayout());
         centeringSpace.setOpaque(false);
         
-        // Tarjeta redondeada con sombra
         JPanel formCard = new ShadowRoundedPanel(new GridBagLayout());
         formCard.setBackground(COLOR_FORM_BG);
         formCard.setBorder(new EmptyBorder(40, 60, 45, 60));
@@ -205,8 +209,6 @@ public class RegistroUI extends JFrame {
         gbc.gridy = 0; gbc.insets = new Insets(0, 0, 25, 0);
         formCard.add(titleLabel, gbc);
 
-        // Inputs con texto fantasma dinámico
-        // { changed code } -> declarar y reutilizar campos
         txtNombre = new ModernTextField("Ej. Pedro Pérez");
         addLabelAndField(formCard, "Nombre:", txtNombre, gbc, 1);
 
@@ -232,29 +234,24 @@ public class RegistroUI extends JFrame {
         gbc.gridy = 5; gbc.insets = new Insets(15, 0, 15, 0);
         formCard.add(radioPanel, gbc);
 
-        // Panel Dinámico (CardLayout)
         cardLayout = new CardLayout();
         specificFieldsPanel = new JPanel(cardLayout);
         specificFieldsPanel.setOpaque(false);
 
-        // Panel Estudiante
         JPanel pEst = new JPanel(new GridBagLayout()); pEst.setOpaque(false);
         GridBagConstraints gbcSub = new GridBagConstraints();
         gbcSub.fill = GridBagConstraints.HORIZONTAL; gbcSub.weightx = 1.0; gbcSub.gridx = 0;
-        // { changed code } -> campos estudiante
         txtFacultad = new ModernTextField("Ej. Ciencias");
         addLabelAndField(pEst, "Facultad:", txtFacultad, gbcSub, 0);
         txtCarrera = new ModernTextField("Ej. Computación");
         addLabelAndField(pEst, "Carrera:", txtCarrera, gbcSub, 1);
 
-        // Panel Empleado
         JPanel pEmp = new JPanel(new GridBagLayout()); pEmp.setOpaque(false);
         txtCargo = new ModernTextField("Ej. Profesor");
         addLabelAndField(pEmp, "Cargo:", txtCargo, gbcSub, 0);
         txtDepartamento = new ModernTextField("Ej. Docencia");
         addLabelAndField(pEmp, "Departamento:", txtDepartamento, gbcSub, 1);
 
-        // Panel Administrador
         JPanel pAdm = new JPanel(new GridBagLayout()); pAdm.setOpaque(false);
         txtAdminCodigo = new ModernTextField("8 caracteres alfanum.");
         addLabelAndField(pAdm, "Código Admin:", txtAdminCodigo, gbcSub, 0);
@@ -265,10 +262,9 @@ public class RegistroUI extends JFrame {
         gbc.gridy = 6; gbc.insets = new Insets(0, 0, 25, 0);
         formCard.add(specificFieldsPanel, gbc);
 
-        // --- BOTÓN REGISTRAR (Navega a MainUI) ---
+        // Registro
         JButton btnReg = new JButton("REGISTRAR");
         styleButton(btnReg);
-        // { changed code } -> listener que construye Usuario y llama al servicio
         btnReg.addActionListener(e -> {
             String nombre = txtNombre.getText().trim();
             String cedula = txtCedula.getText().trim();
@@ -323,7 +319,6 @@ public class RegistroUI extends JFrame {
         gbc.gridy = 7; gbc.fill = GridBagConstraints.NONE; gbc.anchor = GridBagConstraints.CENTER;
         formCard.add(btnReg, gbc);
 
-        // Centrado final
         centeringSpace.add(formCard, new GridBagConstraints());
         gbcMain.gridy = 1; gbcMain.weighty = 1.0; gbcMain.fill = GridBagConstraints.BOTH;
         contentHost.add(centeringSpace, gbcMain);
@@ -333,17 +328,11 @@ public class RegistroUI extends JFrame {
         scroll.setBorder(null);
         backgroundPanel.add(scroll, BorderLayout.CENTER);
 
-        // Cambio de campos según el Radio seleccionado
         studentRadio.addActionListener(e -> cardLayout.show(specificFieldsPanel, "Estudiante"));
         employeeRadio.addActionListener(e -> cardLayout.show(specificFieldsPanel, "Empleado"));
         adminRadio.addActionListener(e -> cardLayout.show(specificFieldsPanel, "Administrador"));
     }
 
-    // --- COMPONENTES PERSONALIZADOS ---
-
-    /**
-     * Campo de texto moderno con texto fantasma que desaparece correctamente.
-     */
     private class ModernTextField extends JTextField {
         private String hint;
         public ModernTextField(String h) { 
@@ -368,26 +357,19 @@ public class RegistroUI extends JFrame {
         }
     }
 
-    /**
-     * Crea un RadioButton sin el borde azul y con iconos personalizados.
-     */
     private JRadioButton createCustomRadio(String texto) {
         JRadioButton radio = new JRadioButton(texto);
         radio.setOpaque(false);
-        radio.setFocusPainted(false); // ESTO ELIMINA EL RECUADRO AZUL
+        radio.setFocusPainted(false);
         radio.setFont(new Font("Segoe UI", Font.BOLD, 14));
         radio.setForeground(new Color(60, 40, 30));
         radio.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
-        // Aplicamos los círculos dibujados manualmente
         radio.setIcon(new CustomRadioIcon(false));
         radio.setSelectedIcon(new CustomRadioIcon(true));
         return radio;
     }
 
-    /**
-     * Dibuja los círculos de los RadioButtons al estilo UCV.
-     */
     private static class CustomRadioIcon implements Icon {
         private boolean sel;
         public CustomRadioIcon(boolean sel) { this.sel = sel; }

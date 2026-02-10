@@ -1,16 +1,48 @@
 package com.comedor.vista.admin;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.RenderingHints;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import com.comedor.controlador.ServicioMenu;
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 
 /**
  * Interfaz gráfica para la administración del Menú del Comedor.
@@ -33,9 +65,7 @@ public class MenuAdminUI extends JFrame {
     private JTextField[] fieldsNombre = new JTextField[4];
     private JTextField[] fieldsPrecio = new JTextField[4];
 
-    /**
-     * Inicializa la interfaz de administración del menú.
-     */
+    // Inicializa la interfaz de administración del menú.
     public MenuAdminUI() {
         // Inicializar datos de ejemplo
         inicializarDatosEjemplo();
@@ -51,9 +81,8 @@ public class MenuAdminUI extends JFrame {
         initUI();
     }
     
-    /**
-     * Inicializa datos de ejemplo para los platillos.
-     */
+    //Inicializa datos de ejemplo para los platillos.
+    
     private void inicializarDatosEjemplo() {
         for (int i = 0; i < 4; i++) {
             rutasImagenes[i] = "/com/comedor/resources/images/menu/base.jpg";
@@ -62,9 +91,6 @@ public class MenuAdminUI extends JFrame {
         }
     }
 
-    /**
-     * Configura propiedades básicas de la ventana.
-     */
     private void configurarVentana() {
         setTitle("Administración de Menú - SAGC UCV");
         setSize(1400, 950);
@@ -74,9 +100,6 @@ public class MenuAdminUI extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
-    /**
-     * Carga una imagen y la redimensiona.
-     */
     private ImageIcon cargarImagen(String ruta, int ancho, int alto) {
         try {
             URL url = getClass().getResource(ruta);
@@ -88,13 +111,9 @@ public class MenuAdminUI extends JFrame {
         } catch (Exception e) {
             System.err.println("Error cargando imagen: " + ruta);
         }
-        // Crear placeholder personalizado
         return crearIconoPlaceholder(ancho, alto);
     }
     
-    /**
-     * Crea un icono de placeholder.
-     */
     private ImageIcon crearIconoPlaceholder(int ancho, int alto) {
         BufferedImage imagen = new BufferedImage(ancho, alto, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = imagen.createGraphics();
@@ -108,7 +127,7 @@ public class MenuAdminUI extends JFrame {
         g2d.setStroke(new BasicStroke(1));
         g2d.drawRect(0, 0, ancho - 1, alto - 1);
         
-        // Icono de comida
+        // Emoji de comida
         g2d.setColor(new Color(180, 180, 180));
         g2d.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 48));
         FontMetrics fm = g2d.getFontMetrics();
@@ -130,16 +149,12 @@ public class MenuAdminUI extends JFrame {
         return new ImageIcon(imagen);
     }
     
-    /**
-     * Crea una pestaña de navegación.
-     */
     private JLabel createTabLabel(String text) {
         JLabel tab = new JLabel(text);
         tab.setFont(new Font("Segoe UI", Font.BOLD, 18));
         tab.setForeground(Color.WHITE);
         tab.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
-        // Efecto hover
         tab.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -157,9 +172,6 @@ public class MenuAdminUI extends JFrame {
         return tab;
     }
 
-    /**
-     * Crea un panel para configurar un platillo.
-     */
     private JPanel crearPanelPlatillo(int indice) {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout(10, 10));
@@ -172,16 +184,16 @@ public class MenuAdminUI extends JFrame {
         panelImagen.setPreferredSize(new Dimension(220, 270));
         panelImagen.setMinimumSize(new Dimension(220, 270));
         
-        // Label para mostrar la imagen
+        // Crear imagenes
         labelsImagen[indice] = new JLabel();
         labelsImagen[indice].setHorizontalAlignment(SwingConstants.CENTER);
         labelsImagen[indice].setVerticalAlignment(SwingConstants.CENTER);
         
-        // Cargar imagen actual
+        // Cargar imagenes
         ImageIcon icono = cargarImagen(rutasImagenes[indice], 216, 266);
         labelsImagen[indice].setIcon(icono);
         
-        // Hacer la imagen clickeable para cambiar
+        // Cambiar imagen
         labelsImagen[indice].setCursor(new Cursor(Cursor.HAND_CURSOR));
         labelsImagen[indice].addMouseListener(new MouseAdapter() {
             @Override
@@ -195,7 +207,7 @@ public class MenuAdminUI extends JFrame {
         panelInfo.setOpaque(false);
         panelInfo.setBorder(new EmptyBorder(8, 0, 0, 0));
         
-        // Panel para nombre
+        // Nombre
         JPanel panelNombre = new JPanel(new BorderLayout(2, 2));
         panelNombre.setOpaque(false);
         
@@ -215,7 +227,7 @@ public class MenuAdminUI extends JFrame {
         panelNombre.add(labelNombre, BorderLayout.NORTH);
         panelNombre.add(fieldsNombre[indice], BorderLayout.CENTER);
         
-        // Panel para precio (NUEVO)
+        // Precio 
         JPanel panelPrecio = new JPanel(new BorderLayout(2, 2));
         panelPrecio.setOpaque(false);
         panelPrecio.setBorder(new EmptyBorder(5, 0, 0, 0));
@@ -228,31 +240,26 @@ public class MenuAdminUI extends JFrame {
         fieldsPrecio[indice].setFont(new Font("Segoe UI", Font.PLAIN, 13));
         fieldsPrecio[indice].setBackground(new Color(255, 255, 255, 230));
         fieldsPrecio[indice].setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(75, 105, 50), 1), // Verde diferente
+            BorderFactory.createLineBorder(new Color(75, 105, 50), 1),
             new EmptyBorder(4, 8, 4, 8)
         ));
         fieldsPrecio[indice].setPreferredSize(new Dimension(220, 28));
         
-        // Placeholder para formato de precio
         fieldsPrecio[indice].setToolTipText("Formato: Bs. 0,00 o 0.00");
         
         panelPrecio.add(labelPrecio, BorderLayout.NORTH);
         panelPrecio.add(fieldsPrecio[indice], BorderLayout.CENTER);
         
-        // Agregar nombre y precio al panel de info
         panelInfo.add(panelNombre, BorderLayout.NORTH);
         panelInfo.add(panelPrecio, BorderLayout.CENTER);
         
-        // Agregar componentes al panel principal
         panel.add(panelImagen, BorderLayout.CENTER);
         panel.add(panelInfo, BorderLayout.SOUTH);
         
         return panel;
     }
     
-    /**
-     * Método para seleccionar una nueva imagen.
-     */
+
     private void seleccionarImagen(int indice) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Seleccionar imagen para Platillo " + (indice + 1));
@@ -277,11 +284,9 @@ public class MenuAdminUI extends JFrame {
         int resultado = fileChooser.showOpenDialog(this);
         if (resultado == JFileChooser.APPROVE_OPTION) {
             File archivo = fileChooser.getSelectedFile();
-            // Aquí deberías copiar la imagen a la carpeta de recursos
-            // Por ahora solo actualizamos el path temporalmente
+
             rutasImagenes[indice] = archivo.getAbsolutePath();
             
-            // Actualizar la imagen mostrada
             ImageIcon nuevoIcono = new ImageIcon(new ImageIcon(rutasImagenes[indice])
                 .getImage().getScaledInstance(216, 266, Image.SCALE_SMOOTH));
             labelsImagen[indice].setIcon(nuevoIcono);
@@ -293,9 +298,7 @@ public class MenuAdminUI extends JFrame {
         }
     }
     
-    /**
-     * Guarda los cambios realizados en los platillos.
-     */
+    // Guarda cambios para platillos
     private void guardarCambios() {
         // Validar y actualizar nombres
         for (int i = 0; i < 4; i++) {
@@ -305,7 +308,7 @@ public class MenuAdminUI extends JFrame {
                 fieldsNombre[i].setText(nombresPlatillos[i]);
             }
             
-            // Validar y actualizar precios (NUEVO)
+            // Validar y actualizar precios
             preciosPlatillos[i] = fieldsPrecio[i].getText().trim();
             if (preciosPlatillos[i].isEmpty()) {
                 preciosPlatillos[i] = "Bs. 0,00";
@@ -338,11 +341,8 @@ public class MenuAdminUI extends JFrame {
             JOptionPane.INFORMATION_MESSAGE);
     }
 
-    /**
-     * Construye y organiza los componentes de la interfaz.
-     */
+    // Construye interfaz
     private void initUI() {
-        // 1. PANEL DE FONDO con dibujo de barras
         JPanel backgroundPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -354,7 +354,6 @@ public class MenuAdminUI extends JFrame {
                 g2d.setColor(COLOR_OVERLAY);
                 g2d.fillRect(0, 0, getWidth(), getHeight());
 
-                // Barras sólidas superior e inferior (135px) - PARTE DEL FONDO
                 g2d.setColor(COLOR_TERRACOTA);
                 int barHeight = 135;
                 g2d.fillRect(0, 0, getWidth(), barHeight);
@@ -389,7 +388,6 @@ public class MenuAdminUI extends JFrame {
         brandLabel.setForeground(Color.WHITE);
         brandLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
-        // Listener para redirigir a MainUserUI
         brandLabel.addMouseListener(new MouseAdapter() {
             @Override 
             public void mouseClicked(MouseEvent e) {
@@ -408,57 +406,43 @@ public class MenuAdminUI extends JFrame {
             }
         });
 
-        // Margen izquierdo
         topBarContainer.add(Box.createRigidArea(new Dimension(20, 0)));
 
-        // Contenedor interno para centrar verticalmente
         JPanel verticalCenterPanel = new JPanel();
         verticalCenterPanel.setOpaque(false);
         verticalCenterPanel.setLayout(new BoxLayout(verticalCenterPanel, BoxLayout.Y_AXIS));
 
-        // Espacio flexible arriba
         verticalCenterPanel.add(Box.createVerticalGlue());
 
-        // Agregar el logo
         verticalCenterPanel.add(brandLabel);
 
-        // Espacio flexible abajo
         verticalCenterPanel.add(Box.createVerticalGlue());
 
-        // Agregar el contenedor de centrado vertical al contenedor principal
         topBarContainer.add(verticalCenterPanel);
 
-        // Agregar el contenedor directamente a la parte norte del backgroundPanel
         backgroundPanel.add(topBarContainer, BorderLayout.NORTH);
-
         
         // --- PESTAÑAS DE FUNCIONALIDADES ---
         JPanel tabsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 30, 0));
         tabsPanel.setOpaque(false);
         
-        // Crear pestañas
         JLabel usuarioTab = createTabLabel("Usuario");
         JLabel menuTab = createTabLabel("Visualizar menú");
         JLabel reservasTab = createTabLabel("Reservas");
-        JLabel historialTab = createTabLabel("Historial");
         
-        // Añadir pestañas al panel
         tabsPanel.add(usuarioTab);
         tabsPanel.add(menuTab);
         tabsPanel.add(reservasTab);
-        tabsPanel.add(historialTab);
-        
-        // Pestañas de redireccionamiento
-         // Pestañas de redireccionamiento para las funcionalidades
-         usuarioTab.addMouseListener(new MouseAdapter() {
+
+        usuarioTab.addMouseListener(new MouseAdapter() {
             @Override 
             public void mouseClicked(MouseEvent e) {
-                // Redirigir a Usuario 
-                // new HistorialUI().setVisible(true);
+                // Redirigir a Usuario
+                // new UsuarioUI().setVisible(true);
                 // MainAdminUI.this.dispose();
                 JOptionPane.showMessageDialog(MenuAdminUI.this, 
                     "Funcionalidad no implementada.", 
-                    "Gestión de Usuarios", 
+                    "Usuario", 
                     JOptionPane.INFORMATION_MESSAGE);
             }
         });
@@ -484,20 +468,6 @@ public class MenuAdminUI extends JFrame {
             }
         });
 
-        historialTab.addMouseListener(new MouseAdapter() {
-            @Override 
-            public void mouseClicked(MouseEvent e) {
-                // Redirigir a Historial
-                // new HistorialUI().setVisible(true);
-                // MainAdminUI.this.dispose();
-                JOptionPane.showMessageDialog(MenuAdminUI.this, 
-                    "Funcionalidad no implementada.", 
-                    "Historial", 
-                    JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
-
-        // Panel para las pestañas (derecha)
         JPanel tabsContainer = new JPanel(new GridBagLayout());
         tabsContainer.setOpaque(false);
         
@@ -513,7 +483,6 @@ public class MenuAdminUI extends JFrame {
         
         tabsContainer.add(tabsVerticalCenter, gbcTabs);
         
-        // Panel para el logo (izquierda)
         JPanel logoPanel = new JPanel(new GridBagLayout());
         logoPanel.setOpaque(false);
         logoPanel.setPreferredSize(new Dimension(500, 135));
@@ -536,9 +505,8 @@ public class MenuAdminUI extends JFrame {
         logoInnerContainer.add(brandLabel, gbcLogoInner);
         logoPanel.add(logoInnerContainer, gbcLogo);
 
-        // Ensamblar barra superior
-        topBarContainer.add(logoPanel, BorderLayout.WEST);    // Logo a la izquierda
-        topBarContainer.add(tabsContainer, BorderLayout.EAST); // Pestañas a la derecha
+        topBarContainer.add(logoPanel, BorderLayout.WEST);
+        topBarContainer.add(tabsContainer, BorderLayout.EAST);
         backgroundPanel.add(topBarContainer, BorderLayout.NORTH);
         
         // --- BARRA INFERIOR (solo espacio) ---
@@ -551,19 +519,16 @@ public class MenuAdminUI extends JFrame {
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setOpaque(false);
         
-        // Panel principal del contenido que se desplazará
         JPanel scrollableContent = new JPanel();
         scrollableContent.setLayout(new BoxLayout(scrollableContent, BoxLayout.Y_AXIS));
         scrollableContent.setOpaque(false);
         
-        // Título de administración
         JLabel adminTitle = new JLabel("ADMINISTRACIÓN DE MENÚ", SwingConstants.CENTER);
         adminTitle.setFont(new Font("Segoe UI", Font.BOLD, 36));
         adminTitle.setForeground(Color.WHITE);
         adminTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         adminTitle.setBorder(new EmptyBorder(40, 0, 20, 0));
         
-        // Instrucciones (centrado)
         JPanel instruccionesPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         instruccionesPanel.setOpaque(false);
         instruccionesPanel.setMaximumSize(new Dimension(800, 60));
@@ -587,7 +552,7 @@ public class MenuAdminUI extends JFrame {
             }
         }
         
-        // Panel de botones (centrado)
+        // Panel de botones
         JPanel botonesContainer = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 0));
         botonesContainer.setOpaque(false);
         botonesContainer.setMaximumSize(new Dimension(600, 100));
@@ -619,7 +584,6 @@ public class MenuAdminUI extends JFrame {
         ));
         btnCerrar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnCerrar.addActionListener(e -> {
-            // Redirigir a MainAdminUI
             SwingUtilities.invokeLater(() -> {
                 new MainAdminUI().setVisible(true);
                 MenuAdminUI.this.dispose();
@@ -629,16 +593,14 @@ public class MenuAdminUI extends JFrame {
         botonesContainer.add(btnGuardar);
         botonesContainer.add(btnCerrar);
         
-        // Ensamblar el contenido desplazable
         scrollableContent.add(adminTitle);
         scrollableContent.add(instruccionesPanel);
         scrollableContent.add(Box.createVerticalStrut(40));
         scrollableContent.add(platillosContainer);
         scrollableContent.add(Box.createVerticalStrut(40));
         scrollableContent.add(botonesContainer);
-        scrollableContent.add(Box.createVerticalStrut(80)); // Espacio extra abajo
+        scrollableContent.add(Box.createVerticalStrut(80));
         
-        // Crear JScrollPane
         JScrollPane scrollPane = new JScrollPane(scrollableContent);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         scrollPane.getViewport().setOpaque(false);
@@ -646,14 +608,12 @@ public class MenuAdminUI extends JFrame {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         
-        // Personalizar la barra de scroll
         JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
         verticalScrollBar.setUnitIncrement(16);
         verticalScrollBar.setPreferredSize(new Dimension(12, Integer.MAX_VALUE));
         
         contentPanel.add(scrollPane, BorderLayout.CENTER);
         
-        // Panel contenedor para el contenido con márgenes
         JPanel contentWrapper = new JPanel(new BorderLayout());
         contentWrapper.setOpaque(false);
         contentWrapper.setBorder(new EmptyBorder(0, 20, 0, 20));

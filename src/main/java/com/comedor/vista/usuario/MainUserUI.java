@@ -1,19 +1,37 @@
 package com.comedor.vista.usuario;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.RenderingHints;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+
 import com.comedor.vista.ISUI;
-/**
- * Interfaz gráfica para el registro de usuarios del sistema SAGC UCV.
- */
+
 public class MainUserUI extends JFrame {
 
     // --- PALETA DE COLORES (Basada en el diseño institucional) ---
@@ -23,9 +41,6 @@ public class MainUserUI extends JFrame {
     private BufferedImage backgroundImage;
     // private double saldoActual = 0.0;
 
-    /**
-     * Inicializa la interfaz de registro y carga recursos (imagen de fondo).
-     */
     public MainUserUI() {
         try {
             URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_reg_bg.jpg");
@@ -38,9 +53,6 @@ public class MainUserUI extends JFrame {
         initUI();
     }
 
-    /**
-     * Configura propiedades básicas de la ventana de registro.
-     */
     private void configurarVentana() {
         setTitle("Usuario - SAGC UCV");
         setSize(1400, 950);
@@ -50,12 +62,8 @@ public class MainUserUI extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH); 
     }
 
-    /**
-     * Construye y organiza los componentes del formulario de registro.
-     */
     private void initUI() {
         
-        // 1. PANEL DE FONDO: Dibuja la imagen, el filtro y las barras
         JPanel backgroundPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -66,8 +74,6 @@ public class MainUserUI extends JFrame {
                 }
                 g2d.setColor(COLOR_OVERLAY);
                 g2d.fillRect(0, 0, getWidth(), getHeight());
-
-                // Barras sólidas superior e inferior
                 g2d.setColor(COLOR_TERRACOTA);
                 int barHeight = 135;
                 g2d.fillRect(0, 0, getWidth(), barHeight);
@@ -77,11 +83,9 @@ public class MainUserUI extends JFrame {
         backgroundPanel.setLayout(new BorderLayout());
         setContentPane(backgroundPanel);
 
-        // 2. CONTENEDOR DE CONTENIDO (GridBagLayout para el centrado)
         JPanel contentHost = new JPanel(new GridBagLayout());
         contentHost.setOpaque(false);
 
-       // --- LOGO ESTILIZADO (SAGC) Y PESTAÑAS DE NAVEGACIÓN ---
         JLabel brandLabel = new JLabel("SAGC") {
             @Override
             protected void paintComponent(Graphics g) {
@@ -116,12 +120,9 @@ public class MainUserUI extends JFrame {
         JPanel tabsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 30, 0));
         tabsPanel.setOpaque(false);
 
-        // Crear funcionalidades
         JLabel menuTab = createTabLabel("Menú");
         JLabel reservasTab = createTabLabel("Reservas");
         JLabel historialTab = createTabLabel("Historial");
-
-        // Pestañas de redireccionamiento para las funcionalidades
 
         menuTab.addMouseListener(new MouseAdapter() {
             @Override 
@@ -157,17 +158,14 @@ public class MainUserUI extends JFrame {
             }
         });
 
-        // Añadir pestañas al panel
         tabsPanel.add(menuTab);
         tabsPanel.add(reservasTab);
         tabsPanel.add(historialTab);
 
-        // --- CONTENEDOR PRINCIPAL DE LA BARRA SUPERIOR ---
         JPanel topBarContainer = new JPanel(new BorderLayout());
         topBarContainer.setOpaque(false);
         topBarContainer.setPreferredSize(new Dimension(getWidth(), 135));
 
-        // Panel para el logo (izquierda)
         JPanel logoPanel = new JPanel(new GridBagLayout());
         logoPanel.setOpaque(false);
         logoPanel.setPreferredSize(new Dimension(300, 135));
@@ -178,7 +176,6 @@ public class MainUserUI extends JFrame {
         gbcLogo.anchor = GridBagConstraints.WEST;
         gbcLogo.insets = new Insets(0, -28, 0, 0);
 
-        // Contenedor para centrar verticalmente el logo
         JPanel logoVerticalCenter = new JPanel(new GridBagLayout());
         logoVerticalCenter.setOpaque(false);
         GridBagConstraints gbcLogoCenter = new GridBagConstraints();
@@ -190,7 +187,6 @@ public class MainUserUI extends JFrame {
 
         logoPanel.add(logoVerticalCenter, gbcLogo);
 
-        // Panel para las pestañas (derecha)
         JPanel tabsContainer = new JPanel(new GridBagLayout());
         tabsContainer.setOpaque(false);
 
@@ -200,31 +196,25 @@ public class MainUserUI extends JFrame {
         gbcTabs.weighty = 1.0;
         gbcTabs.anchor = GridBagConstraints.CENTER;
 
-        // Contenedor para centrar verticalmente las pestañas
         JPanel tabsVerticalCenter = new JPanel(new BorderLayout());
         tabsVerticalCenter.setOpaque(false);
         tabsVerticalCenter.add(tabsPanel, BorderLayout.CENTER);
 
         tabsContainer.add(tabsVerticalCenter, gbcTabs);
 
-        // Añadir logo a la izquierda y pestañas a la derecha
         topBarContainer.add(logoPanel, BorderLayout.WEST);
         topBarContainer.add(tabsContainer, BorderLayout.EAST);
 
-        // Agregar el contenedor directamente a la parte norte del backgroundPanel
         backgroundPanel.add(topBarContainer, BorderLayout.NORTH);
 
-        // --- BARRA INFERIOR CON SALDO ---
         JPanel bottomBarContainer = new JPanel(new BorderLayout());
         bottomBarContainer.setOpaque(false);
         bottomBarContainer.setPreferredSize(new Dimension(getWidth(), 135));
 
-        // Saldo en el lado derecho
         JPanel saldoPanel = new JPanel(new GridBagLayout());
         saldoPanel.setOpaque(false);
-        saldoPanel.setPreferredSize(new Dimension(300, 135)); // Ancho fijo para el saldo
+        saldoPanel.setPreferredSize(new Dimension(300, 135));
 
-        // Icono de monedero (puedes reemplazar con una imagen real)
         JLabel iconoMonedero = new JLabel("💰") {
             @Override
             protected void paintComponent(Graphics g) {
@@ -242,13 +232,12 @@ public class MainUserUI extends JFrame {
         iconoMonedero.setFont(new Font("Segoe UI Emoji", Font.BOLD, 36));
         iconoMonedero.setForeground(Color.WHITE);
 
-        // Información de saldo
         JPanel infoSaldoPanel = new JPanel(new GridBagLayout());
         infoSaldoPanel.setOpaque(false);
 
         JLabel saldoLabel = new JLabel("Saldo:");
         saldoLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        saldoLabel.setForeground(new Color(255, 255, 255, 200)); // Blanco semi-transparente
+        saldoLabel.setForeground(new Color(255, 255, 255, 200));
 
         JLabel montoLabel = new JLabel("Bs. 0,00");
         montoLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
@@ -259,7 +248,6 @@ public class MainUserUI extends JFrame {
         recargarLabel.setForeground(new Color(255, 255, 255, 180));
         recargarLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        // Opción de recargar
         recargarLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -348,7 +336,6 @@ public class MainUserUI extends JFrame {
         //     }
         // });
 
-        // Organizar componentes del saldo
         GridBagConstraints gbcSaldo = new GridBagConstraints();
         gbcSaldo.gridx = 0;
         gbcSaldo.gridy = 0;
@@ -364,7 +351,6 @@ public class MainUserUI extends JFrame {
         gbcSaldo.insets = new Insets(0, 0, 0, 0);
         infoSaldoPanel.add(recargarLabel, gbcSaldo);
 
-        // Contenedor para centrar verticalmente todo el bloque de saldo
         JPanel saldoVerticalCenter = new JPanel(new GridBagLayout());
         saldoVerticalCenter.setOpaque(false);
 
@@ -373,7 +359,6 @@ public class MainUserUI extends JFrame {
         gbcCenter.gridy = 0;
         gbcCenter.anchor = GridBagConstraints.CENTER;
 
-        // Panel que contiene icono + información
         JPanel saldoCompletoPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         saldoCompletoPanel.setOpaque(false);
         saldoCompletoPanel.add(iconoMonedero);
@@ -381,14 +366,11 @@ public class MainUserUI extends JFrame {
 
         saldoVerticalCenter.add(saldoCompletoPanel, gbcCenter);
 
-        // Añadir margen derecho
         saldoPanel.setBorder(new EmptyBorder(0, 0, 0, 40));
         saldoPanel.add(saldoVerticalCenter);
 
-        // Añadir el panel de saldo a la derecha de la barra inferior
         bottomBarContainer.add(saldoPanel, BorderLayout.EAST);
 
-        // Añadir barra inferior al backgroundPanel
         backgroundPanel.add(bottomBarContainer, BorderLayout.SOUTH);
     };
 
@@ -398,7 +380,6 @@ public class MainUserUI extends JFrame {
     tab.setForeground(Color.WHITE);
     tab.setCursor(new Cursor(Cursor.HAND_CURSOR));
     
-    // Efecto hover
     tab.addMouseListener(new MouseAdapter() {
         @Override
         public void mouseEntered(MouseEvent e) {

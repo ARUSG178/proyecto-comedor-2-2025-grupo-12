@@ -1,13 +1,41 @@
 package com.comedor.vista.usuario;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 
 /**
  * Interfaz gráfica para el Menú del Comedor del sistema SAGC UCV.
@@ -20,9 +48,6 @@ public class MenuUserUI extends JFrame {
 
     private BufferedImage backgroundImage;
 
-    /**
-     * Inicializa la interfaz del menú del comedor y carga recursos.
-     */
     public MenuUserUI() {
         try {
             URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_reg_bg.jpg");
@@ -35,9 +60,6 @@ public class MenuUserUI extends JFrame {
         initUI();
     }
 
-    /**
-     * Configura propiedades básicas de la ventana.
-     */
     private void configurarVentana() {
         setTitle("Menú del Comedor - SAGC UCV");
         setSize(1400, 950);
@@ -47,9 +69,6 @@ public class MenuUserUI extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Inicia en pantalla completa
     }
 
-    /**
-     * Crea un panel de platillo individual con solo imagen y botón.
-     */
     private JPanel crearPlatilloPanel(String rutaImagen, int numeroPlatillo) {
         JPanel platilloPanel = new JPanel();
         platilloPanel.setLayout(new BorderLayout(0, 15));
@@ -62,17 +81,14 @@ public class MenuUserUI extends JFrame {
                 super.paintComponent(g);
                 Graphics2D g2d = (Graphics2D) g;
                 
-                // Dibujar fondo con borde redondeado
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2d.setColor(Color.WHITE);
                 g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
                 
-                // Dibujar borde decorativo
                 g2d.setColor(new Color(160, 70, 40, 180));
                 g2d.setStroke(new BasicStroke(2));
                 g2d.drawRoundRect(1, 1, getWidth()-2, getHeight()-2, 10, 10);
                 
-                // Dibujar número del platillo
                 g2d.setColor(new Color(100, 100, 100, 200));
                 g2d.setFont(new Font("Segoe UI", Font.BOLD, 20));
                 FontMetrics fm = g2d.getFontMetrics();
@@ -81,7 +97,6 @@ public class MenuUserUI extends JFrame {
                 int y = 30;
                 g2d.drawString(numero, x, y);
                 
-                // Dibujar icono de placeholder
                 g2d.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 60));
                 String icono = "🍽️";
                 fm = g2d.getFontMetrics();
@@ -89,7 +104,6 @@ public class MenuUserUI extends JFrame {
                 y = (getHeight() + fm.getAscent()) / 2 - 10;
                 g2d.drawString(icono, x, y);
                 
-                // Texto indicativo
                 g2d.setFont(new Font("Segoe UI", Font.ITALIC, 12));
                 g2d.setColor(new Color(120, 120, 120, 180));
                 String texto = "Imagen 250x300";
@@ -114,7 +128,6 @@ public class MenuUserUI extends JFrame {
             imagenLabel.setHorizontalAlignment(SwingConstants.CENTER);
             imagenPanel.add(imagenLabel);
         } catch (Exception e) {
-            // Fallback al mensaje dibujado
         }
         
         // Botón para seleccionar
@@ -126,7 +139,6 @@ public class MenuUserUI extends JFrame {
         btnSeleccionar.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
         btnSeleccionar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
-        // Panel para centrar el botón
         JPanel botonPanel = new JPanel(new GridBagLayout());
         botonPanel.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -135,19 +147,15 @@ public class MenuUserUI extends JFrame {
         gbc.anchor = GridBagConstraints.CENTER;
         botonPanel.add(btnSeleccionar, gbc);
         
-        // Agregar componentes al panel principal
         platilloPanel.add(imagenPanel, BorderLayout.CENTER);
         platilloPanel.add(botonPanel, BorderLayout.SOUTH);
         
         return platilloPanel;
     }
 
-    /**
-     * Construye y organiza los componentes del menú.
-     */
+
     private void initUI() {
         
-        // 1. PANEL DE FONDO: Dibuja la imagen, el filtro y las barras
         JPanel backgroundPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -158,8 +166,6 @@ public class MenuUserUI extends JFrame {
                 }
                 g2d.setColor(COLOR_OVERLAY);
                 g2d.fillRect(0, 0, getWidth(), getHeight());
-
-                // Barras sólidas superior e inferior
                 g2d.setColor(COLOR_TERRACOTA);
                 int barHeight = 135;
                 g2d.fillRect(0, 0, getWidth(), barHeight);
@@ -175,11 +181,9 @@ public class MenuUserUI extends JFrame {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-                // Sombra
                 g2.setFont(getFont());
                 g2.setColor(new Color(0, 0, 0, 80));
                 g2.drawString(getText(), 3, 43);
-                // Degradado metálico
                 g2.setPaint(new GradientPaint(0, 0, Color.WHITE, 0, getHeight(), new Color(220, 220, 220)));
                 g2.drawString(getText(), 0, 40);
                 g2.dispose();
@@ -189,7 +193,6 @@ public class MenuUserUI extends JFrame {
         brandLabel.setForeground(Color.WHITE);
         brandLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        // Listener para redirigir a MainUserUI
         brandLabel.addMouseListener(new MouseAdapter() {
             @Override 
             public void mouseClicked(MouseEvent e) {
@@ -208,88 +211,68 @@ public class MenuUserUI extends JFrame {
             }
         });
 
-        // Crear un panel con BoxLayout para control preciso
         JPanel topBarContainer = new JPanel();
         topBarContainer.setOpaque(false);
         topBarContainer.setPreferredSize(new Dimension(getWidth(), 135));
         topBarContainer.setLayout(new BoxLayout(topBarContainer, BoxLayout.X_AXIS));
 
-        // Margen izquierdo
         topBarContainer.add(Box.createRigidArea(new Dimension(20, 0)));
 
-        // Contenedor interno para centrar verticalmente
         JPanel verticalCenterPanel = new JPanel();
         verticalCenterPanel.setOpaque(false);
         verticalCenterPanel.setLayout(new BoxLayout(verticalCenterPanel, BoxLayout.Y_AXIS));
 
-        // Espacio flexible arriba
         verticalCenterPanel.add(Box.createVerticalGlue());
 
-        // Agregar el logo
         verticalCenterPanel.add(brandLabel);
 
-        // Espacio flexible abajo
         verticalCenterPanel.add(Box.createVerticalGlue());
 
-        // Agregar el contenedor de centrado vertical al contenedor principal
         topBarContainer.add(verticalCenterPanel);
 
-        // Empujar todo hacia la izquierda
         topBarContainer.add(Box.createHorizontalGlue());
 
-        // Agregar el contenedor directamente a la parte norte del backgroundPanel
         backgroundPanel.add(topBarContainer, BorderLayout.NORTH);
 
         // --- CONTENIDO CENTRAL CON LOS 4 PLATILLOS EN HORIZONTAL ---
-        // Usamos un JPanel con BoxLayout para mejor control del centrado vertical
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setOpaque(false);
         
-        // Espacio flexible arriba para empujar el contenido hacia abajo desde la barra superior
         centerPanel.add(Box.createVerticalGlue());
         
-        // Panel contenedor principal del contenido
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setOpaque(false);
         contentPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-        // Título del menú
         JLabel menuTitle = new JLabel("Seleccione su platillo", SwingConstants.CENTER);
         menuTitle.setFont(new Font("Segoe UI", Font.BOLD, 36));
         menuTitle.setForeground(Color.WHITE);
         menuTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         menuTitle.setBorder(new EmptyBorder(0, 0, 50, 0));
         
-        // Panel para los 4 platillos en HORIZONTAL
         JPanel filaPlatillos = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0));
         filaPlatillos.setOpaque(false);
         filaPlatillos.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-        // Crear los 4 platillos
         JPanel platillo1 = crearPlatilloPanel("/com/comedor/resources/images/menu/base.jpg", 1);
         JPanel platillo2 = crearPlatilloPanel("/com/comedor/resources/images/menu/base.jpg", 2);
         JPanel platillo3 = crearPlatilloPanel("/com/comedor/resources/images/menu/base.jpg", 3);
         JPanel platillo4 = crearPlatilloPanel("/com/comedor/resources/images/menu/base.jpg", 4);
         
-        // Añadir los platillos en horizontal
         filaPlatillos.add(platillo1);
         filaPlatillos.add(platillo2);
         filaPlatillos.add(platillo3);
         filaPlatillos.add(platillo4);
         
-        // Ensamblar el contentPanel
         contentPanel.add(menuTitle);
         contentPanel.add(filaPlatillos);
         
-        // Añadir el contentPanel al centroPanel
         centerPanel.add(contentPanel);
         
-        // Espacio flexible abajo para empujar el contenido hacia arriba desde la barra inferior
         centerPanel.add(Box.createVerticalGlue());
         
-        // Añadir el centerPanel al backgroundPanel
         backgroundPanel.add(centerPanel, BorderLayout.CENTER);
     }
 

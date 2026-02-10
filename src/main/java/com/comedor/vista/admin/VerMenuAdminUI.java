@@ -1,13 +1,43 @@
 package com.comedor.vista.admin;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.RenderingHints;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 
 /**
  * Interfaz gráfica para el Menú del Comedor del sistema SAGC UCV.
@@ -39,7 +69,7 @@ public class VerMenuAdminUI extends JFrame {
      * Configura propiedades básicas de la ventana.
      */
     private void configurarVentana() {
-        setTitle("Vista del Menú del Comedor | Admin - SAGC UCV");
+        setTitle("Vista del Menú del Comedor - SAGC UCV");
         setSize(1400, 950);
         setMinimumSize(new Dimension(900, 800));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -193,8 +223,13 @@ public class VerMenuAdminUI extends JFrame {
         backgroundPanel.setLayout(new BorderLayout());
         setContentPane(backgroundPanel);
 
-        // --- LOGO ESTILIZADO (< SAGC)
-        JLabel brandLabel = new JLabel("< SAGC") {
+        // --- BARRA SUPERIOR CON LOGO Y PESTAÑAS ---
+        JPanel topBarContainer = new JPanel(new BorderLayout());
+        topBarContainer.setOpaque(false);
+        topBarContainer.setPreferredSize(new Dimension(getWidth(), 135));
+        
+        // Logo SAGC | Admin
+        JLabel brandLabel = new JLabel("< SAGC | Admin ") {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
@@ -212,8 +247,7 @@ public class VerMenuAdminUI extends JFrame {
         brandLabel.setFont(new Font("Segoe UI Semibold", Font.BOLD, 52));
         brandLabel.setForeground(Color.WHITE);
         brandLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        // Listener para redirigir a MainUserUI
+        
         brandLabel.addMouseListener(new MouseAdapter() {
             @Override 
             public void mouseClicked(MouseEvent e) {
@@ -232,91 +266,46 @@ public class VerMenuAdminUI extends JFrame {
             }
         });
 
-        // Crear un panel con BoxLayout para control preciso
-        JPanel topBarContainer = new JPanel(new BorderLayout());
-        topBarContainer.setOpaque(false);
-        topBarContainer.setPreferredSize(new Dimension(getWidth(), 135));
-
-        // Margen izquierdo
-        topBarContainer.add(Box.createRigidArea(new Dimension(20, 0)));
-
-        // Contenedor interno para centrar verticalmente
-        JPanel verticalCenterPanel = new JPanel();
-        verticalCenterPanel.setOpaque(false);
-        verticalCenterPanel.setLayout(new BoxLayout(verticalCenterPanel, BoxLayout.Y_AXIS));
-
-        // Espacio flexible arriba
-        verticalCenterPanel.add(Box.createVerticalGlue());
-
-        // Agregar el logo
-        verticalCenterPanel.add(brandLabel);
-
-        // Espacio flexible abajo
-        verticalCenterPanel.add(Box.createVerticalGlue());
-
-        // Agregar el contenedor de centrado vertical al contenedor principal
-        topBarContainer.add(verticalCenterPanel);
-
-        // Empujar todo hacia la izquierda
-        topBarContainer.add(Box.createHorizontalGlue());
-
-        // Agregar el contenedor directamente a la parte norte del backgroundPanel
-        backgroundPanel.add(topBarContainer, BorderLayout.NORTH);
-
         // --- PESTAÑAS DE FUNCIONALIDADES ---
         JPanel tabsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 30, 0));
         tabsPanel.setOpaque(false);
         
         // Crear pestañas
         JLabel usuarioTab = createTabLabel("Usuario");
-        JLabel menuTab = createTabLabel("Visualizar menú");
+        JLabel menuTab = createTabLabel("Editar Menú");
         JLabel reservasTab = createTabLabel("Reservas");
-        JLabel historialTab = createTabLabel("Historial");
         
-        // Añadir pestañas al panel
         tabsPanel.add(usuarioTab);
         tabsPanel.add(menuTab);
         tabsPanel.add(reservasTab);
-        tabsPanel.add(historialTab);
-        
-        // Pestañas de redireccionamiento
-            // Pestañas de redireccionamiento para las funcionalidades
-            usuarioTab.addMouseListener(new MouseAdapter() {
+
+        usuarioTab.addMouseListener(new MouseAdapter() {
             @Override 
             public void mouseClicked(MouseEvent e) {
-                // Redirigir a Usuario 
-                // new HistorialUI().setVisible(true);
+                // Redirigir a Usuario
+                // new UsuarioUI().setVisible(true);
                 // MainAdminUI.this.dispose();
                 JOptionPane.showMessageDialog(VerMenuAdminUI.this, 
                     "Funcionalidad no implementada.", 
-                    "Gestión de Usuarios", 
+                    "Usuario", 
                     JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
+        menuTab.addMouseListener(new MouseAdapter() {
+            @Override 
+            public void mouseClicked(MouseEvent e) {
+                new MenuAdminUI().setVisible(true);
+                VerMenuAdminUI.this.dispose();
+            }
+        });
 
         reservasTab.addMouseListener(new MouseAdapter() {
             @Override 
             public void mouseClicked(MouseEvent e) {
-                // Redirigir a Reservas
-                // new ReservasUI().setVisible(true);
-                // MainAdminUI.this.dispose();
                 JOptionPane.showMessageDialog(VerMenuAdminUI.this, 
                     "Funcionalidad no implementada.", 
                     "Reservas", 
-                    JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
-
-        historialTab.addMouseListener(new MouseAdapter() {
-            @Override 
-            public void mouseClicked(MouseEvent e) {
-                // Redirigir a Historial
-                // new HistorialUI().setVisible(true);
-                // MainAdminUI.this.dispose();
-                JOptionPane.showMessageDialog(VerMenuAdminUI.this, 
-                    "Funcionalidad no implementada.", 
-                    "Historial", 
                     JOptionPane.INFORMATION_MESSAGE);
             }
         });
@@ -336,30 +325,57 @@ public class VerMenuAdminUI extends JFrame {
         tabsVerticalCenter.add(tabsPanel, BorderLayout.CENTER);
   
         tabsContainer.add(tabsVerticalCenter, gbcTabs);
+        
+        // Panel para el logo (izquierda)
+        JPanel logoPanel = new JPanel(new GridBagLayout());
+        logoPanel.setOpaque(false);
+        logoPanel.setPreferredSize(new Dimension(500, 135));
 
-        // --- CONTENIDO CENTRAL CON LOS 4 PLATILLOS EN HORIZONTAL ---
-        // Usamos un JPanel con BoxLayout para mejor control del centrado vertical
+        GridBagConstraints gbcLogo = new GridBagConstraints();
+        gbcLogo.gridx = 0;
+        gbcLogo.gridy = 0;
+        gbcLogo.weighty = 1.0;
+        gbcLogo.anchor = GridBagConstraints.WEST;
+        gbcLogo.insets = new Insets(0, -31, 0, 0);
+
+        JPanel logoInnerContainer = new JPanel(new GridBagLayout());
+        logoInnerContainer.setOpaque(false);
+
+        GridBagConstraints gbcLogoInner = new GridBagConstraints();
+        gbcLogoInner.gridx = 0;
+        gbcLogoInner.gridy = 0;
+        gbcLogoInner.anchor = GridBagConstraints.WEST;
+
+        logoInnerContainer.add(brandLabel, gbcLogoInner);
+        logoPanel.add(logoInnerContainer, gbcLogo);
+
+        topBarContainer.add(logoPanel, BorderLayout.WEST);
+        topBarContainer.add(tabsContainer, BorderLayout.EAST);
+        
+        backgroundPanel.add(topBarContainer, BorderLayout.NORTH);
+        
+        JPanel bottomBarContainer = new JPanel();
+        bottomBarContainer.setOpaque(false);
+        bottomBarContainer.setPreferredSize(new Dimension(getWidth(), 135));
+        backgroundPanel.add(bottomBarContainer, BorderLayout.SOUTH);
+
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setOpaque(false);
         
-        // Espacio flexible arriba para empujar el contenido hacia abajo desde la barra superior
         centerPanel.add(Box.createVerticalGlue());
         
-        // Panel contenedor principal del contenido
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setOpaque(false);
         contentPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-        // Título del menú
         JLabel menuTitle = new JLabel("Seleccione su platillo", SwingConstants.CENTER);
         menuTitle.setFont(new Font("Segoe UI", Font.BOLD, 36));
         menuTitle.setForeground(Color.WHITE);
         menuTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         menuTitle.setBorder(new EmptyBorder(0, 0, 50, 0));
         
-        // Panel para los 4 platillos en HORIZONTAL
         JPanel filaPlatillos = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0));
         filaPlatillos.setOpaque(false);
         filaPlatillos.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -376,23 +392,13 @@ public class VerMenuAdminUI extends JFrame {
         filaPlatillos.add(platillo3);
         filaPlatillos.add(platillo4);
         
-        // Ensamblar el contentPanel
         contentPanel.add(menuTitle);
         contentPanel.add(filaPlatillos);
         
-        // Añadir el contentPanel al centroPanel
         centerPanel.add(contentPanel);
-
-        topBarContainer.add(brandLabel, BorderLayout.WEST);     // Logo a la izquierda
-        topBarContainer.add(tabsContainer, BorderLayout.EAST); // Pestañas a la derecha
         
-        // 5. Agregar al fondo
-        backgroundPanel.add(topBarContainer, BorderLayout.NORTH);
-        
-        // Espacio flexible abajo para empujar el contenido hacia arriba desde la barra inferior
         centerPanel.add(Box.createVerticalGlue());
         
-        // Añadir el centerPanel al backgroundPanel
         backgroundPanel.add(centerPanel, BorderLayout.CENTER);
     }
 

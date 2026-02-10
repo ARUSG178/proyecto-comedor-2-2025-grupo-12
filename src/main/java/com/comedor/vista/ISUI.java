@@ -68,10 +68,6 @@ public class ISUI extends JFrame {
     private JRadioButton usuarioRadio;
     private JRadioButton adminRadio;
 
-    /**
-     * Constructor de la interfaz. Carga los recursos gráficos iniciales
-     * y dispara la construcción de los componentes de la ventana.
-     */
     public ISUI() {
         try {
             URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_is_bg.jpg");
@@ -84,10 +80,7 @@ public class ISUI extends JFrame {
         initUI();
     }
 
-    /**
-     * Establece las propiedades de la ventana JFrame, como el título, 
-     * dimensiones predeterminadas y la ubicación central en pantalla.
-     */
+
     private void configurarVentana() {
         setTitle("Iniciar Sesión - SAGC UCV"); 
         setSize(1400, 950);
@@ -97,11 +90,7 @@ public class ISUI extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);    
     }
 
-    /**
-     * Inicializa y organiza los componentes del contenedor principal.
-     * Divide la pantalla en un área visual decorativa (izquierda) y 
-     * un área funcional de formulario (derecha).
-     */
+
     private void initUI() {
         JPanel mainPanel = new JPanel(new GridLayout(1, 2));
         mainPanel.setBackground(COLOR_TERRACOTA);
@@ -172,14 +161,13 @@ public class ISUI extends JFrame {
         JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 0));
         radioPanel.setOpaque(false);
         
-        // Crear radio buttons
         usuarioRadio = createCustomRadio("Usuario");
         adminRadio = createCustomRadio("Administrador");
         
         ButtonGroup group = new ButtonGroup();
         group.add(usuarioRadio);
         group.add(adminRadio);
-        usuarioRadio.setSelected(true); // Por defecto es usuario
+        usuarioRadio.setSelected(true);
         
         radioPanel.add(usuarioRadio);
         radioPanel.add(adminRadio);
@@ -212,10 +200,6 @@ public class ISUI extends JFrame {
         setContentPane(mainPanel);
     }
 
-    /**
-     * Extrae la información de los campos de texto, realiza una validación 
-     * de presencia de datos y envía la solicitud al servicio de autenticación.
-     */
     private void ejecutarLogin() {
         String email = txtEmail.getText().trim();
         String clave = new String(txtClave.getPassword());
@@ -239,10 +223,8 @@ public class ISUI extends JFrame {
                 usuarioIngresado = new Estudiante("", "", "", email, clave, "", "");
             }
             
-            // Ahora IniciarSesion retorna el usuario REAL de la BD
             Usuario usuarioReal = servicio.IniciarSesion(usuarioIngresado);
             
-            // Verificar tipo y redirigir
             if (usuarioReal instanceof Administrador) {
                 JOptionPane.showMessageDialog(this, 
                     "¡Bienvenido Administrador!", 
@@ -318,10 +300,6 @@ public class ISUI extends JFrame {
         b.setBorder(new EmptyBorder(12, 0, 12, 0));
     }
 
-    /**
-     * Crea un RadioButton sin el borde azul y con iconos personalizados.
-     * Mismo estilo que en RegistroUI.
-     */
     private JRadioButton createCustomRadio(String texto) {
         JRadioButton radio = new JRadioButton(texto);
         radio.setOpaque(false);
@@ -336,10 +314,6 @@ public class ISUI extends JFrame {
         return radio;
     }
 
-    /**
-     * Dibuja los círculos de los RadioButtons al estilo UCV.
-     * Mismo que en RegistroUI.
-     */
     private static class CustomRadioIcon implements Icon {
         private boolean sel;
         public CustomRadioIcon(boolean sel) { this.sel = sel; }
@@ -357,10 +331,6 @@ public class ISUI extends JFrame {
         @Override public int getIconHeight() { return 20; }
     }
 
-    /**
-     * Componente personalizado de entrada de texto que implementa 
-     * bordes redondeados y una estética coherente con el manual de marca.
-     */
     private class ModernTextField extends JTextField {
         private final Color COLOR_PLACEHOLDER = new Color(255, 255, 255, 160);
         private String hint;
@@ -395,10 +365,6 @@ public class ISUI extends JFrame {
         }
     }
 
-    /**
-     * Variante de ModernTextField diseñada específicamente para contraseñas,
-     * manteniendo el renderizado redondeado pero ocultando el contenido.
-     */
     private class ModernPasswordField extends JPasswordField {
         private final Color COLOR_PLACEHOLDER = new Color(255, 255, 255, 160);
         private String hint;
@@ -433,10 +399,7 @@ public class ISUI extends JFrame {
         }
     }
 
-    /**
-     * Panel contenedor especializado que dibuja una elevación (sombra) 
-     * y un fondo redondeado para simular una tarjeta de diseño moderno.
-     */
+
     private class ShadowRoundedPanel extends JPanel {
         public ShadowRoundedPanel(LayoutManager lm) { super(lm); setOpaque(false); }
         @Override 

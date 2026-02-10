@@ -1,14 +1,32 @@
 package com.comedor.vista.admin;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 
 /**
  * Interfaz gráfica para el registro de usuarios del sistema SAGC UCV.
@@ -103,25 +121,9 @@ public class MainAdminUI extends JFrame {
         JPanel tabsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 30, 0));
         tabsPanel.setOpaque(false);
 
-        // Crear funcionalidades
         JLabel usuarioTab = createTabLabel("Usuario");
         JLabel menuTab = createTabLabel("Editar Menú");
         JLabel reservasTab = createTabLabel("Reservas");
-        JLabel historialTab = createTabLabel("Historial");
-
-        // Pestañas de redireccionamiento para las funcionalidades
-        usuarioTab.addMouseListener(new MouseAdapter() {
-            @Override 
-            public void mouseClicked(MouseEvent e) {
-                // Redirigir a Usuario 
-                // new HistorialUI().setVisible(true);
-                // MainAdminUI.this.dispose();
-                JOptionPane.showMessageDialog(MainAdminUI.this, 
-                    "Funcionalidad no implementada.", 
-                    "Gestión de Usuarios", 
-                    JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
         
         menuTab.addMouseListener(new MouseAdapter() {
             @Override 
@@ -144,25 +146,11 @@ public class MainAdminUI extends JFrame {
             }
         });
 
-        historialTab.addMouseListener(new MouseAdapter() {
-            @Override 
-            public void mouseClicked(MouseEvent e) {
-                // Redirigir a Historial
-                // new HistorialUI().setVisible(true);
-                // MainAdminUI.this.dispose();
-                JOptionPane.showMessageDialog(MainAdminUI.this, 
-                    "Funcionalidad no implementada.", 
-                    "Historial", 
-                    JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
-
         // Añadir pestañas al panel
         tabsPanel.add(usuarioTab);
         tabsPanel.add(menuTab);
         tabsPanel.add(reservasTab);
-        tabsPanel.add(historialTab);
-
+        
         // --- BARRA INFERIOR ---
         JPanel bottomBarContainer = new JPanel(new BorderLayout());
         bottomBarContainer.setOpaque(false);
