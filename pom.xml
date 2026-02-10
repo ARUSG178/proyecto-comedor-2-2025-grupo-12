@@ -1,3 +1,5 @@
+<!--Para implementar pruebas unitarias-->
+
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -19,9 +21,7 @@
     </properties>
     
     <dependencies>
-        <!-- Tus dependencias principales aquí -->
-        
-        <!-- Dependencias de pruebas -->
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>

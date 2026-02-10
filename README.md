@@ -1,3 +1,4 @@
 # proyecto-comedor-2-2025-grupo-12
 
-Proyecto de la Materia "Ingenieria en Software"...
+Sistema de Administración y Gestión del Comedor Universitario para la UCV.
+Actualmente estamos en el incremento 1. 
