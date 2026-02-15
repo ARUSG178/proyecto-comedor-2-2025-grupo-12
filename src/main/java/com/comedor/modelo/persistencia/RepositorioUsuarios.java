@@ -71,45 +71,27 @@ public class RepositorioUsuarios {
     private String serializar(Usuario usuario) {
         StringBuilder buffer = new StringBuilder();
         //datos comunes
-        buffer.append(usuario.getTipo()).append(";");
-        buffer.append(usuario.getCedula()).append(";");
-        buffer.append(usuario.getNombre()).append(";");
-        buffer.append(usuario.getApellido()).append(";");
-        buffer.append(usuario.getEmail()).append(";");
-        buffer.append(usuario.getContraseña()).append(";");
-        buffer.append(usuario.isEstado()).append(";");
-        buffer.append(usuario.getIntentosFallidos()).append(";");
-        buffer.append(usuario.getSaldo()).append(";");
+        buffer.append(usuario.obtTipo()).append(";");
+        buffer.append(usuario.obtCedula()).append(";");
+        buffer.append(usuario.obtContraseña()).append(";");
+        buffer.append(usuario.obtEstado()).append(";");
+        buffer.append(usuario.obtIntentosFallidos()).append(";");
+        buffer.append(usuario.obtSaldo()).append(";");
 
         //datos específicos según el tipo
         if (usuario instanceof Estudiante) {
             Estudiante estudiante = (Estudiante) usuario;
-            buffer.append(estudiante.getCarrera()).append(";");
-            buffer.append(estudiante.getFacultad());
+            buffer.append(estudiante.obtCarrera()).append(";");
+            buffer.append(estudiante.obtFacultad());
         } else if (usuario instanceof Empleado) {
             Empleado emp = (Empleado) usuario;
-            buffer.append(emp.getCargo()).append(";");
-            buffer.append(emp.getDepartamento()).append(";");
-            buffer.append(emp.getCodigoEmpleado());
+            buffer.append(emp.obtCargo()).append(";");
+            buffer.append(emp.obtDepartamento()).append(";");
+            buffer.append(emp.obtCodigoEmpleado());
         } else if (usuario instanceof Administrador) {
             // Si Administrador tiene un campo adicional, agregar aquí
             Administrador adm = (Administrador) usuario;
-            // Intentar agregar un campo identificador común; si no existe, dejar vacío
-            try {
-                // asume método getCodigoAdministrador o similar; si no existe, se ignora
-                String codigo = "";
-                try {
-                    codigo = (String) adm.getClass().getMethod("getCodigoAdministrador").invoke(adm);
-                } catch (NoSuchMethodException ex) {
-                    try {
-                        codigo = (String) adm.getClass().getMethod("getCodigo").invoke(adm);
-                    } catch (NoSuchMethodException ex2) {
-                        // no method found -> leave codigo empty
-                    }
-                }
-                buffer.append(codigo);
-            } catch (Exception ignored) {
-            }
+            buffer.append(adm.obtCodigoAdministrador());
         }
         return buffer.toString();
     }
@@ -117,29 +99,26 @@ public class RepositorioUsuarios {
     //convierte un String (CSV) a objeto Usuario
     private Usuario deserializar(String linea) {
         String[] datos = linea.split(";");
-        if (datos.length < 9) return null; // Validación básica de estructura
+        if (datos.length < 6) return null; // Validación básica ajustada a menos campos
 
         try {
             String tipo = datos[0];
             String cedula = datos[1];
-            String nombre = datos[2];
-            String apellido = datos[3];
-            String email = datos[4];
-            String contraseña = datos[5];
-            boolean estado = Boolean.parseBoolean(datos[6]);
-            int intentos = Integer.parseInt(datos[7]);
-            double saldo = Double.parseDouble(datos[8]);
+            String contraseña = datos[2];
+            boolean estado = Boolean.parseBoolean(datos[3]);
+            int intentos = Integer.parseInt(datos[4]);
+            double saldo = Double.parseDouble(datos[5]);
 
             Usuario usuario = null;
 
             //instanciación según el tipo
-            if (tipo.equals("Estudiante") && datos.length >= 11) {
-                usuario = new Estudiante(cedula, nombre, apellido, email, contraseña, datos[9], datos[10]);
-            } else if (tipo.equals("Empleado") && datos.length >= 12) {
-                usuario = new Empleado(cedula, nombre, apellido, email, contraseña, datos[9], datos[10], datos[11]);
-            } else if (tipo.equals("Administrador") && datos.length >= 10) {
-                // Asume Administrador tiene constructor con un campo extra en datos[9]
-                usuario = new Administrador(cedula, nombre, apellido, email, contraseña, datos[9]);
+            if (tipo.equals("Estudiante") && datos.length >= 8) {
+                usuario = new Estudiante(cedula, contraseña, datos[6], datos[7]);
+            } else if (tipo.equals("Empleado") && datos.length >= 9) {
+                // Ajustado asumiendo constructor (cedula, pass, cargo, depto, codigo)
+                usuario = new Empleado(cedula, contraseña, datos[6], datos[7], datos[8]);
+            } else if (tipo.equals("Administrador") && datos.length >= 7) {
+                usuario = new Administrador(cedula, contraseña, datos[6]);
             }
 
             if (usuario != null) {

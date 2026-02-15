@@ -19,10 +19,10 @@ public class Platillo {
         this.disponible = true;
     }
 
-    public String getNombre() { return nombre; }// Getter para el nombre
-    public String getDescripcion() { return descripcion; }// Getter para la descripción
-    public double getPrecio() { return precio; }/// Getter para el precio
-    public boolean isDisponible() { return disponible; }/// Getter para disponibilidad
+    public String obtNombre() { return nombre; }// Getter para el nombre
+    public String obtDescripcion() { return descripcion; }// Getter para la descripción
+    public double obtPrecio() { return precio; }/// Getter para el precio
+    public boolean obtDisponible() { return disponible; }/// Getter para disponibilidad
     public void setNombre(String nombre) { this.nombre = nombre; }// Setter para el nombre
     public void setDisponible(boolean disponible) { this.disponible = disponible; }// Setter para disponibilidad >>>>>>> ced746e1c5c1f179bdb8f594730ed1e2d5b917b5
     public void setPrecio(double precio) { this.precio = precio; }

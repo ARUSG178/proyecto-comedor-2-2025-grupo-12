@@ -5,20 +5,20 @@ public class Empleado extends Usuario {
     private String departamento;  
     private String codigoEmpleado; 
 
-    public Empleado(String cedula, String nombre, String apellido, String email, String contraseña,String cargo, String departamento, String codigoEmpleado) {
-        super(cedula, nombre, apellido, email, contraseña);
+    public Empleado(String cedula, String contraseña, String cargo, String departamento, String codigoEmpleado) {
+        super(cedula, contraseña);
         setCargo(cargo);
         setDepartamento(departamento);
         setCodigoEmpleado(codigoEmpleado);
     }
 
     @Override
-    public String getTipo() { return "Empleado"; }
+    public String obtTipo() { return "Empleado"; }
 
     // Getters
-    public String getCargo() { return cargo; }
-    public String getDepartamento() { return departamento; }
-    public String getCodigoEmpleado() { return codigoEmpleado; }
+    public String obtCargo() { return cargo; }
+    public String obtDepartamento() { return departamento; }
+    public String obtCodigoEmpleado() { return codigoEmpleado; }
 
     // Setters
     public void setCargo(String cargo) { this.cargo = cargo; }

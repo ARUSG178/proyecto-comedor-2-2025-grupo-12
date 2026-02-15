@@ -11,9 +11,9 @@ public class Costos {
         this.costosVariables = costosVariables;
     }
 
-    public String getPeriodo() { return periodo; }/// Getter para el periodo
-    public double getCostosFijos() { return costosFijos; }
-    public double getCostosVariables() { return costosVariables; }
+    public String obtPeriodo() { return periodo; }/// Getter para el periodo
+    public double obtCostosFijos() { return costosFijos; }
+    public double obtCostosVariables() { return costosVariables; }
     
     public double calcularTotal() {// metodo para calcular el costo total del periodo
         return costosFijos + costosVariables;

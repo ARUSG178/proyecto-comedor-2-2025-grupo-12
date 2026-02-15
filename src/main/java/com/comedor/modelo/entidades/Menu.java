@@ -31,20 +31,20 @@ public class Menu {
         platillos.add(p);// Agrega el platillo a la lista de platillos
     }
 
-    public LocalDate getFechaInicio() { return fechaInicio; }// Getter para la fecha del menu
+    public LocalDate obtFechaInicio() { return fechaInicio; }// Getter para la fecha del menu
     public void setFechaInicio(LocalDate fechaInicio) { this.fechaInicio = fechaInicio; }
 
-    public LocalDate getFechaFin() { return fechaFin; }
+    public LocalDate obtFechaFin() { return fechaFin; }
     public void setFechaFin(LocalDate fechaFin) { this.fechaFin = fechaFin; }
 
-    public List<Platillo> getPlatillos() { return platillos; }// Getter para la lista de platillos del menu
+    public List<Platillo> obtPlatillos() { return platillos; }// Getter para la lista de platillos del menu
 
-    public String getMenuID() { return menuID; }
+    public String obtMenuID() { return menuID; }
     public void setMenuID(String menuID) { this.menuID = menuID; }
 
-    public String getNombre() { return nombre; }
+    public String obtNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public boolean isEstado() {return estado;}
+    public boolean obtEstado() {return estado;}
     public void setEstado(boolean estado) { this.estado = estado; }
 }

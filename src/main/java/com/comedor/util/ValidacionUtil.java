@@ -1,4 +1,4 @@
-package com.comedor.modelo.util;
+package com.comedor.util;
 
 public class ValidacionUtil {
 

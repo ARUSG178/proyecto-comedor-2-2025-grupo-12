@@ -13,14 +13,14 @@ import java.util.List;
 public class ServicioIS {
 
     public Usuario IniciarSesion(Usuario uIngresado)
-            throws InvalidCredentialsException, InvalidEmailFormatException, IOException {
+            throws InvalidCredentialsException, IOException {
 
         RepositorioUsuarios repo = new RepositorioUsuarios();
         List<Usuario> usuarios = repo.listarUsuarios();
 
         Usuario uBD = null;
         for (Usuario u : usuarios) {
-            if (u != null && u.getEmail() != null && u.getEmail().trim().equalsIgnoreCase(uIngresado.getEmail().trim())) {
+            if (u != null && u.obtCedula() != null && u.obtCedula().trim().equalsIgnoreCase(uIngresado.obtCedula().trim())) {
                 uBD = u;
                 break;
             }
@@ -33,12 +33,12 @@ public class ServicioIS {
         VSesion validador = new VSesion(uIngresado, uBD);
         try {
             validador.validar();
-            System.out.println("LOG: Inicio de sesión exitoso para: " + uBD.getEmail());
-        } catch (InvalidCredentialsException | InvalidEmailFormatException ex) {
+            System.out.println("LOG: Inicio de sesión exitoso para cédula: " + uBD.obtCedula());
+        } catch (InvalidCredentialsException ex) {
             // Aun en fallo, VSesion puede haber modificado intentos/estado -> persistir y re-lanzar
             for (int i = 0; i < usuarios.size(); i++) {
                 Usuario x = usuarios.get(i);
-                if (x != null && x.getEmail() != null && x.getEmail().trim().equalsIgnoreCase(uBD.getEmail().trim())) {
+                if (x != null && x.obtCedula() != null && x.obtCedula().trim().equalsIgnoreCase(uBD.obtCedula().trim())) {
                     usuarios.set(i, uBD);
                     break;
                 }
@@ -63,7 +63,7 @@ public class ServicioIS {
         // Si ha sido exitoso, también guardamos posibles cambios (ej. intentosFallidos = 0)
         for (int i = 0; i < usuarios.size(); i++) {
             Usuario x = usuarios.get(i);
-            if (x != null && x.getEmail() != null && x.getEmail().trim().equalsIgnoreCase(uBD.getEmail().trim())) {
+            if (x != null && x.obtCedula() != null && x.obtCedula().trim().equalsIgnoreCase(uBD.obtCedula().trim())) {
                 usuarios.set(i, uBD);
                 break;
             }

@@ -3,8 +3,8 @@ package com.comedor.modelo.entidades;
 public class Administrador extends Usuario {
     private String codigoAdministrador; // código de verificación para registro
 
-    public Administrador(String cedula, String nombre, String apellido, String email, String contraseña, String codigoAdministrador) {
-        super(cedula, nombre, apellido, email, contraseña);
+    public Administrador(String cedula, String contraseña, String codigoAdministrador) {
+        super(cedula, contraseña);
         this.codigoAdministrador = codigoAdministrador;
     }
 
@@ -14,9 +14,9 @@ public class Administrador extends Usuario {
     }
 
     @Override
-    public String getTipo() { return "Administrador"; }
+    public String obtTipo() { return "Administrador"; }
 
-    public String getCodigoAdministrador() { return codigoAdministrador; }
+    public String obtCodigoAdministrador() { return codigoAdministrador; }
     public void setCodigoAdministrador(String codigoAdministrador) { this.codigoAdministrador = codigoAdministrador; }
 
     // Por poner algo

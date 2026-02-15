@@ -50,7 +50,6 @@ import com.comedor.modelo.entidades.Estudiante;
 import com.comedor.modelo.entidades.Usuario;
 import com.comedor.modelo.excepciones.DuplicateUserException;
 import com.comedor.modelo.excepciones.InvalidCredentialsException;
-import com.comedor.modelo.excepciones.InvalidEmailFormatException;
 
 /**
  * Interfaz gráfica para el registro de usuarios del sistema SAGC UCV.
@@ -284,7 +283,7 @@ public class RegistroUI extends JFrame {
                     JOptionPane.showMessageDialog(this, "Complete Facultad y Carrera para estudiantes.", "Campos incompletos", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
-                nuevo = new Estudiante(cedula, nombre, "", email, contr, carrera, facultad);
+                nuevo = new Estudiante(cedula, contr, carrera, facultad);
             } else if (employeeRadio.isSelected()) {
                 String cargo = txtCargo.getText().trim();
                 String departamento = txtDepartamento.getText().trim();
@@ -292,14 +291,14 @@ public class RegistroUI extends JFrame {
                     JOptionPane.showMessageDialog(this, "Complete Cargo y Departamento para empleados.", "Campos incompletos", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
-                nuevo = new Empleado(cedula, nombre, "", email, contr, cargo, departamento, "0000");
+                nuevo = new Empleado(cedula, contr, cargo, departamento, "0000");
             } else { // Administrador
                 String codigo = txtAdminCodigo.getText().trim();
                 if (codigo.isEmpty() || !codigo.matches("[A-Za-z0-9]{8}")) {
                     JOptionPane.showMessageDialog(this, "Ingrese un código de administrador válido (8 caracteres alfanum.).", "Código inválido", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
-                nuevo = new Administrador(cedula, nombre, "", email, contr, codigo);
+                nuevo = new Administrador(cedula, contr, codigo);
             }
 
             ServicioRegistro servicio = new ServicioRegistro();
@@ -310,7 +309,7 @@ public class RegistroUI extends JFrame {
                     new ISUI().setVisible(true);
                     dispose();
                 });
-            } catch (DuplicateUserException | InvalidEmailFormatException | InvalidCredentialsException ex) {
+            } catch (DuplicateUserException | InvalidCredentialsException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error de validación", JOptionPane.ERROR_MESSAGE);
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(this, "Error al guardar en disco: " + ex.getMessage(), "Error IO", JOptionPane.ERROR_MESSAGE);

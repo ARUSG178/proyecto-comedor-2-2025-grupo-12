@@ -20,22 +20,22 @@ public class ServicioMenu {
         }
 
         // Copia los atributos del objeto recibido al singleton vigente
-        menu.setNombre(nuevoMenu.getNombre());
-        menu.setMenuID(nuevoMenu.getMenuID());
-        menu.setFechaInicio(nuevoMenu.getFechaInicio());
-        menu.setFechaFin(nuevoMenu.getFechaFin());
-        menu.setEstado(nuevoMenu.isEstado());
+        menu.setNombre(nuevoMenu.obtNombre());
+        menu.setMenuID(nuevoMenu.obtMenuID());
+        menu.setFechaInicio(nuevoMenu.obtFechaInicio());
+        menu.setFechaFin(nuevoMenu.obtFechaFin());
+        menu.setEstado(nuevoMenu.obtEstado());
 
         // Reemplaza la lista de platillos
-        List<Platillo> platillosNuevos = nuevoMenu.getPlatillos();
-        menu.getPlatillos().clear();
+        List<Platillo> platillosNuevos = nuevoMenu.obtPlatillos();
+        menu.obtPlatillos().clear();
         if (platillosNuevos != null) {
             for (Platillo p : platillosNuevos) {
                 menu.agregarPlatillo(p);
             }
         }
 
-        System.out.println("Menú actualizado por administrador: " + actor.getNombre());
+        System.out.println("Menú actualizado por administrador (Cédula): " + actor.obtCedula());
     }
 
     // Añadir un platillo al menú (solo Administrador)
@@ -49,7 +49,7 @@ public class ServicioMenu {
             return;
         }
         menu.agregarPlatillo(p);
-        System.out.println("Platillo agregado: " + p.getNombre());
+        System.out.println("Platillo agregado: " + p.obtNombre());
     }
 
     // Quitar un platillo por nombre (solo Administrador)
@@ -62,7 +62,7 @@ public class ServicioMenu {
             System.out.println("Nombre de platillo inválido.");
             return;
         }
-        boolean removed = menu.getPlatillos().removeIf(p -> nombrePlatillo.equalsIgnoreCase(p.getNombre()));
+        boolean removed = menu.obtPlatillos().removeIf(p -> nombrePlatillo.equalsIgnoreCase(p.obtNombre()));
         if (removed) {
             System.out.println("Platillo eliminado: " + nombrePlatillo);
         } else {
@@ -81,14 +81,14 @@ public class ServicioMenu {
             System.out.println("Nombre de platillo inválido.");
             return;
         }
-        for (Platillo p : menu.getPlatillos()) {
-            if (nombrePlatillo.equalsIgnoreCase(p.getNombre())) {
-                double anterior = p.getPrecio();
+        for (Platillo p : menu.obtPlatillos()) {
+            if (nombrePlatillo.equalsIgnoreCase(p.obtNombre())) {
+                double anterior = p.obtPrecio();
                 // Registrar el cambio de precio en el servicio de costos
-                servicioCosto.registrarCambioPrecio(p.getNombre(), anterior, nuevoPrecio, actor.getNombre());
+                servicioCosto.registrarCambioPrecio(p.obtNombre(), anterior, nuevoPrecio, actor.obtCedula());
                 // Actualizar el precio mostrado en el platillo
                 p.setPrecio(nuevoPrecio);
-                System.out.println("Precio actualizado para " + p.getNombre() + ": " + nuevoPrecio);
+                System.out.println("Precio actualizado para " + p.obtNombre() + ": " + nuevoPrecio);
                 return;
             }
         }
@@ -97,15 +97,15 @@ public class ServicioMenu {
 
     // Visualización del menú: disponible tanto para usuarios como administradores
     public void visualizarMenu(Usuario actor) {
-        if (menu.getPlatillos() == null || menu.getPlatillos().isEmpty()) {
+        if (menu.obtPlatillos() == null || menu.obtPlatillos().isEmpty()) {
             System.out.println("No hay menú configurado.");
             return;
         }
 
-        System.out.println("Menú: " + (menu.getNombre() != null ? menu.getNombre() : "(sin nombre)"));
-        System.out.println("Periodo: " + menu.getFechaInicio() + " - " + menu.getFechaFin());
+        System.out.println("Menú: " + (menu.obtNombre() != null ? menu.obtNombre() : "(sin nombre)"));
+        System.out.println("Periodo: " + menu.obtFechaInicio() + " - " + menu.obtFechaFin());
         System.out.println("Platillos:");
-        for (Platillo p : menu.getPlatillos()) {
+        for (Platillo p : menu.obtPlatillos()) {
             System.out.println(" - " + p);
         }
     }

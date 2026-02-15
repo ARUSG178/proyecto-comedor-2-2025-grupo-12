@@ -24,13 +24,13 @@ public class ServicioCosto {// clase para gestionar costos
 
     public List<RegistroCosto> obtenerCostosPorPeriodo(String periodo) {// obtiene costos de un periodo
         return costos.stream()// inicia stream de costos
-                .filter(c -> c.getPeriodo().equals(periodo))// filtra por periodo
+                .filter(c -> c.obtPeriodo().equals(periodo))// filtra por periodo
                 .collect(Collectors.toList());// devuelve como lista
     }
     
     public double obtenerTotalCostosPorPeriodo(String periodo) {// calcula total de costos
         return obtenerCostosPorPeriodo(periodo).stream()// stream de costos filtrados
-                .mapToDouble(RegistroCosto::getMonto)// obtiene los montos
+                .mapToDouble(RegistroCosto::obtMonto)// obtiene los montos
                 .sum();// suma los montos
     }
 

@@ -4,14 +4,11 @@ import com.comedor.modelo.entidades.Empleado;
 import com.comedor.modelo.entidades.Estudiante;
 import com.comedor.modelo.entidades.Usuario;
 import com.comedor.modelo.excepciones.*;
-import com.comedor.modelo.util.ValidacionUtil;
+import com.comedor.util.ValidacionUtil;
 import com.comedor.modelo.entidades.Administrador;
+import com.comedor.modelo.persistencia.RepoAdminCdg;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 public class VRegistro {
@@ -28,14 +25,14 @@ public class VRegistro {
 
     // Validar que no exista duplicado en BD
     boolean validarDuplicado() {
-        return usBaseDatos.stream().noneMatch(u -> u.getEmail().equals(uIngresado.getEmail()));
+        return usBaseDatos.stream().noneMatch(u -> u.obtCedula().equals(uIngresado.obtCedula()));
     }
 
     // Validar datos exclusivos si es Estudiante
     boolean validarEstudiante() {
         if (uIngresado instanceof Estudiante) {
             Estudiante est = (Estudiante) uIngresado;
-            return est.getCarrera() != null && !est.getCarrera().isEmpty();
+            return est.obtCarrera() != null && !est.obtCarrera().isEmpty();
         }
         return true;
     }
@@ -44,55 +41,18 @@ public class VRegistro {
     boolean validarEmpleado() {
         if (uIngresado instanceof Empleado) {
             Empleado emp = (Empleado) uIngresado;
-            return emp.getCargo() != null && !emp.getCargo().isEmpty()
-                    && emp.getDepartamento() != null && !emp.getDepartamento().isEmpty();
+            return emp.obtCargo() != null && !emp.obtCargo().isEmpty()
+                    && emp.obtDepartamento() != null && !emp.obtDepartamento().isEmpty();
         }
         return true;
     }
 
-    // Comprueba si el código aparece en el archivo de códigos de administradores
-    private boolean existeCodigoEnArchivo(String codigo) throws IOException {
-        Path p = Paths.get("src/main/java/com/comedor/data/codigos_admin.txt");
-        if (!Files.exists(p)) return false;
-        String contenido = new String(Files.readAllBytes(p), StandardCharsets.UTF_8);
-        String[] cods = contenido.split(";");
-        for (String c : cods) {
-            if (c != null && codigo.equalsIgnoreCase(c.trim())) return true;
-        }
-        return false;
-    }
-
-    // Elimina (consume) el código de administrador del archivo tras registro exitoso
-    public void consumirCodigoAdministrador() throws IOException {
-        if (!(uIngresado instanceof Administrador)) return;
-        String codigo = ((Administrador) uIngresado).getCodigoAdministrador();
-        if (codigo == null) return;
-        Path p = Paths.get("src/main/java/com/comedor/data/codigos_admin.txt");
-        if (!Files.exists(p)) return;
-        String contenido = new String(Files.readAllBytes(p), StandardCharsets.UTF_8);
-        String[] cods = contenido.split(";");
-        StringBuilder sb = new StringBuilder();
-        for (String c : cods) {
-            if (c == null) continue;
-            String t = c.trim();
-            if (t.isEmpty()) continue;
-            if (t.equalsIgnoreCase(codigo.trim())) continue; // omitir el código usado
-            if (sb.length() > 0) sb.append("; ");
-            sb.append(t);
-        }
-        if (sb.length() > 0) sb.append(";");
-        Files.write(p, sb.toString().getBytes(StandardCharsets.UTF_8));
-    }
-
     // Validar todo el registro
-    public void validar() throws InvalidEmailFormatException, InvalidCredentialsException, DuplicateUserException, IOException {
-        if (!ValidacionUtil.formatoCorreo(uIngresado.getEmail())) {
-            throw new InvalidEmailFormatException("El correo no es institucional");
-        }
-        if (!ValidacionUtil.formatoCedula(uIngresado.getCedula())) {
+    public void validar() throws InvalidCredentialsException, DuplicateUserException, IOException {
+        if (!ValidacionUtil.formatoCedula(uIngresado.obtCedula())) {
             throw new InvalidCredentialsException("La cédula no es válida");
         }
-        if (!ValidacionUtil.formatoContraseña(uIngresado.getContraseña())) {
+        if (!ValidacionUtil.formatoContraseña(uIngresado.obtContraseña())) {
             throw new InvalidCredentialsException("La contraseña no cumple requisitos mínimos");
         }
         if (!validarDuplicado()) {
@@ -100,11 +60,12 @@ public class VRegistro {
         }
         // Si es administrador, validar código contra archivo de códigos válidos
         if (uIngresado instanceof Administrador) {
-            String codigo = ((Administrador) uIngresado).getCodigoAdministrador();
+            String codigo = ((Administrador) uIngresado).obtCodigoAdministrador();
             if (codigo == null || !codigo.trim().matches("[A-Za-z0-9]{8}")) {
                 throw new InvalidCredentialsException("Código de administrador inválido");
             }
-            if (!existeCodigoEnArchivo(codigo.trim())) {
+            RepoAdminCdg repoCdg = new RepoAdminCdg();
+            if (!repoCdg.existeCodigo(codigo.trim())) {
                 throw new InvalidCredentialsException("Código de administrador no encontrado");
             }
         }

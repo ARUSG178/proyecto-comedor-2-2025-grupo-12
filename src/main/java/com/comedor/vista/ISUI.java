@@ -44,9 +44,6 @@ import com.comedor.modelo.entidades.Administrador;
 import com.comedor.modelo.entidades.Estudiante;
 import com.comedor.modelo.entidades.Usuario;
 import com.comedor.modelo.excepciones.InvalidCredentialsException;
-import com.comedor.modelo.excepciones.InvalidEmailFormatException;
-import com.comedor.vista.admin.MainAdminUI;
-import com.comedor.vista.usuario.MainUserUI;
 
 /**
  * Interfaz gráfica principal para el inicio de sesión del sistema SAGC UCV.
@@ -63,7 +60,7 @@ public class ISUI extends JFrame {
     private static final Color COLOR_RADIO_GOLD = new Color(210, 160, 30); // Color dorado para radios
 
     private BufferedImage backgroundImage;
-    private ModernTextField txtEmail;
+    private ModernTextField txtCedula;
     private ModernPasswordField txtClave;
     private JRadioButton usuarioRadio;
     private JRadioButton adminRadio;
@@ -151,8 +148,8 @@ public class ISUI extends JFrame {
         gbc.gridy = 0; gbc.insets = new Insets(0, 0, 30, 0);
         card.add(title, gbc);
 
-        txtEmail = new ModernTextField("Ej. ucvista@ciens.ucv.ve");
-        addLabelAndField(card, "Correo Institucional:", txtEmail, gbc, 1);
+        txtCedula = new ModernTextField("Ej. V12345678");
+        addLabelAndField(card, "Cédula:", txtCedula, gbc, 1);
 
         txtClave = new ModernPasswordField("••••••••");
         addLabelAndField(card, "Contraseña:", txtClave, gbc, 2);
@@ -201,10 +198,10 @@ public class ISUI extends JFrame {
     }
 
     private void ejecutarLogin() {
-        String email = txtEmail.getText().trim();
+        String cedula = txtCedula.getText().trim();
         String clave = new String(txtClave.getPassword());
         
-        if (email.isEmpty() || clave.isEmpty()) {
+        if (cedula.isEmpty() || clave.isEmpty()) {
             JOptionPane.showMessageDialog(this, 
                 "Por favor ingrese correo y contraseña", 
                 "Datos incompletos", 
@@ -218,9 +215,9 @@ public class ISUI extends JFrame {
             // Crear instancia Usuario según selección
             Usuario usuarioIngresado;
             if (adminRadio.isSelected()) {
-                usuarioIngresado = new Administrador("", "", "", email, clave, "");
+                usuarioIngresado = new Administrador(cedula, clave, "");
             } else {
-                usuarioIngresado = new Estudiante("", "", "", email, clave, "", "");
+                usuarioIngresado = new Estudiante(cedula, clave, "", "");
             }
             
             Usuario usuarioReal = servicio.IniciarSesion(usuarioIngresado);
@@ -231,8 +228,8 @@ public class ISUI extends JFrame {
                     "Éxito", 
                     JOptionPane.INFORMATION_MESSAGE);
                 SwingUtilities.invokeLater(() -> {
-                    this.dispose();
-                    new MainAdminUI().setVisible(true);
+                    // this.dispose();
+                    // new MainAdminUI().setVisible(true);
                 });
                 
             } else if (usuarioReal instanceof Estudiante) {
@@ -243,8 +240,8 @@ public class ISUI extends JFrame {
                 
                 // Redirigir a MainUserUI
                 SwingUtilities.invokeLater(() -> {
-                    this.dispose();
-                    new MainUserUI().setVisible(true);
+                    // this.dispose();
+                    // new MainUserUI().setVisible(true);
                 });
             }
             
@@ -252,11 +249,6 @@ public class ISUI extends JFrame {
             // Este error ahora incluirá mensajes específicos sobre tipo de usuario
             JOptionPane.showMessageDialog(this, ex.getMessage(), 
                 "Error de Acceso", JOptionPane.ERROR_MESSAGE);
-        } catch (InvalidEmailFormatException ex) {
-            JOptionPane.showMessageDialog(this, 
-                "Formato de correo inválido.\nUse el formato: usuario@dominio.ucv.ve", 
-                "Error de Formato", 
-                JOptionPane.ERROR_MESSAGE);
         } catch (java.io.IOException ioEx) {
             JOptionPane.showMessageDialog(this, 
                 "Error accediendo a la base de datos", 

@@ -5,18 +5,18 @@ public class Estudiante extends Usuario {
     private String carrera;
    
 
-    public Estudiante(String cedula, String nombre, String apellido, String email, String contraseña, String carrera, String facultad) {
-        super(cedula, nombre, apellido, email, contraseña);
+    public Estudiante(String cedula, String contraseña, String carrera, String facultad) {
+        super(cedula, contraseña);
         setCarrera(carrera);
         setFacultad(facultad);
     }
 
     @Override
-    public String getTipo() { return "Estudiante"; }
+    public String obtTipo() { return "Estudiante"; }
 
     // Getters
-    public String getCarrera() { return carrera; }
-    public String getFacultad() { return facultad; }
+    public String obtCarrera() { return carrera; }
+    public String obtFacultad() { return facultad; }
     
     // Setters
     public void setCarrera(String carrera) { this.carrera = carrera; }

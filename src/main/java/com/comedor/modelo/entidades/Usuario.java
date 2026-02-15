@@ -4,9 +4,6 @@ package com.comedor.modelo.entidades;
 
 public abstract class Usuario {
     private final String cedula;  
-    private String nombre;
-    private String apellido;
-    private String email;
     private String contraseña;
     private boolean estado;
     private int intentosFallidos;
@@ -16,43 +13,30 @@ public abstract class Usuario {
 
     public Usuario() {
         this.cedula = "";
-        this.nombre = "";
-        this.apellido = "";
-        this.email = "";
         this.contraseña = "";
     }
     
-    public Usuario(String cedula, String nombre, String apellido, String email, String contraseña) {
+    public Usuario(String cedula, String contraseña) {
         this.cedula = cedula;
-        setNombre(nombre);
-        setApellido(apellido);
-        setEmail(email);
-        setContraseña(contraseña);
+        this.contraseña = contraseña;
         this.estado = true;      
         this.intentosFallidos = 0;
         this.saldo = 0.0;
     }
 
     // Getters
-    public String getCedula() { return cedula; }
-    public String getNombre() { return nombre; }
-    public String getApellido() { return apellido; }
-    public String getEmail() { return email; }
-    public String getContraseña() { return contraseña; }
-    public boolean isEstado() { return estado; }
-    public int getIntentosFallidos() { return intentosFallidos; }
-
-    public double getSaldo() { return saldo; }
+    public String obtCedula() { return cedula; }
+    public String obtContraseña() { return contraseña; }
+    public boolean obtEstado() { return estado; }
+    public int obtIntentosFallidos() { return intentosFallidos; }
+    public double obtSaldo() { return saldo; }
 
     // Setters
-    public void setNombre(String nombre) { this.nombre = nombre; }
-    public void setApellido(String apellido) { this.apellido = apellido; }
-    public void setEmail(String email) { this.email = email; }
     public void setContraseña(String contraseña) { this.contraseña = contraseña; }
     public void setEstado(boolean estado) { this.estado = estado; }
     public void setIntentosFallidos(int intentosFallidos) { this.intentosFallidos = intentosFallidos; }
     public void setSaldo(double saldo) { this.saldo = saldo; }
 
     // Setter abstracto
-    public abstract String getTipo();
+    public abstract String obtTipo();
 }

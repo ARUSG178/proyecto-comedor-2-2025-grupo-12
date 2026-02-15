@@ -21,13 +21,13 @@ public class Reserva {
         return UUID.randomUUID().toString().replace("-", "").substring(0, 12);
     }
 
-    public Usuario getPropietario() { return propietario; }
-    public LocalDateTime getHorarioReservado() { return horarioReservado; }
-    public String getEstado() { return estado; }
-    public String getClaveAcceso() { return clave_acceso; }
+    public Usuario obtPropietario() { return propietario; }
+    public LocalDateTime obtHorarioReservado() { return horarioReservado; }
+    public String obtEstado() { return estado; }
+    public String obtClaveAcceso() { return clave_acceso; }
 
     @Override
     public String toString() {
-        return "Reserva de " + propietario.getNombre() + " en " + horarioReservado +  " [estado ->" + estado + ", clave ->" + clave_acceso + "]";
+        return "Reserva de " + propietario.obtCedula() + " en " + horarioReservado +  " [estado ->" + estado + ", clave ->" + clave_acceso + "]";
     }
 }

@@ -15,9 +15,9 @@ public class RegistroCosto {
         this.monto = monto;
     }
 
-    public String getPeriodo() { return periodo; }
-    public TipoCosto getTipo() { return tipo; }
-    public double getMonto() { return monto; }
+    public String obtPeriodo() { return periodo; }
+    public TipoCosto obtTipo() { return tipo; }
+    public double obtMonto() { return monto; }
 
     @Override
     public String toString() {
