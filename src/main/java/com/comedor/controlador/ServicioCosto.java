@@ -1,52 +1,57 @@
-package com.comedor.controlador;// paquete del controlador
+package com.comedor.controlador;
 
-import java.util.ArrayList;// importa arraylist
-import java.util.HashMap;// importa hashmap
-import java.util.List;// importa lista
-import java.util.Map;// importa mapa
-import java.util.stream.Collectors;// importa collectors para streams
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.comedor.modelo.entidades.RegistroCosto;
+import com.comedor.util.ServicioUtil;
 
-public class ServicioCosto {// clase para gestionar costos
-    private List<RegistroCosto> costos = new ArrayList<>();// lista de costos registrados
-    private Map<String, Integer> produccionBandejas = new HashMap<>();// mapa de produccion por periodo
+public class ServicioCosto {
+    private List<RegistroCosto> costos = new ArrayList<>();
+    private Map<String, Integer> produccionBandejas = new HashMap<>();
 
-    public void registrarProduccionBandejas(String periodo, int cantidad) {// registra bandejas producidas
-        produccionBandejas.put(periodo, cantidad);// guarda la cantidad
-        System.out.println("Producción estimada de bandejas para " + periodo + ": " + cantidad);// imprime confirmacion
+    // Registra la cantidad estimada de bandejas a producir en un periodo específico
+    public void registrarProduccionBandejas(String periodo, int cantidad) {
+        produccionBandejas.put(periodo, cantidad);
+        System.out.println("Producción estimada de bandejas para " + periodo + ": " + cantidad);
     }
 
-    public void agregarCosto(String periodo, RegistroCosto.TipoCosto tipo, String descripcion, double monto) {// agrega un nuevo costo
-        costos.add(new RegistroCosto(periodo, tipo, descripcion, monto));// crea y anade el costo
-        System.out.println("Costo agregado: " + descripcion + " (" + tipo + ")");// imprime confirmacion
+    // Agrega un nuevo registro de costo al sistema con su tipo y descripción
+    public void agregarCosto(String periodo, RegistroCosto.TipoCosto tipo, String descripcion, double monto) {
+        costos.add(new RegistroCosto(periodo, tipo, descripcion, monto));
+        System.out.println("Costo agregado: " + descripcion + " (" + tipo + ")");
     }
 
-    public List<RegistroCosto> obtenerCostosPorPeriodo(String periodo) {// obtiene costos de un periodo
-        return costos.stream()// inicia stream de costos
-                .filter(c -> c.obtPeriodo().equals(periodo))// filtra por periodo
-                .collect(Collectors.toList());// devuelve como lista
+    // Obtiene una lista de costos filtrados por el periodo especificado
+    public List<RegistroCosto> obtenerCostosPorPeriodo(String periodo) {
+        return costos.stream()
+                .filter(c -> c.obtPeriodo().equals(periodo))
+                .collect(Collectors.toList());
     }
     
-    public double obtenerTotalCostosPorPeriodo(String periodo) {// calcula total de costos
-        return obtenerCostosPorPeriodo(periodo).stream()// stream de costos filtrados
-                .mapToDouble(RegistroCosto::obtMonto)// obtiene los montos
-                .sum();// suma los montos
+    // Calcula la suma total de los montos de costos para un periodo dado
+    public double obtenerTotalCostosPorPeriodo(String periodo) {
+        return obtenerCostosPorPeriodo(periodo).stream()
+                .mapToDouble(RegistroCosto::obtMonto)
+                .sum();
     }
 
-    public double calcularCostoUnitarioBandeja(String periodo) {// calcula costo por bandeja
-        double totalCostos = obtenerTotalCostosPorPeriodo(periodo);// obtiene costo total
-        int cantidad = produccionBandejas.getOrDefault(periodo, 0);// obtiene cantidad producida
-        if (cantidad <= 0) {// verifica si es cero o menos
-            return 0.0;// retorna cero para evitar error
+    // Calcula el costo unitario por bandeja dividiendo el total de costos entre la producción
+    public double calcularCostoUnitarioBandeja(String periodo) {
+        double totalCostos = obtenerTotalCostosPorPeriodo(periodo);
+        int cantidad = produccionBandejas.getOrDefault(periodo, 0);
+        if (cantidad <= 0) {
+            return 0.0;
         }
-        return totalCostos / cantidad;// calcula costo unitario
+        return totalCostos / cantidad;
     }
 
-    // Registra un cambio de precio de un platillo como un costo variable.
-    // Se guarda el nuevo precio y se incluye una descripción con el platillo, actor y cambio.
+    // Registra un cambio de precio de platillo como costo variable en el periodo actual
     public void registrarCambioPrecio(String nombrePlatillo, double precioAnterior, double precioNuevo, String actor) {
-        String periodo = java.time.LocalDate.now().getYear() + "-" + String.format("%02d", java.time.LocalDate.now().getMonthValue());
+        String periodo = ServicioUtil.obtenerPeriodoActual();
         double diferencia = precioNuevo - precioAnterior;
         String descripcion = String.format("Cambio precio %s por %s: %.2f -> %.2f (diff %.2f)", nombrePlatillo, actor, precioAnterior, precioNuevo, diferencia);
         agregarCosto(periodo, RegistroCosto.TipoCosto.VARIABLE, descripcion, precioNuevo);

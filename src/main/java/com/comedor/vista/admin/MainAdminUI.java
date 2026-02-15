@@ -34,8 +34,8 @@ import javax.swing.border.EmptyBorder;
 public class MainAdminUI extends JFrame {
 
     // --- PALETA DE COLORES (Basada en el diseño institucional) ---
-    private static final Color COLOR_TERRACOTA = new Color(160, 70, 40);            // Barras y Títulos
-    private static final Color COLOR_OVERLAY = new Color(160, 70, 40, 140);      // Filtro sobre imagen
+    private static final Color COLOR_AZUL_INST = new Color(0, 51, 102);            // Barras y Títulos
+    private static final Color COLOR_OVERLAY = new Color(0, 51, 102, 140);      // Filtro sobre imagen
 
     private BufferedImage backgroundImage;
 
@@ -84,7 +84,7 @@ public class MainAdminUI extends JFrame {
                 g2d.fillRect(0, 0, getWidth(), getHeight());
 
                 // Barras sólidas superior e inferior
-                g2d.setColor(COLOR_TERRACOTA);
+                g2d.setColor(COLOR_AZUL_INST);
                 int barHeight = 135;
                 g2d.fillRect(0, 0, getWidth(), barHeight);
                 g2d.fillRect(0, getHeight() - barHeight, getWidth(), barHeight);

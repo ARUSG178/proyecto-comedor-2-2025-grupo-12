@@ -7,6 +7,7 @@ import com.comedor.modelo.excepciones.*;
 import com.comedor.util.ValidacionUtil;
 import com.comedor.modelo.entidades.Administrador;
 import com.comedor.modelo.persistencia.RepoAdminCdg;
+import com.comedor.modelo.persistencia.RepoSecretaria;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,6 +16,7 @@ public class VRegistro {
     private final Usuario uIngresado;
     private final List<Usuario> usBaseDatos;
 
+    // Inicializa el validador de registro con el usuario a registrar y la lista existente
     public VRegistro(Usuario uIngresado, List<Usuario> usBaseDatos) {
         if (uIngresado == null || usBaseDatos == null) {
             throw new IllegalArgumentException("El usuario y la lista no pueden ser nulos");
@@ -23,21 +25,24 @@ public class VRegistro {
         this.usBaseDatos = usBaseDatos;
     }
 
-    // Validar que no exista duplicado en BD
+    // Verifica que no exista otro usuario con la misma cédula
     boolean validarDuplicado() {
         return usBaseDatos.stream().noneMatch(u -> u.obtCedula().equals(uIngresado.obtCedula()));
     }
 
-    // Validar datos exclusivos si es Estudiante
+    // Valida que los campos específicos de estudiante no estén vacíos
     boolean validarEstudiante() {
         if (uIngresado instanceof Estudiante) {
             Estudiante est = (Estudiante) uIngresado;
-            return est.obtCarrera() != null && !est.obtCarrera().isEmpty();
+            if (est.obtCarrera() == null || est.obtCarrera().isEmpty() || est.obtFacultad() == null || est.obtFacultad().isEmpty()) {
+                return false;
+            }
+            return ValidacionUtil.validarFacultadCarrera(est.obtFacultad(), est.obtCarrera());
         }
         return true;
     }
 
-    // Validar datos exclusivos si es Empleado
+    // Valida que los campos específicos de empleado no estén vacíos
     boolean validarEmpleado() {
         if (uIngresado instanceof Empleado) {
             Empleado emp = (Empleado) uIngresado;
@@ -47,7 +52,32 @@ public class VRegistro {
         return true;
     }
 
-    // Validar todo el registro
+    // Verifica que la cédula exista en la base de datos de la UCV y coincida el tipo de usuario
+    void validarInscripcionUCV() throws InvalidCredentialsException, IOException {
+        // Los administradores tienen su propio mecanismo de validación (código)
+        if (uIngresado instanceof Administrador) return;
+
+        RepoSecretaria repoSec = new RepoSecretaria();
+        Usuario uSecretaria = repoSec.buscarRegistroUCV(uIngresado.obtCedula());
+
+        if (uSecretaria == null) {
+            throw new InvalidCredentialsException(
+                "La cédula " + uIngresado.obtCedula() + " no figura en los registros activos de la UCV."
+            );
+        }
+
+        // Validar consistencia de tipo (Ej: No registrarse como Estudiante si en secretaría es Empleado)
+        if (!uSecretaria.obtTipo().equalsIgnoreCase(uIngresado.obtTipo())) {
+            throw new InvalidCredentialsException(
+                "Inconsistencia de datos: La cédula ingresada está registrada en la UCV como " + 
+                uSecretaria.obtTipo() + ", pero intenta registrarse como " + uIngresado.obtTipo() + "."
+            );
+        }
+
+        // Aquí podrías agregar validaciones extra, como que la Carrera coincida con la de secretaría, etc.
+    }
+
+    // Ejecuta todas las validaciones necesarias para registrar un usuario
     public void validar() throws InvalidCredentialsException, DuplicateUserException, IOException {
         if (!ValidacionUtil.formatoCedula(uIngresado.obtCedula())) {
             throw new InvalidCredentialsException("La cédula no es válida");
@@ -58,7 +88,10 @@ public class VRegistro {
         if (!validarDuplicado()) {
             throw new DuplicateUserException("El usuario ya existe en la base de datos");
         }
-        // Si es administrador, validar código contra archivo de códigos válidos
+        
+        // Validar contra la base de datos simulada de la UCV
+        validarInscripcionUCV();
+
         if (uIngresado instanceof Administrador) {
             String codigo = ((Administrador) uIngresado).obtCodigoAdministrador();
             if (codigo == null || !codigo.trim().matches("[A-Za-z0-9]{8}")) {

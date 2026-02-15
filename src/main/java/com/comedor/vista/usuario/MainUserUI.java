@@ -30,13 +30,13 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
-import com.comedor.vista.ISUI;
+import com.comedor.vista.InicioSesionUI;
 
 public class MainUserUI extends JFrame {
 
     // --- PALETA DE COLORES (Basada en el diseño institucional) ---
-    private static final Color COLOR_TERRACOTA = new Color(160, 70, 40);            // Barras y Títulos
-    private static final Color COLOR_OVERLAY = new Color(160, 70, 40, 140);      // Filtro sobre imagen
+    private static final Color COLOR_AZUL_INST = new Color(0, 51, 102);            // Barras y Títulos
+    private static final Color COLOR_OVERLAY = new Color(0, 51, 102, 140);      // Filtro sobre imagen
 
     private BufferedImage backgroundImage;
     // private double saldoActual = 0.0;
@@ -74,7 +74,7 @@ public class MainUserUI extends JFrame {
                 }
                 g2d.setColor(COLOR_OVERLAY);
                 g2d.fillRect(0, 0, getWidth(), getHeight());
-                g2d.setColor(COLOR_TERRACOTA);
+                g2d.setColor(COLOR_AZUL_INST);
                 int barHeight = 135;
                 g2d.fillRect(0, 0, getWidth(), barHeight);
                 g2d.fillRect(0, getHeight() - barHeight, getWidth(), barHeight);
@@ -110,7 +110,7 @@ public class MainUserUI extends JFrame {
             @Override 
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_UP) {
-                    new ISUI().setVisible(true);
+                    new InicioSesionUI().setVisible(true);
                     MainUserUI.this.dispose();
                 }
             }

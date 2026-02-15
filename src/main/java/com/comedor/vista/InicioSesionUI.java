@@ -45,19 +45,15 @@ import com.comedor.modelo.entidades.Estudiante;
 import com.comedor.modelo.entidades.Usuario;
 import com.comedor.modelo.excepciones.InvalidCredentialsException;
 
-/**
- * Interfaz gráfica principal para el inicio de sesión del sistema SAGC UCV.
- * Gestiona la presentación visual de doble panel (imagen/formulario) y coordina
- * la captura de credenciales con la lógica de autenticación del controlador.
- */
-public class ISUI extends JFrame {
+// Interfaz gráfica principal para el inicio de sesión del sistema SAGC UCV
+public class InicioSesionUI extends JFrame {
 
-    private static final Color COLOR_TERRACOTA = new Color(160, 70, 40);
-    private static final Color COLOR_FORM_BG = new Color(248, 245, 235);
-    private static final Color COLOR_INPUT_BG = new Color(175, 125, 95);
-    private static final Color COLOR_BTN_VERDE = new Color(75, 105, 50);
-    private static final Color COLOR_TEXTO = new Color(60, 40, 30);
-    private static final Color COLOR_RADIO_GOLD = new Color(210, 160, 30); // Color dorado para radios
+    private static final Color COLOR_AZUL_INST = new Color(0, 51, 102); // Azul Institucional
+    private static final Color COLOR_FORM_BG = new Color(255, 255, 255); // Blanco
+    private static final Color COLOR_INPUT_BG = new Color(0, 85, 170); // Azul más claro para inputs
+    private static final Color COLOR_BTN_AZUL = new Color(0, 60, 120); // Azul botón
+    private static final Color COLOR_TEXTO = new Color(0, 51, 102); // Texto azul oscuro
+    private static final Color COLOR_RADIO_BLUE = new Color(0, 102, 204); // Azul brillante para radios
 
     private BufferedImage backgroundImage;
     private ModernTextField txtCedula;
@@ -65,7 +61,8 @@ public class ISUI extends JFrame {
     private JRadioButton usuarioRadio;
     private JRadioButton adminRadio;
 
-    public ISUI() {
+    // Inicializa la ventana y carga los recursos necesarios
+    public InicioSesionUI() {
         try {
             URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_is_bg.jpg");
             if (imageUrl != null) backgroundImage = ImageIO.read(imageUrl);
@@ -77,7 +74,7 @@ public class ISUI extends JFrame {
         initUI();
     }
 
-
+    // Configura las propiedades básicas de la ventana principal
     private void configurarVentana() {
         setTitle("Iniciar Sesión - SAGC UCV"); 
         setSize(1400, 950);
@@ -87,24 +84,30 @@ public class ISUI extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);    
     }
 
-
+    // Construye la interfaz gráfica dividida en dos paneles principales
     private void initUI() {
         JPanel mainPanel = new JPanel(new GridLayout(1, 2));
-        mainPanel.setBackground(COLOR_TERRACOTA);
+        mainPanel.setBackground(COLOR_AZUL_INST);
 
-        // --- LADO IZQUIERDO: SECCIÓN DE IDENTIDAD VISUAL ---
-        JPanel leftPanel = new JPanel() {
+        mainPanel.add(crearPanelIzquierdo());
+        mainPanel.add(crearPanelDerecho());
+        setContentPane(mainPanel);
+    }
+
+    // Crea el panel izquierdo con la imagen de fondo y el logo institucional
+    private JPanel crearPanelIzquierdo() {
+        JPanel panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 if (backgroundImage != null) {
                     g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
-                    g.setColor(new Color(160, 70, 40, 180));
+                    g.setColor(new Color(0, 51, 102, 180)); // Filtro azul
                     g.fillRect(0, 0, getWidth(), getHeight());
                 }
             }
         };
-        leftPanel.setLayout(new GridBagLayout());
+        panel.setLayout(new GridBagLayout());
         
         JLabel lbLogo = new JLabel("SAGC", SwingConstants.CENTER);
         lbLogo.setFont(new Font("Segoe UI", Font.BOLD, 100));
@@ -114,7 +117,7 @@ public class ISUI extends JFrame {
         lbLogo.addMouseListener(new MouseAdapter() {
             @Override public void mouseClicked(MouseEvent e) {
                 new RegistroUI().setVisible(true);
-                ISUI.this.dispose();
+                InicioSesionUI.this.dispose();
             }
         });
 
@@ -127,11 +130,14 @@ public class ISUI extends JFrame {
         logoPanel.setOpaque(false);
         logoPanel.add(lbLogo, BorderLayout.CENTER);
         logoPanel.add(subtitle, BorderLayout.SOUTH);
-        leftPanel.add(logoPanel);
+        panel.add(logoPanel);
+        return panel;
+    }
 
-        // --- LADO DERECHO: SECCIÓN DE CREDENCIALES ---
-        JPanel rightPanel = new JPanel(new GridBagLayout());
-        rightPanel.setBackground(COLOR_TERRACOTA);
+    // Crea el panel derecho con el formulario de inicio de sesión
+    private JPanel crearPanelDerecho() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBackground(COLOR_AZUL_INST);
 
         ShadowRoundedPanel card = new ShadowRoundedPanel(new GridBagLayout());
         card.setBackground(COLOR_FORM_BG);
@@ -144,7 +150,7 @@ public class ISUI extends JFrame {
 
         JLabel title = new JLabel("Iniciar Sesión");
         title.setFont(new Font("Segoe UI", Font.BOLD, 32));
-        title.setForeground(COLOR_TERRACOTA);
+        title.setForeground(COLOR_AZUL_INST);
         gbc.gridy = 0; gbc.insets = new Insets(0, 0, 30, 0);
         card.add(title, gbc);
 
@@ -154,7 +160,6 @@ public class ISUI extends JFrame {
         txtClave = new ModernPasswordField("••••••••");
         addLabelAndField(card, "Contraseña:", txtClave, gbc, 2);
 
-        // --- SECCIÓN DE RADIO BUTTONS PERSONALIZADOS ---
         JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 0));
         radioPanel.setOpaque(false);
         
@@ -182,7 +187,7 @@ public class ISUI extends JFrame {
         JButton btnIrRegistro = new JButton("¿No tienes cuenta? Regístrate");
         btnIrRegistro.setContentAreaFilled(false);
         btnIrRegistro.setBorderPainted(false);
-        btnIrRegistro.setForeground(COLOR_TERRACOTA);
+        btnIrRegistro.setForeground(COLOR_AZUL_INST);
         btnIrRegistro.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnIrRegistro.addActionListener(e -> {
             new RegistroUI().setVisible(true);
@@ -191,12 +196,11 @@ public class ISUI extends JFrame {
         gbc.gridy = 5;
         card.add(btnIrRegistro, gbc);
 
-        rightPanel.add(card);
-        mainPanel.add(leftPanel);
-        mainPanel.add(rightPanel);
-        setContentPane(mainPanel);
+        panel.add(card);
+        return panel;
     }
 
+    // Ejecuta la lógica de autenticación al presionar el botón Entrar
     private void ejecutarLogin() {
         String cedula = txtCedula.getText().trim();
         String clave = new String(txtClave.getPassword());
@@ -257,15 +261,7 @@ public class ISUI extends JFrame {
         }
     }
 
-    /**
-     * Crea una agrupación vertical compuesta por una etiqueta descriptiva 
-     * y su respectivo campo de entrada, insertándola en el panel destino.
-     * @param p Panel contenedor.
-     * @param t Texto de la etiqueta.
-     * @param f Componente de entrada de texto.
-     * @param g Restricciones de GridBagLayout.
-     * @param y Fila en la que se posicionará el grupo.
-     */
+    // Agrega una etiqueta y un campo de texto al panel especificado
     private void addLabelAndField(JPanel p, String t, JComponent f, GridBagConstraints g, int y) {
         g.gridy = y;
         JLabel l = new JLabel(t);
@@ -278,26 +274,23 @@ public class ISUI extends JFrame {
         p.add(container, g);
     }
 
-    /**
-     * Define la apariencia visual de los botones de acción, configurando
-     * tipografía, colores de fondo y bordes de relleno (padding).
-     * @param b Botón a estilizar.
-     */
+    // Aplica el estilo visual estándar a los botones de acción
     private void styleButton(JButton b) {
         b.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        b.setBackground(COLOR_BTN_VERDE);
+        b.setBackground(COLOR_BTN_AZUL);
         b.setForeground(Color.WHITE);
         b.setFocusPainted(false);
         b.setCursor(new Cursor(Cursor.HAND_CURSOR));
         b.setBorder(new EmptyBorder(12, 0, 12, 0));
     }
 
+    // Crea un botón de radio personalizado con el estilo visual del sistema
     private JRadioButton createCustomRadio(String texto) {
         JRadioButton radio = new JRadioButton(texto);
         radio.setOpaque(false);
         radio.setFocusPainted(false); // ESTO ELIMINA EL RECUADRO AZUL
         radio.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        radio.setForeground(new Color(60, 40, 30));
+        radio.setForeground(COLOR_TEXTO);
         radio.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
         // Aplicamos los círculos dibujados manualmente (mismo que RegistroUI)
@@ -313,7 +306,7 @@ public class ISUI extends JFrame {
         public void paintIcon(Component c, Graphics g, int x, int y) {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(COLOR_RADIO_GOLD);
+            g2.setColor(COLOR_RADIO_BLUE);
             g2.setStroke(new BasicStroke(2.0f));
             g2.drawOval(x, y + 2, 16, 16); // Círculo exterior
             if (sel) g2.fillOval(x + 4, y + 6, 9, 9); // Punto interior
@@ -404,13 +397,5 @@ public class ISUI extends JFrame {
             g2.fillRoundRect(0, 0, getWidth()-5, getHeight()-5, 30, 30);
             g2.dispose();
         }
-    }
-
-    /**
-     * Punto de entrada de la interfaz de inicio de sesión.
-     * @param args Argumentos de línea de comandos.
-     */
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new ISUI().setVisible(true));
     }
 }

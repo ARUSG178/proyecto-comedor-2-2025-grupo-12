@@ -5,6 +5,7 @@ public class Empleado extends Usuario {
     private String departamento;  
     private String codigoEmpleado; 
 
+    // Inicializa un empleado con credenciales y datos laborales
     public Empleado(String cedula, String contraseña, String cargo, String departamento, String codigoEmpleado) {
         super(cedula, contraseña);
         setCargo(cargo);
@@ -12,16 +13,25 @@ public class Empleado extends Usuario {
         setCodigoEmpleado(codigoEmpleado);
     }
 
+    // Retorna el identificador de tipo para empleado
     @Override
     public String obtTipo() { return "Empleado"; }
 
-    // Getters
+    // Retorna el cargo que ocupa el empleado
     public String obtCargo() { return cargo; }
+    
+    // Retorna el departamento al que pertenece el empleado
     public String obtDepartamento() { return departamento; }
+    
+    // Retorna el código único de empleado
     public String obtCodigoEmpleado() { return codigoEmpleado; }
 
-    // Setters
+    // Establece el cargo del empleado
     public void setCargo(String cargo) { this.cargo = cargo; }
+    
+    // Establece el departamento del empleado
     public void setDepartamento(String departamento) { this.departamento = departamento; }
+    
+    // Establece el código de empleado
     public void setCodigoEmpleado(String codigoEmpleado) { this.codigoEmpleado = codigoEmpleado; }
 }

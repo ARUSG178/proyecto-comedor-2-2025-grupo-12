@@ -13,6 +13,7 @@ import java.util.List;
 public class RepoAdminCdg {
     private static final String RUTA_ARCHIVO = "src/main/java/com/comedor/data/codigos_admin.txt";
 
+    // Verifica si un código de administrador existe en el archivo
     public boolean existeCodigo(String codigo) {
         try {
             Path path = Paths.get(RUTA_ARCHIVO);
@@ -26,6 +27,7 @@ public class RepoAdminCdg {
         }
     }
 
+    // Elimina un código de administrador del archivo tras su uso
     public void consumirCodigo(String codigo) {
         try {
             Path path = Paths.get(RUTA_ARCHIVO);

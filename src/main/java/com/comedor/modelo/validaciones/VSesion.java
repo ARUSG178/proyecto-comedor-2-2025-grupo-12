@@ -7,6 +7,7 @@ public class VSesion {
     private final Usuario uIngresado;
     private final Usuario uBaseDatos;
 
+    // Inicializa el validador de sesión con el usuario ingresado y el de base de datos
     public VSesion(Usuario uIngresado, Usuario uBaseDatos) {
         if (uIngresado == null || uBaseDatos == null) {
             throw new IllegalArgumentException("Los objetos de usuario no pueden ser nulos");
@@ -15,14 +16,17 @@ public class VSesion {
         this.uBaseDatos = uBaseDatos;
     }
 
+    // Verifica si la cédula ingresada coincide con la almacenada
     boolean validarCedula() {
         return uIngresado.obtCedula().trim().equals(uBaseDatos.obtCedula().trim());
     }
 
+    // Verifica si la contraseña ingresada coincide con la almacenada
     boolean validarContraseña() {
         return uIngresado.obtContraseña().equals(uBaseDatos.obtContraseña());
     }
 
+    // Ejecuta la validación de credenciales y gestiona intentos fallidos
     public void validar() throws InvalidCredentialsException {
 
         if (!(validarCedula() && validarContraseña())) {

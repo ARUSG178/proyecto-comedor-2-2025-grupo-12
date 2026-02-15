@@ -5,17 +5,18 @@ import com.comedor.modelo.entidades.Administrador;
 import com.comedor.modelo.entidades.Estudiante;
 import com.comedor.modelo.excepciones.*;
 import com.comedor.modelo.validaciones.VSesion;
-import com.comedor.modelo.persistencia.RepositorioUsuarios;
+import com.comedor.modelo.persistencia.RepoUsuarios;
 
 import java.io.IOException;
 import java.util.List;
 
 public class ServicioIS {
 
+    // Autentica al usuario verificando credenciales y tipo de cuenta en la base de datos
     public Usuario IniciarSesion(Usuario uIngresado)
             throws InvalidCredentialsException, IOException {
 
-        RepositorioUsuarios repo = new RepositorioUsuarios();
+        RepoUsuarios repo = new RepoUsuarios();
         List<Usuario> usuarios = repo.listarUsuarios();
 
         Usuario uBD = null;
@@ -35,7 +36,6 @@ public class ServicioIS {
             validador.validar();
             System.out.println("LOG: Inicio de sesión exitoso para cédula: " + uBD.obtCedula());
         } catch (InvalidCredentialsException ex) {
-            // Aun en fallo, VSesion puede haber modificado intentos/estado -> persistir y re-lanzar
             for (int i = 0; i < usuarios.size(); i++) {
                 Usuario x = usuarios.get(i);
                 if (x != null && x.obtCedula() != null && x.obtCedula().trim().equalsIgnoreCase(uBD.obtCedula().trim())) {
@@ -47,7 +47,6 @@ public class ServicioIS {
             throw ex;
         }
 
-        // Verificar que el tipo seleccionado coincida con el tipo en BD
         if (uBD instanceof Administrador && uIngresado instanceof Estudiante) {
             throw new InvalidCredentialsException(
                 "Esta cuenta es de administrador. " +
@@ -60,7 +59,6 @@ public class ServicioIS {
                 "Por favor, seleccione 'Estudiante' en el tipo de usuario.");
         }
 
-        // Si ha sido exitoso, también guardamos posibles cambios (ej. intentosFallidos = 0)
         for (int i = 0; i < usuarios.size(); i++) {
             Usuario x = usuarios.get(i);
             if (x != null && x.obtCedula() != null && x.obtCedula().trim().equalsIgnoreCase(uBD.obtCedula().trim())) {
@@ -70,7 +68,6 @@ public class ServicioIS {
         }
         repo.guardarTodos(usuarios);
         
-        // CAMBIO: Retornar el usuario encontrado
         return uBD;
     }
 }

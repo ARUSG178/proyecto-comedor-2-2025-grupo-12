@@ -1,21 +1,28 @@
 package com.comedor.modelo.entidades;
-// Clase que representa los costos del comedor en un periodo determinado
+
 public class Costos {
     private String periodo;
     private double costosFijos;
     private double costosVariables;
 
-    public Costos(String periodo, double costosFijos, double costosVariables) {//constructor de la clase Costos
+    // Inicializa un objeto de costos con periodo y montos fijos/variables
+    public Costos(String periodo, double costosFijos, double costosVariables) {
         this.periodo = periodo;
         this.costosFijos = costosFijos;
         this.costosVariables = costosVariables;
     }
 
-    public String obtPeriodo() { return periodo; }/// Getter para el periodo
+    // Retorna el periodo asociado a los costos
+    public String obtPeriodo() { return periodo; }
+    
+    // Retorna el monto de los costos fijos
     public double obtCostosFijos() { return costosFijos; }
+    
+    // Retorna el monto de los costos variables
     public double obtCostosVariables() { return costosVariables; }
     
-    public double calcularTotal() {// metodo para calcular el costo total del periodo
+    // Calcula la suma total de costos fijos y variables
+    public double calcularTotal() {
         return costosFijos + costosVariables;
     }
 }

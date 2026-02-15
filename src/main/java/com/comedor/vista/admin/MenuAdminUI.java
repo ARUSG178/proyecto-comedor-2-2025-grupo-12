@@ -50,8 +50,8 @@ import javax.swing.border.EmptyBorder;
 public class MenuAdminUI extends JFrame {
 
     // --- PALETA DE COLORES ---
-    private static final Color COLOR_TERRACOTA = new Color(160, 70, 40);
-    private static final Color COLOR_OVERLAY = new Color(160, 70, 40, 140);
+    private static final Color COLOR_AZUL_INST = new Color(0, 51, 102);
+    private static final Color COLOR_OVERLAY = new Color(0, 51, 102, 140);
 
     private BufferedImage backgroundImage;
     
@@ -180,7 +180,7 @@ public class MenuAdminUI extends JFrame {
         // Panel para la imagen (220x270)
         JPanel panelImagen = new JPanel(new GridBagLayout());
         panelImagen.setBackground(Color.WHITE);
-        panelImagen.setBorder(BorderFactory.createLineBorder(COLOR_TERRACOTA, 2));
+        panelImagen.setBorder(BorderFactory.createLineBorder(COLOR_AZUL_INST, 2));
         panelImagen.setPreferredSize(new Dimension(220, 270));
         panelImagen.setMinimumSize(new Dimension(220, 270));
         
@@ -219,7 +219,7 @@ public class MenuAdminUI extends JFrame {
         fieldsNombre[indice].setFont(new Font("Segoe UI", Font.PLAIN, 13));
         fieldsNombre[indice].setBackground(new Color(255, 255, 255, 230));
         fieldsNombre[indice].setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(COLOR_TERRACOTA, 1),
+            BorderFactory.createLineBorder(COLOR_AZUL_INST, 1),
             new EmptyBorder(4, 8, 4, 8)
         ));
         fieldsNombre[indice].setPreferredSize(new Dimension(220, 28));
@@ -240,7 +240,7 @@ public class MenuAdminUI extends JFrame {
         fieldsPrecio[indice].setFont(new Font("Segoe UI", Font.PLAIN, 13));
         fieldsPrecio[indice].setBackground(new Color(255, 255, 255, 230));
         fieldsPrecio[indice].setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(75, 105, 50), 1),
+            BorderFactory.createLineBorder(new Color(0, 60, 120), 1),
             new EmptyBorder(4, 8, 4, 8)
         ));
         fieldsPrecio[indice].setPreferredSize(new Dimension(220, 28));
@@ -354,7 +354,7 @@ public class MenuAdminUI extends JFrame {
                 g2d.setColor(COLOR_OVERLAY);
                 g2d.fillRect(0, 0, getWidth(), getHeight());
 
-                g2d.setColor(COLOR_TERRACOTA);
+                g2d.setColor(COLOR_AZUL_INST);
                 int barHeight = 135;
                 g2d.fillRect(0, 0, getWidth(), barHeight);
                 g2d.fillRect(0, getHeight() - barHeight, getWidth(), barHeight);
@@ -561,11 +561,11 @@ public class MenuAdminUI extends JFrame {
         // Botón Guardar
         JButton btnGuardar = new JButton("GUARDAR CAMBIOS");
         btnGuardar.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        btnGuardar.setBackground(new Color(75, 105, 50));
+        btnGuardar.setBackground(new Color(0, 60, 120));
         btnGuardar.setForeground(Color.WHITE);
         btnGuardar.setFocusPainted(false);
         btnGuardar.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(50, 80, 40), 2),
+            BorderFactory.createLineBorder(new Color(0, 40, 80), 2),
             new EmptyBorder(12, 25, 12, 25)
         ));
         btnGuardar.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -575,11 +575,11 @@ public class MenuAdminUI extends JFrame {
         // Botón Cerrar
         JButton btnCerrar = new JButton("CERRAR");
         btnCerrar.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        btnCerrar.setBackground(new Color(180, 70, 70));
+        btnCerrar.setBackground(new Color(80, 80, 80)); // Gris oscuro para cerrar
         btnCerrar.setForeground(Color.WHITE);
         btnCerrar.setFocusPainted(false);
         btnCerrar.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(150, 50, 50), 2),
+            BorderFactory.createLineBorder(new Color(50, 50, 50), 2),
             new EmptyBorder(12, 25, 12, 25)
         ));
         btnCerrar.setCursor(new Cursor(Cursor.HAND_CURSOR));

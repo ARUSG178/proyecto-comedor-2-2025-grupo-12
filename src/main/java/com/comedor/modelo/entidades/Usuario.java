@@ -1,7 +1,5 @@
 package com.comedor.modelo.entidades;
 
-// Clase abstracta que representa un usuario del sistema
-
 public abstract class Usuario {
     private final String cedula;  
     private String contraseña;
@@ -9,13 +7,13 @@ public abstract class Usuario {
     private int intentosFallidos;
     private double saldo;
 
-// Constructor de la clase Usuario
-
+    // Inicializa un usuario con valores por defecto
     public Usuario() {
         this.cedula = "";
         this.contraseña = "";
     }
     
+    // Inicializa un usuario con credenciales y estado activo por defecto
     public Usuario(String cedula, String contraseña) {
         this.cedula = cedula;
         this.contraseña = contraseña;
@@ -24,19 +22,33 @@ public abstract class Usuario {
         this.saldo = 0.0;
     }
 
-    // Getters
+    // Retorna el número de cédula del usuario
     public String obtCedula() { return cedula; }
+    
+    // Retorna la contraseña del usuario
     public String obtContraseña() { return contraseña; }
+    
+    // Indica si el usuario está activo o bloqueado
     public boolean obtEstado() { return estado; }
+    
+    // Retorna el contador de intentos fallidos de inicio de sesión
     public int obtIntentosFallidos() { return intentosFallidos; }
+    
+    // Retorna el saldo actual disponible en el monedero
     public double obtSaldo() { return saldo; }
 
-    // Setters
+    // Actualiza la contraseña del usuario
     public void setContraseña(String contraseña) { this.contraseña = contraseña; }
+    
+    // Establece el estado de la cuenta (activo/bloqueado)
     public void setEstado(boolean estado) { this.estado = estado; }
+    
+    // Actualiza el número de intentos fallidos
     public void setIntentosFallidos(int intentosFallidos) { this.intentosFallidos = intentosFallidos; }
+    
+    // Actualiza el saldo del usuario
     public void setSaldo(double saldo) { this.saldo = saldo; }
 
-    // Setter abstracto
+    // Retorna el tipo de usuario como cadena de texto
     public abstract String obtTipo();
 }

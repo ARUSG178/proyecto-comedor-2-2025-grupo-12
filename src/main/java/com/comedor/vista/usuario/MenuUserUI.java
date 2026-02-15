@@ -43,8 +43,8 @@ import javax.swing.border.EmptyBorder;
 public class MenuUserUI extends JFrame {
 
     // --- PALETA DE COLORES (Basada en el diseño institucional) ---
-    private static final Color COLOR_TERRACOTA = new Color(160, 70, 40);            // Barras y Títulos
-    private static final Color COLOR_OVERLAY = new Color(160, 70, 40, 140);      // Filtro sobre imagen
+    private static final Color COLOR_AZUL_INST = new Color(0, 51, 102);            // Barras y Títulos
+    private static final Color COLOR_OVERLAY = new Color(0, 51, 102, 140);      // Filtro sobre imagen
 
     private BufferedImage backgroundImage;
 
@@ -85,7 +85,7 @@ public class MenuUserUI extends JFrame {
                 g2d.setColor(Color.WHITE);
                 g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
                 
-                g2d.setColor(new Color(160, 70, 40, 180));
+                g2d.setColor(new Color(0, 51, 102, 180));
                 g2d.setStroke(new BasicStroke(2));
                 g2d.drawRoundRect(1, 1, getWidth()-2, getHeight()-2, 10, 10);
                 
@@ -133,7 +133,7 @@ public class MenuUserUI extends JFrame {
         // Botón para seleccionar
         JButton btnSeleccionar = new JButton("SELECCIONAR");
         btnSeleccionar.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnSeleccionar.setBackground(new Color(75, 105, 50));
+        btnSeleccionar.setBackground(new Color(0, 60, 120));
         btnSeleccionar.setForeground(Color.WHITE);
         btnSeleccionar.setFocusPainted(false);
         btnSeleccionar.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
@@ -166,7 +166,7 @@ public class MenuUserUI extends JFrame {
                 }
                 g2d.setColor(COLOR_OVERLAY);
                 g2d.fillRect(0, 0, getWidth(), getHeight());
-                g2d.setColor(COLOR_TERRACOTA);
+                g2d.setColor(COLOR_AZUL_INST);
                 int barHeight = 135;
                 g2d.fillRect(0, 0, getWidth(), barHeight);
                 g2d.fillRect(0, getHeight() - barHeight, getWidth(), barHeight);

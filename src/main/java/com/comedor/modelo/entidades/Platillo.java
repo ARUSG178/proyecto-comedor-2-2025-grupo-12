@@ -1,29 +1,43 @@
 package com.comedor.modelo.entidades;
 
-// Clase que representa un platillo en el menú del comedor
 public class Platillo {
     private String nombre;
     private String descripcion;
     private double precio;
     private boolean disponible;
 
+    // Inicializa un platillo vacío por defecto
     public Platillo() {
         this.nombre = "";
         this.precio = 0.0;
     }
     
-    public Platillo(String nombre, String descripcion, double precio) {// Constructor de la clase Platillo
+    // Inicializa un platillo con nombre, descripción y precio
+    public Platillo(String nombre, String descripcion, double precio) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.disponible = true;
     }
 
-    public String obtNombre() { return nombre; }// Getter para el nombre
-    public String obtDescripcion() { return descripcion; }// Getter para la descripción
-    public double obtPrecio() { return precio; }/// Getter para el precio
-    public boolean obtDisponible() { return disponible; }/// Getter para disponibilidad
-    public void setNombre(String nombre) { this.nombre = nombre; }// Setter para el nombre
-    public void setDisponible(boolean disponible) { this.disponible = disponible; }// Setter para disponibilidad >>>>>>> ced746e1c5c1f179bdb8f594730ed1e2d5b917b5
+    // Retorna el nombre del platillo
+    public String obtNombre() { return nombre; }
+    
+    // Retorna la descripción del platillo
+    public String obtDescripcion() { return descripcion; }
+    
+    // Retorna el precio del platillo
+    public double obtPrecio() { return precio; }
+    
+    // Indica si el platillo está disponible
+    public boolean obtDisponible() { return disponible; }
+    
+    // Establece el nombre del platillo
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    
+    // Establece la disponibilidad del platillo
+    public void setDisponible(boolean disponible) { this.disponible = disponible; }
+    
+    // Establece el precio del platillo
     public void setPrecio(double precio) { this.precio = precio; }
 }

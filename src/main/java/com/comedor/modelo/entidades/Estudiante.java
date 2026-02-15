@@ -5,22 +5,26 @@ public class Estudiante extends Usuario {
     private String carrera;
    
 
+    // Inicializa un estudiante con credenciales y datos académicos
     public Estudiante(String cedula, String contraseña, String carrera, String facultad) {
         super(cedula, contraseña);
         setCarrera(carrera);
         setFacultad(facultad);
     }
 
+    // Retorna el identificador de tipo para estudiante
     @Override
     public String obtTipo() { return "Estudiante"; }
 
-    // Getters
+    // Retorna la carrera que cursa el estudiante
     public String obtCarrera() { return carrera; }
+    
+    // Retorna la facultad a la que pertenece el estudiante
     public String obtFacultad() { return facultad; }
     
-    // Setters
+    // Establece la carrera del estudiante
     public void setCarrera(String carrera) { this.carrera = carrera; }
-    public void setFacultad(String facultad) { this.facultad = facultad; }
     
-
+    // Establece la facultad del estudiante
+    public void setFacultad(String facultad) { this.facultad = facultad; }
 }
