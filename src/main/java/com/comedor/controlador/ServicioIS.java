@@ -2,7 +2,6 @@ package com.comedor.controlador;
 
 import com.comedor.modelo.entidades.Usuario;
 import com.comedor.modelo.entidades.Administrador;
-import com.comedor.modelo.entidades.Estudiante;
 import com.comedor.modelo.excepciones.*;
 import com.comedor.modelo.validaciones.VSesion;
 import com.comedor.modelo.persistencia.RepoUsuarios;
