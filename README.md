@@ -15,4 +15,4 @@ De acuerdo con los requisitos del proyecto, la interfaz gráfica ha sido constru
 **Aclaratoria sobre el uso de Librerías:**
 Queremos hacer constar que para el desarrollo de este software:
 
-1  **Uso de Estándares:** Se han utilizado exclusivamente las librerías estándar incluidas en el JDK (`javax.swing`, `java.awt`, `java.io`, `java.nio`, `java.util`).
+**Uso de Estándares:** Se han utilizado exclusivamente las librerías estándar incluidas en el JDK (`javax.swing`, `java.awt`, `java.io`, `java.nio`, `java.util`).
