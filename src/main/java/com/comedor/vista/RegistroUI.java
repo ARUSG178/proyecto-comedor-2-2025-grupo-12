@@ -66,7 +66,6 @@ public class RegistroUI extends JFrame {
     private CardLayout cardLayout;
     private JPanel specificFieldsPanel;
 
-    private ModernTextField txtNombre;
     private ModernTextField txtCedula;
     private ModernTextField txtContrasena;
 
@@ -100,8 +99,10 @@ public class RegistroUI extends JFrame {
         setSize(1400, 950);
         setMinimumSize(new Dimension(900, 800));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Centra la ventana al abrirse
-        setExtendedState(JFrame.MAXIMIZED_BOTH); // Inicia en pantalla completa
+        // Centra la ventana al abrirse 
+        setLocationRelativeTo(null); 
+        // Inicia en pantalla completa
+        setExtendedState(JFrame.MAXIMIZED_BOTH); 
     }
 
     // Construye la interfaz gráfica completa
@@ -225,14 +226,11 @@ public class RegistroUI extends JFrame {
         gbc.gridy = 0; gbc.insets = new Insets(0, 0, 25, 0);
         formCard.add(titleLabel, gbc);
 
-        txtNombre = new ModernTextField("Ej. Pedro Pérez");
-        addLabelAndField(formCard, "Nombre:", txtNombre, gbc, 1);
-
         txtCedula = new ModernTextField("Ej. 12345678");
-        addLabelAndField(formCard, "Cédula:", txtCedula, gbc, 2);
+        addLabelAndField(formCard, "Cédula:", txtCedula, gbc, 1);
 
         txtContrasena = new ModernTextField("Mín. 6 caracteres");
-        addLabelAndField(formCard, "Contraseña:", txtContrasena, gbc, 3);
+        addLabelAndField(formCard, "Contraseña:", txtContrasena, gbc, 2);
 
         JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
         radioPanel.setOpaque(false);
@@ -243,7 +241,7 @@ public class RegistroUI extends JFrame {
         group.add(studentRadio); group.add(employeeRadio); group.add(adminRadio);
         studentRadio.setSelected(true);
         radioPanel.add(studentRadio); radioPanel.add(employeeRadio); radioPanel.add(adminRadio);
-        gbc.gridy = 4; gbc.insets = new Insets(15, 0, 15, 0);
+        gbc.gridy = 3; gbc.insets = new Insets(15, 0, 15, 0);
         formCard.add(radioPanel, gbc);
 
         cardLayout = new CardLayout();
@@ -271,13 +269,13 @@ public class RegistroUI extends JFrame {
         specificFieldsPanel.add(pEst, "Estudiante");
         specificFieldsPanel.add(pEmp, "Empleado");
         specificFieldsPanel.add(pAdm, "Administrador");
-        gbc.gridy = 5; gbc.insets = new Insets(0, 0, 25, 0);
+        gbc.gridy = 4; gbc.insets = new Insets(0, 0, 25, 0);
         formCard.add(specificFieldsPanel, gbc);
 
         JButton btnReg = new JButton("REGISTRAR");
         styleButton(btnReg);
         btnReg.addActionListener(e -> ejecutarRegistro());
-        gbc.gridy = 6; gbc.fill = GridBagConstraints.NONE; gbc.anchor = GridBagConstraints.CENTER;
+        gbc.gridy = 5; gbc.fill = GridBagConstraints.NONE; gbc.anchor = GridBagConstraints.CENTER;
         formCard.add(btnReg, gbc);
 
         centeringSpace.add(formCard, new GridBagConstraints());
@@ -291,11 +289,10 @@ public class RegistroUI extends JFrame {
 
     // Ejecuta la lógica de validación y registro del usuario
     private void ejecutarRegistro() {
-        String nombre = txtNombre.getText().trim();
         String cedula = txtCedula.getText().trim();
         String contr = txtContrasena.getText();
 
-        if (nombre.isEmpty() || cedula.isEmpty() || contr.isEmpty()) {
+        if (cedula.isEmpty() || contr.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Complete todos los campos obligatorios", "Aviso", JOptionPane.WARNING_MESSAGE);
             return;
         }

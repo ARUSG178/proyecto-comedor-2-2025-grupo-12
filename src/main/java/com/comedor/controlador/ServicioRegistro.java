@@ -18,7 +18,7 @@ public class ServicioRegistro {
         this.repositorio = new RepoUsuarios();
     }
 
-    // Coordina la validación y persistencia de un nuevo usuario en el sistema
+    // Valida la identidad con Secretaría y guarda la cuenta en la base de datos local
     public void registrarUsuario(Usuario nuevoUsuario) throws InvalidCredentialsException, DuplicateUserException, IOException {
         List<Usuario> usuariosRegistrados = repositorio.listarUsuarios();
 

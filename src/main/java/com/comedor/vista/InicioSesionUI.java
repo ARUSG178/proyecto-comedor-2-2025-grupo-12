@@ -44,6 +44,8 @@ import com.comedor.modelo.entidades.Administrador;
 import com.comedor.modelo.entidades.Estudiante;
 import com.comedor.modelo.entidades.Usuario;
 import com.comedor.modelo.excepciones.InvalidCredentialsException;
+import com.comedor.vista.admin.MainAdminUI;
+import com.comedor.vista.usuario.MainUserUI;
 
 // Interfaz gráfica principal para el inicio de sesión del sistema SAGC UCV
 public class InicioSesionUI extends JFrame {
@@ -226,26 +228,20 @@ public class InicioSesionUI extends JFrame {
             
             Usuario usuarioReal = servicio.IniciarSesion(usuarioIngresado);
             
+            JOptionPane.showMessageDialog(this, 
+                "¡Bienvenido al sistema!", 
+                "Éxito", 
+                JOptionPane.INFORMATION_MESSAGE);
+
             if (usuarioReal instanceof Administrador) {
-                JOptionPane.showMessageDialog(this, 
-                    "¡Bienvenido Administrador!", 
-                    "Éxito", 
-                    JOptionPane.INFORMATION_MESSAGE);
                 SwingUtilities.invokeLater(() -> {
-                    // this.dispose();
-                    // new MainAdminUI().setVisible(true);
+                    this.dispose();
+                    new MainAdminUI().setVisible(true);
                 });
-                
-            } else if (usuarioReal instanceof Estudiante) {
-                JOptionPane.showMessageDialog(this, 
-                    "¡Bienvenido Estudiante!", 
-                    "Éxito", 
-                    JOptionPane.INFORMATION_MESSAGE);
-                
-                // Redirigir a MainUserUI
+            } else {
                 SwingUtilities.invokeLater(() -> {
-                    // this.dispose();
-                    // new MainUserUI().setVisible(true);
+                    this.dispose();
+                    new MainUserUI().setVisible(true);
                 });
             }
             

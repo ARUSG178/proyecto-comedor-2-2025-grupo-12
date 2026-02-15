@@ -13,61 +13,67 @@ import java.util.List;
 public class ServicioIS {
 
     // Autentica al usuario verificando credenciales y tipo de cuenta en la base de datos
-    public Usuario IniciarSesion(Usuario uIngresado)
-            throws InvalidCredentialsException, IOException {
-
+    public Usuario IniciarSesion(Usuario uIngresado) throws InvalidCredentialsException, IOException {
         RepoUsuarios repo = new RepoUsuarios();
         List<Usuario> usuarios = repo.listarUsuarios();
 
-        Usuario uBD = null;
-        for (Usuario u : usuarios) {
-            if (u != null && u.obtCedula() != null && u.obtCedula().trim().equalsIgnoreCase(uIngresado.obtCedula().trim())) {
-                uBD = u;
-                break;
-            }
-        }
+        Usuario uBD = usuarioPorCedula(uIngresado.obtCedula(), usuarios);
 
         if (uBD == null) {
             throw new InvalidCredentialsException("Usuario no encontrado");
         }
 
+        vTipoUsuario(uBD, uIngresado);
+
         VSesion validador = new VSesion(uIngresado, uBD);
         try {
             validador.validar();
-            System.out.println("LOG: Inicio de sesión exitoso para cédula: " + uBD.obtCedula());
+            pLoginExitoso(uBD, usuarios, repo);
+            return uBD;
         } catch (InvalidCredentialsException ex) {
-            for (int i = 0; i < usuarios.size(); i++) {
-                Usuario x = usuarios.get(i);
-                if (x != null && x.obtCedula() != null && x.obtCedula().trim().equalsIgnoreCase(uBD.obtCedula().trim())) {
-                    usuarios.set(i, uBD);
-                    break;
-                }
-            }
-            repo.guardarTodos(usuarios);
+            pLoginFallido(usuarios, repo);
             throw ex;
         }
+    }
 
-        if (uBD instanceof Administrador && uIngresado instanceof Estudiante) {
+    // Busca un usuario en la lista por su cédula
+    private Usuario usuarioPorCedula(String cedula, List<Usuario> usuarios) {
+        for (Usuario u : usuarios) {
+            if (u != null && u.obtCedula() != null && u.obtCedula().trim().equalsIgnoreCase(cedula.trim())) {
+                return u;
+            }
+        }
+        return null;
+    }
+
+    // Valida que el tipo de usuario seleccionado en la UI coincida con el de la BD
+    private void vTipoUsuario(Usuario usuarioBD, Usuario usuarioIngresado) throws InvalidCredentialsException {
+        boolean esAdminBD = usuarioBD instanceof Administrador;
+        boolean esAdminIngresado = usuarioIngresado instanceof Administrador;
+
+        if (esAdminBD && !esAdminIngresado) {
             throw new InvalidCredentialsException(
                 "Esta cuenta es de administrador. " +
                 "Por favor, seleccione 'Administrador' en el tipo de usuario.");
         }
         
-        if (uBD instanceof Estudiante && uIngresado instanceof Administrador) {
+        if (!esAdminBD && esAdminIngresado) {
             throw new InvalidCredentialsException(
-                "Esta cuenta es de estudiante. " +
-                "Por favor, seleccione 'Estudiante' en el tipo de usuario.");
+                "Esta cuenta es de usuario. " +
+                "Por favor, seleccione 'Usuario' en el tipo de usuario.");
         }
+    }
 
-        for (int i = 0; i < usuarios.size(); i++) {
-            Usuario x = usuarios.get(i);
-            if (x != null && x.obtCedula() != null && x.obtCedula().trim().equalsIgnoreCase(uBD.obtCedula().trim())) {
-                usuarios.set(i, uBD);
-                break;
-            }
-        }
-        repo.guardarTodos(usuarios);
-        
-        return uBD;
+    // Procesa un inicio de sesión exitoso, reseteando intentos y guardando
+    private void pLoginExitoso(Usuario usuario, List<Usuario> todosLosUsuarios, RepoUsuarios repo) throws IOException {
+        System.out.println("LOG: Inicio de sesión exitoso para cédula: " + usuario.obtCedula());
+        usuario.setIntentosFallidos(0);
+        repo.guardarTodos(todosLosUsuarios);
+    }
+
+    // Procesa un inicio de sesión fallido, guardando el estado actualizado del usuario
+    private void pLoginFallido(List<Usuario> todosLosUsuarios, RepoUsuarios repo) throws IOException {
+        // VSesion ya modificó el objeto usuario en la lista, solo persistimos.
+        repo.guardarTodos(todosLosUsuarios);
     }
 }

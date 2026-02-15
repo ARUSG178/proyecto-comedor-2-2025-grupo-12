@@ -27,16 +27,12 @@ public class ServicioCosto {
 
     // Obtiene una lista de costos filtrados por el periodo especificado
     public List<RegistroCosto> obtenerCostosPorPeriodo(String periodo) {
-        return costos.stream()
-                .filter(c -> c.obtPeriodo().equals(periodo))
-                .collect(Collectors.toList());
+        return costos.stream().filter(c -> c.obtPeriodo().equals(periodo)).collect(Collectors.toList());
     }
     
     // Calcula la suma total de los montos de costos para un periodo dado
     public double obtenerTotalCostosPorPeriodo(String periodo) {
-        return obtenerCostosPorPeriodo(periodo).stream()
-                .mapToDouble(RegistroCosto::obtMonto)
-                .sum();
+        return obtenerCostosPorPeriodo(periodo).stream().mapToDouble(RegistroCosto::obtMonto).sum();
     }
 
     // Calcula el costo unitario por bandeja dividiendo el total de costos entre la producción
