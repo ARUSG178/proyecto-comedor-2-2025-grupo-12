@@ -34,4 +34,10 @@ public class Empleado extends Usuario {
     
     // Establece el código de empleado
     public void setCodigoEmpleado(String codigoEmpleado) { this.codigoEmpleado = codigoEmpleado; }
+
+    @Override
+    public double calcularTarifa(double precioBase) {
+        // Los empleados tienen un subsidio del 50%, pagan la mitad del precio base
+        return precioBase * 0.50;
+    }
 }

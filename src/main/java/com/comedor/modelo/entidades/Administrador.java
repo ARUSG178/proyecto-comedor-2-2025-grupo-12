@@ -30,4 +30,10 @@ public class Administrador extends Usuario {
     
     // Métodos placeholder para gestión de reservas
     public void gestionarReservas() { }
+
+    @Override
+    public double calcularTarifa(double precioBase) {
+        // Los administradores pagan la tarifa completa (o la lógica que aplique)
+        return precioBase;
+    }
 }
