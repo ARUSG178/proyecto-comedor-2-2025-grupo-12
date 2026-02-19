@@ -394,4 +394,4 @@ public class InicioSesionUI extends JFrame {
             g2.dispose();
         }
     }
-}
+}// fastidio los commits git se bugea
