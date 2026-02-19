@@ -12,11 +12,18 @@ import com.comedor.util.ServicioUtil;
 public class ServicioCosto {
     private List<RegistroCosto> costos = new ArrayList<>();
     private Map<String, Integer> produccionBandejas = new HashMap<>();
+    private Map<String, Double> mermas = new HashMap<>();
 
     // Registra la cantidad estimada de bandejas a producir en un periodo específico
     public void registrarProduccionBandejas(String periodo, int cantidad) {
         produccionBandejas.put(periodo, cantidad);
         System.out.println("Producción estimada de bandejas para " + periodo + ": " + cantidad);
+    }
+
+    // Registra el porcentaje de merma (0.0 a 1.0) esperado para el periodo
+    public void registrarMerma(String periodo, double porcentaje) {
+        mermas.put(periodo, porcentaje);
+        System.out.println("Merma registrada para " + periodo + ": " + (porcentaje * 100) + "%");
     }
 
     // Agrega un nuevo registro de costo al sistema con su tipo y descripción
@@ -43,6 +50,19 @@ public class ServicioCosto {
             return 0.0;
         }
         return totalCostos / cantidad;
+    }
+
+    // Calcula el Costo Base de Bandeja (CCB) considerando producción, costos y merma
+    public double calcularCCB(String periodo) {
+        double totalCostos = obtenerTotalCostosPorPeriodo(periodo);
+        int cantidadPlanificada = produccionBandejas.getOrDefault(periodo, 0);
+        double porcentajeMerma = mermas.getOrDefault(periodo, 0.0);
+
+        if (cantidadPlanificada <= 0) return 0.0;
+
+        // El CCB se calcula agregando el porcentaje de merma al costo unitario base
+        double costoUnitario = totalCostos / cantidadPlanificada;
+        return costoUnitario * (1 + porcentajeMerma);
     }
 
     // Registra un cambio de precio de platillo como costo variable en el periodo actual

@@ -37,12 +37,11 @@ public class ServicioIS {
 
     // Busca un usuario en la lista por su cédula
     private Usuario usuarioPorCedula(String cedula, List<Usuario> usuarios) {
-        for (Usuario u : usuarios) {
-            if (u != null && u.obtCedula() != null && u.obtCedula().trim().equalsIgnoreCase(cedula.trim())) {
-                return u;
-            }
-        }
-        return null;
+        return usuarios.stream()
+                .filter(u -> u != null && u.obtCedula() != null && 
+                             u.obtCedula().trim().equalsIgnoreCase(cedula.trim()))
+                .findFirst()
+                .orElse(null);
     }
 
     // Valida que el tipo de usuario seleccionado en la UI coincida con el de la BD

@@ -51,4 +51,7 @@ public abstract class Usuario {
 
     // Retorna el tipo de usuario como cadena de texto
     public abstract String obtTipo();
+
+    // Calcula la tarifa final a pagar por el usuario basado en un precio base (CCB o Precio de Venta)
+    public abstract double calcularTarifa(double precioBase);
 }
