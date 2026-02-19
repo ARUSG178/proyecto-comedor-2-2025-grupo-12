@@ -12,17 +12,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Utilidades comunes para servicios y persistencia.
- * Centraliza lógica de Archivos, Fechas y Formatos.
- */
 public class ServicioUtil {
 
-    // --- SECCIÓN DE ARCHIVOS ---
-
-    /**
-     * Asegura que el archivo y sus directorios padres existan.
-     */
+    //Asegura que el archivo y sus directorios padres existan.
     public static void garantizarArchivo(String ruta) throws IOException {
         Path path = Paths.get(ruta);
         if (path.getParent() != null && !Files.exists(path.getParent())) {
@@ -33,9 +25,8 @@ public class ServicioUtil {
         }
     }
 
-    /**
-     * Escribe una línea al final del archivo.
-     */
+    //Escribe una línea al final del archivo.
+     
     public static void escribirLinea(String ruta, String linea, boolean append) throws IOException {
         garantizarArchivo(ruta);
         Path path = Paths.get(ruta);
@@ -48,9 +39,8 @@ public class ServicioUtil {
         }
     }
 
-    /**
-     * Lee todas las líneas de un archivo.
-     */
+    // Lee todas las líneas de un archivo.
+     
     public static List<String> leerLineas(String ruta) throws IOException {
         Path path = Paths.get(ruta);
         List<String> lineas = new ArrayList<>();
@@ -67,9 +57,8 @@ public class ServicioUtil {
 
     // --- SECCIÓN DE FECHAS ---
 
-    /**
-     * Retorna el periodo actual en formato "YYYY-MM".
-     */
+    //Retorna el periodo actual en formato "YYYY-MM".
+     
     public static String obtenerPeriodoActual() {
         LocalDate hoy = LocalDate.now();
         return hoy.getYear() + "-" + String.format("%02d", hoy.getMonthValue());
@@ -77,9 +66,8 @@ public class ServicioUtil {
 
     // --- SECCIÓN DE MONEDA ---
 
-    /**
-     * Formatea un double a String de moneda (Ej: "Bs. 1.250,50").
-     */
+    //Formatea un double a String de moneda (Ej: "Bs. 1.250,50").
+     
     public static String formatearMoneda(double monto) {
         return String.format("Bs. %,.2f", monto)
                 .replace(",", "X")
@@ -87,9 +75,8 @@ public class ServicioUtil {
                 .replace("X", ".");
     }
 
-    /**
-     * Parsea un String de moneda a double, manejando "Bs." y comas.
-     */
+    //Parsea un String de moneda a double, manejando "Bs." y comas.
+     
     public static double parsearMoneda(String texto) throws NumberFormatException {
         String limpio = texto.replace("Bs.", "").replace(".", "").replace(",", ".").trim();
         return Double.parseDouble(limpio);
