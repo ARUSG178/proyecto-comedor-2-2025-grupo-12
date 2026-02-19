@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-//clase que representa el menú diario del comedor
 public class Menu {
     private static Menu instance;
     private String nombre;
@@ -14,12 +13,12 @@ public class Menu {
     private LocalDate fechaFin;
     private List<Platillo> platillos;
 
-    // Constructor privado para implementar Singleton
+    // Constructor privado para inicializar la lista de platillos (Singleton)
     private Menu() {
         this.platillos = new ArrayList<>();
     }
 
-    // Método estático para obtener la instancia única de Menu
+    // Retorna la instancia única de la clase Menu
     public static Menu getInstance() {
         if (instance == null) {
             instance = new Menu();
@@ -27,24 +26,41 @@ public class Menu {
         return instance;
     }
 
-    public void agregarPlatillo(Platillo p) {// Metodo para agregar un platillo al menu
-        platillos.add(p);// Agrega el platillo a la lista de platillos
+    // Agrega un nuevo platillo a la lista del menú
+    public void agregarPlatillo(Platillo p) {
+        platillos.add(p);
     }
 
-    public LocalDate getFechaInicio() { return fechaInicio; }// Getter para la fecha del menu
+    // Retorna la fecha de inicio de vigencia del menú
+    public LocalDate obtFechaInicio() { return fechaInicio; }
+    
+    // Establece la fecha de inicio de vigencia del menú
     public void setFechaInicio(LocalDate fechaInicio) { this.fechaInicio = fechaInicio; }
 
-    public LocalDate getFechaFin() { return fechaFin; }
+    // Retorna la fecha de fin de vigencia del menú
+    public LocalDate obtFechaFin() { return fechaFin; }
+    
+    // Establece la fecha de fin de vigencia del menú
     public void setFechaFin(LocalDate fechaFin) { this.fechaFin = fechaFin; }
 
-    public List<Platillo> getPlatillos() { return platillos; }// Getter para la lista de platillos del menu
+    // Retorna la lista de platillos configurados en el menú
+    public List<Platillo> obtPlatillos() { return platillos; }
 
-    public String getMenuID() { return menuID; }
+    // Retorna el identificador único del menú
+    public String obtMenuID() { return menuID; }
+    
+    // Establece el identificador único del menú
     public void setMenuID(String menuID) { this.menuID = menuID; }
 
-    public String getNombre() { return nombre; }
+    // Retorna el nombre descriptivo del menú
+    public String obtNombre() { return nombre; }
+    
+    // Establece el nombre descriptivo del menú
     public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public boolean isEstado() {return estado;}
+    // Indica si el menú está activo
+    public boolean obtEstado() {return estado;}
+    
+    // Establece el estado de actividad del menú
     public void setEstado(boolean estado) { this.estado = estado; }
 }

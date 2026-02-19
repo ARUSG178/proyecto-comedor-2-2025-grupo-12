@@ -1,7 +1,0 @@
-com\comedor\modelo\entidades\Menu.class
-com\comedor\modelo\entidades\Usuario.class
-com\comedor\modelo\entidades\Platillo.class
-com\comedor\controlador\ServicioCosto.class
-com\comedor\modelo\entidades\RegistroCosto$TipoCosto.class
-com\comedor\modelo\entidades\RegistroCosto.class
-com\comedor\controlador\ServicioMenu.class

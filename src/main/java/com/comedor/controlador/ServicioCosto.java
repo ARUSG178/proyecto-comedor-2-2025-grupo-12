@@ -1,31 +1,20 @@
-package com.comedor.controlador;// paquete del controlador
+package com.comedor.controlador;
 
 import java.util.ArrayList;// importa arraylist
 import java.util.HashMap;// importa hashmap
 import java.util.List;// importa lista
 import java.util.Map;// importa mapa
 import java.util.stream.Collectors;// importa collectors para streams
-import java.time.LocalDate; // importa LocalDate
 
 import com.comedor.modelo.entidades.RegistroCosto;
-import com.comedor.modelo.entidades.Costos;
 
 public class ServicioCosto {// clase para gestionar costos
-    private static List<RegistroCosto> costos = new ArrayList<>();// STATIC: lista de costos registrados
-    private static Map<String, Integer> produccionBandejas = new HashMap<>();// STATIC: mapa de produccion por periodo
-    private static Map<String, Costos> costosMensuales = new HashMap<>(); // STATIC: almacena los costos agregados por el admin
+    private List<RegistroCosto> costos = new ArrayList<>();// lista de costos registrados
+    private Map<String, Integer> produccionBandejas = new HashMap<>();// mapa de produccion por periodo
 
     public void registrarProduccionBandejas(String periodo, int cantidad) {// registra bandejas producidas
         produccionBandejas.put(periodo, cantidad);// guarda la cantidad
         System.out.println("Producción estimada de bandejas para " + periodo + ": " + cantidad);// imprime confirmacion
-    }
-
-    // Método para que el Admin suba los valores de la fórmula directamente
-    public void registrarValoresCCB(String periodo, double fijos, double variables, int produccion) {
-        Costos c = new Costos(periodo, fijos, variables);
-        costosMensuales.put(periodo, c);
-        registrarProduccionBandejas(periodo, produccion);
-        System.out.println("Valores CCB registrados para " + periodo + ": CF=" + fijos + ", CV=" + variables + ", Prod=" + produccion);
     }
 
     public void agregarCosto(String periodo, RegistroCosto.TipoCosto tipo, String descripcion, double monto) {// agrega un nuevo costo
@@ -40,11 +29,6 @@ public class ServicioCosto {// clase para gestionar costos
     }
     
     public double obtenerTotalCostosPorPeriodo(String periodo) {// calcula total de costos
-        // Si el admin subió los valores agregados (Costos.java), usamos esos
-        if (costosMensuales.containsKey(periodo)) {
-            return costosMensuales.get(periodo).calcularTotal();
-        }
-        // Si no, sumamos los costos individuales (RegistroCosto)
         return obtenerCostosPorPeriodo(periodo).stream()// stream de costos filtrados
                 .mapToDouble(RegistroCosto::getMonto)// obtiene los montos
                 .sum();// suma los montos
@@ -56,7 +40,7 @@ public class ServicioCosto {// clase para gestionar costos
         if (cantidad <= 0) {// verifica si es cero o menos
             return 0.0;// retorna cero para evitar error
         }
-        return totalCostos / cantidad;// calcula costo unitario
+        return totalCostos / cantidad;
     }
 
     // Obtiene el periodo actual (Ej: "2025-05")
@@ -69,10 +53,9 @@ public class ServicioCosto {// clase para gestionar costos
         return calcularCostoUnitarioBandeja(obtenerPeriodoActual());
     }
 
-    // Registra un cambio de precio de un platillo como un costo variable.
-    // Se guarda el nuevo precio y se incluye una descripción con el platillo, actor y cambio.
+    // Registra un cambio de precio de platillo como costo variable en el periodo actual
     public void registrarCambioPrecio(String nombrePlatillo, double precioAnterior, double precioNuevo, String actor) {
-        String periodo = obtenerPeriodoActual();
+        String periodo = java.time.LocalDate.now().getYear() + "-" + String.format("%02d", java.time.LocalDate.now().getMonthValue());
         double diferencia = precioNuevo - precioAnterior;
         String descripcion = String.format("Cambio precio %s por %s: %.2f -> %.2f (diff %.2f)", nombrePlatillo, actor, precioAnterior, precioNuevo, diferencia);
         agregarCosto(periodo, RegistroCosto.TipoCosto.VARIABLE, descripcion, precioNuevo);

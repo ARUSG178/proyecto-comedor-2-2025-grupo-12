@@ -2,12 +2,12 @@ package com.comedor.modelo.validaciones;
 
 import com.comedor.modelo.entidades.Usuario;
 import com.comedor.modelo.excepciones.*;
-import com.comedor.modelo.util.ValidacionUtil;
 
 public class VSesion {
     private final Usuario uIngresado;
     private final Usuario uBaseDatos;
 
+    // Inicializa el validador de sesión con el usuario ingresado y el de base de datos
     public VSesion(Usuario uIngresado, Usuario uBaseDatos) {
         if (uIngresado == null || uBaseDatos == null) {
             throw new IllegalArgumentException("Los objetos de usuario no pueden ser nulos");
@@ -16,24 +16,23 @@ public class VSesion {
         this.uBaseDatos = uBaseDatos;
     }
 
-    boolean validarCorreo() {
-        return uIngresado.getEmail().trim().equals(uBaseDatos.getEmail().trim());
+    // Verifica si la cédula ingresada coincide con la almacenada
+    boolean validarCedula() {
+        return uIngresado.obtCedula().trim().equals(uBaseDatos.obtCedula().trim());
     }
 
+    // Verifica si la contraseña ingresada coincide con la almacenada
     boolean validarContraseña() {
-        return uIngresado.getContraseña().equals(uBaseDatos.getContraseña());
+        return uIngresado.obtContraseña().equals(uBaseDatos.obtContraseña());
     }
 
-    public void validar() throws InvalidEmailFormatException, InvalidCredentialsException {
+    // Ejecuta la validación de credenciales y gestiona intentos fallidos
+    public void validar() throws InvalidCredentialsException {
 
-        if (!ValidacionUtil.formatoCorreo(uIngresado.getEmail())) {
-            throw new InvalidEmailFormatException("El correo no es institucional");
-        }
+        if (!(validarCedula() && validarContraseña())) {
+            uBaseDatos.setIntentosFallidos(uBaseDatos.obtIntentosFallidos() + 1);
 
-        if (!(validarCorreo() && validarContraseña())) {
-            uBaseDatos.setIntentosFallidos(uBaseDatos.getIntentosFallidos() + 1);
-
-            if (uBaseDatos.getIntentosFallidos() >= 3) {
+            if (uBaseDatos.obtIntentosFallidos() >= 3) {
                 uBaseDatos.setEstado(false);
                 throw new InvalidCredentialsException("Cuenta bloqueada por múltiples intentos fallidos");
             }

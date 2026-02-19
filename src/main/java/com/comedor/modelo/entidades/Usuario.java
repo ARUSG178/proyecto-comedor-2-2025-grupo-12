@@ -1,58 +1,54 @@
 package com.comedor.modelo.entidades;
 
-// Clase abstracta que representa un usuario del sistema
-
 public abstract class Usuario {
     private final String cedula;  
-    private String nombre;
-    private String apellido;
-    private String email;
     private String contraseña;
     private boolean estado;
     private int intentosFallidos;
     private double saldo;
 
-// Constructor de la clase Usuario
-
+    // Inicializa un usuario con valores por defecto
     public Usuario() {
         this.cedula = "";
-        this.nombre = "";
-        this.apellido = "";
-        this.email = "";
         this.contraseña = "";
     }
     
-    public Usuario(String cedula, String nombre, String apellido, String email, String contraseña) {
+    // Inicializa un usuario con credenciales y estado activo por defecto
+    public Usuario(String cedula, String contraseña) {
         this.cedula = cedula;
-        setNombre(nombre);
-        setApellido(apellido);
-        setEmail(email);
-        setContraseña(contraseña);
+        this.contraseña = contraseña;
         this.estado = true;      
         this.intentosFallidos = 0;
         this.saldo = 0.0;
     }
 
-    // Getters
-    public String getCedula() { return cedula; }
-    public String getNombre() { return nombre; }
-    public String getApellido() { return apellido; }
-    public String getEmail() { return email; }
-    public String getContraseña() { return contraseña; }
-    public boolean isEstado() { return estado; }
-    public int getIntentosFallidos() { return intentosFallidos; }
+    // Retorna el número de cédula del usuario
+    public String obtCedula() { return cedula; }
+    
+    // Retorna la contraseña del usuario
+    public String obtContraseña() { return contraseña; }
+    
+    // Indica si el usuario está activo o bloqueado
+    public boolean obtEstado() { return estado; }
+    
+    // Retorna el contador de intentos fallidos de inicio de sesión
+    public int obtIntentosFallidos() { return intentosFallidos; }
+    
+    // Retorna el saldo actual disponible en el monedero
+    public double obtSaldo() { return saldo; }
 
-    public double getSaldo() { return saldo; }
-
-    // Setters
-    public void setNombre(String nombre) { this.nombre = nombre; }
-    public void setApellido(String apellido) { this.apellido = apellido; }
-    public void setEmail(String email) { this.email = email; }
+    // Actualiza la contraseña del usuario
     public void setContraseña(String contraseña) { this.contraseña = contraseña; }
+    
+    // Establece el estado de la cuenta (activo/bloqueado)
     public void setEstado(boolean estado) { this.estado = estado; }
+    
+    // Actualiza el número de intentos fallidos
     public void setIntentosFallidos(int intentosFallidos) { this.intentosFallidos = intentosFallidos; }
+    
+    // Actualiza el saldo del usuario
     public void setSaldo(double saldo) { this.saldo = saldo; }
 
-    // Setter abstracto
-    public abstract String getTipo();
+    // Retorna el tipo de usuario como cadena de texto
+    public abstract String obtTipo();
 }

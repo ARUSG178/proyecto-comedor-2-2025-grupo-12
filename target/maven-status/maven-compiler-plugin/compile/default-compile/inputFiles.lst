@@ -1,31 +1,31 @@
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Menu.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\excepciones\InvalidEmailFormatException.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Usuario.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\vista\usuario\MainUserUI.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\controlador\ServicioCosto.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Reserva.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\util\ValidacionUtil.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\vista\admin\MainAdminUI.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Estudiante.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\controlador\ServicioIS.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\controlador\ServicioMenu.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\vista\admin\MenuAdminUI.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Empleado.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\controlador\ServicioRegistro.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Reporte.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\vista\usuario\MenuUserUI.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Insumo.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\RegistroCosto.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Monedero.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\excepciones\DuplicateUserException.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Platillo.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\vista\admin\VerMenuAdminUI.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\vista\RegistroUI.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\persistencia\RepositorioUsuarios.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\excepciones\InvalidCredentialsException.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Costos.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\validaciones\VSesion.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\vista\ISUI.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Administrador.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Turno.java
-c:\Users\Juan Dos Ramos\Documents\GitHub\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\validaciones\VRegistro.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\vista\admin\MenuAdminUI.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Costos.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\vista\ISUI.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\excepciones\DuplicateUserException.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\RegistroCosto.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\controlador\ServicioCosto.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\controlador\ServicioIS.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Administrador.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Menu.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Turno.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\validaciones\VRegistro.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\util\ValidacionUtil.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Platillo.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\excepciones\InvalidCredentialsException.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\excepciones\InvalidEmailFormatException.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\controlador\ServicioMenu.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\validaciones\VSesion.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Empleado.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Estudiante.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Reporte.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\vista\RegistroUI.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Monedero.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Reserva.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\vista\usuario\MainUserUI.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Usuario.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\controlador\ServicioRegistro.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\vista\admin\MainAdminUI.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\entidades\Insumo.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\vista\admin\VerMenuAdminUI.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\vista\usuario\MenuUserUI.java
+c:\Users\hanli\Desktop\Stuff\proyecto-comedor-2-2025-grupo-12\src\main\java\com\comedor\modelo\persistencia\RepositorioUsuarios.java

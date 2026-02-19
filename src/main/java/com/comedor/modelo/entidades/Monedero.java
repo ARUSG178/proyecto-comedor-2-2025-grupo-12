@@ -1,33 +1,38 @@
 package com.comedor.modelo.entidades;
 
-public class Monedero {// clase publica Monedero
-    private Usuario propietario;// atributo privado de tipo Usuario para el propietario
+public class Monedero {
+    private Usuario propietario;
 
-    public Monedero(Usuario propietario) {//constructor de la clase Monedero que recibe un objeto Usuario como parametro
+    // Inicializa el monedero asociándolo a un usuario propietario
+    public Monedero(Usuario propietario) {
         this.propietario = propietario;
     }
 
-    // Getters
-    public Usuario getPropietario() { return propietario; }// metodo publico para obtener el propietario del monedero
-    public double getSaldo() { return propietario.getSaldo(); }// obtiene el saldo directamente del usuario
+    // Retorna el usuario propietario del monedero
+    public Usuario obtPropietario() { return propietario; }
+    
+    // Obtiene el saldo actual directamente del usuario propietario
+    public double obtSaldo() { return propietario.obtSaldo(); }
 
-    // Permite aumentar el saldo
+    // Aumenta el saldo del propietario si el monto es positivo
     public void recargar(double monto) {
         if (monto > 0) {
-            propietario.setSaldo(propietario.getSaldo() + monto);
+            propietario.setSaldo(propietario.obtSaldo() + monto);
         }
     }
-    // Permite descontar del saldo si hay fondos suficientes
-    public boolean descontar(double monto) {// clase publica tipo boolean o buleana para devolver verdadero o falso
-        if (monto > 0 && getSaldo() >= monto) {
-            propietario.setSaldo(getSaldo() - monto);
+    
+    // Descuenta el monto del saldo si hay fondos suficientes
+    public boolean descontar(double monto) {
+        if (monto > 0 && obtSaldo() >= monto) {
+            propietario.setSaldo(obtSaldo() - monto);
             return true;
         }
         return false;
     }
 
+    // Retorna una representación en texto del estado del monedero
     @Override
-    public String toString() {// metodo para devolver una representacion en cadena del objeto Monedero
-        return "Monedero de " + propietario.getNombre() + " [Saldo: $" + getSaldo() + "]";
+    public String toString() {
+        return "Monedero de " + propietario.obtCedula() + " [Saldo: $" + obtSaldo() + "]";
     }
 }
