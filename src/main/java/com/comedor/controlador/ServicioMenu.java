@@ -5,11 +5,17 @@ import java.util.List;
 import com.comedor.modelo.entidades.Menu;
 import com.comedor.modelo.entidades.Platillo;
 import com.comedor.modelo.entidades.Usuario;
+import com.comedor.modelo.entidades.Estudiante;
+import com.comedor.modelo.entidades.Empleado;
 import com.comedor.modelo.entidades.Administrador;
 
 public class ServicioMenu {
     private final Menu menu = Menu.getInstance();
     private final ServicioCosto servicioCosto = new ServicioCosto();
+
+    // Factores de cobro según tipo de usuario (1.0 = 100%, 0.2 = 20%)
+    private static final double FACTOR_PAGO_ESTUDIANTE = 0.20; // Estudiante paga 20%
+    private static final double FACTOR_PAGO_EMPLEADO = 0.50;   // Empleado paga 50%
 
     // Permite a un administrador subir/actualizar el menú semanal.
     // Solo los usuarios de tipo Administrador pueden ejecutar esta acción.
@@ -95,6 +101,32 @@ public class ServicioMenu {
         System.out.println("No se encontró el platillo: " + nombrePlatillo);
     }
 
+    // Permite al administrador registrar los costos fijos, variables y producción del mes para el cálculo del CCB
+    public void registrarCostosMensuales(Usuario actor, double fijos, double variables, int produccion) {
+        if (!(actor instanceof Administrador)) {
+            System.out.println("Acceso denegado: solo administradores pueden registrar costos.");
+            return;
+        }
+        String periodo = servicioCosto.obtenerPeriodoActual();
+        servicioCosto.registrarValoresCCB(periodo, fijos, variables, produccion);
+        System.out.println("Costos mensuales actualizados por: " + actor.getNombre());
+    }
+
+    // Calcula la tarifa automática basada en el rol del usuario y el precio base del platillo.
+    public double calcularTarifaPorUsuario(Usuario usuario, Platillo p) {
+        // 1. Obtenemos el CCB real del periodo. Si es 0 (no hay datos), usamos el precio referencial del platillo.
+        double ccb = servicioCosto.obtenerCCBActual();
+        double precioBase = (ccb > 0) ? ccb : p.getPrecio();
+        
+        if (usuario instanceof Estudiante) {
+            return precioBase * FACTOR_PAGO_ESTUDIANTE;
+        } else if (usuario instanceof Empleado) {
+            return precioBase * FACTOR_PAGO_EMPLEADO;
+        } else {
+            return precioBase; // Administradores o externos pagan completo
+        }
+    }
+
     // Visualización del menú: disponible tanto para usuarios como administradores
     public void visualizarMenu(Usuario actor) {
         if (menu.getPlatillos() == null || menu.getPlatillos().isEmpty()) {
@@ -106,7 +138,9 @@ public class ServicioMenu {
         System.out.println("Periodo: " + menu.getFechaInicio() + " - " + menu.getFechaFin());
         System.out.println("Platillos:");
         for (Platillo p : menu.getPlatillos()) {
-            System.out.println(" - " + p);
+            // Calculamos el precio específico para quien está viendo el menú
+            double precioFinal = calcularTarifaPorUsuario(actor, p);
+            System.out.println(" - " + p.getNombre() + " | Precio Regular: " + p.getPrecio() + " | Tu Precio: " + String.format("%.2f", precioFinal));
         }
     }
 

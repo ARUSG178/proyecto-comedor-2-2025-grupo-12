@@ -26,4 +26,9 @@ public class Platillo {
     public void setNombre(String nombre) { this.nombre = nombre; }// Setter para el nombre
     public void setDisponible(boolean disponible) { this.disponible = disponible; }// Setter para disponibilidad >>>>>>> ced746e1c5c1f179bdb8f594730ed1e2d5b917b5
     public void setPrecio(double precio) { this.precio = precio; }
+
+    @Override
+    public String toString() {
+        return nombre + " ($" + precio + ")";
+    }
 }
