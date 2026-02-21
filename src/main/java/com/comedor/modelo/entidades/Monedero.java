@@ -2,6 +2,7 @@ package com.comedor.modelo.entidades;
 
 public class Monedero {
     private Usuario propietario;
+    public static final double LIMITE_SALDO = 9999.0;
 
     // Inicializa el monedero asociándolo a un usuario propietario
     public Monedero(Usuario propietario) {
@@ -16,7 +17,7 @@ public class Monedero {
 
     // Aumenta el saldo del propietario si el monto es positivo
     public void recargar(double monto) {
-        if (monto > 0) {
+        if (monto > 0 && (propietario.obtSaldo() + monto) <= LIMITE_SALDO) {
             propietario.setSaldo(propietario.obtSaldo() + monto);
         }
     }

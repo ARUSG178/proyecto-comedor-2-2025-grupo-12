@@ -87,7 +87,7 @@ public class MenuAdminUI extends JFrame {
         for (int i = 0; i < 4; i++) {
             rutasImagenes[i] = "/com/comedor/resources/images/menu/base.jpg";
             nombresPlatillos[i] = "Platillo " + (i + 1);
-            preciosPlatillos[i] = "Bs. 0,00"; //
+            preciosPlatillos[i] = "$ 0.00"; //
         }
     }
 
@@ -245,7 +245,7 @@ public class MenuAdminUI extends JFrame {
         ));
         fieldsPrecio[indice].setPreferredSize(new Dimension(220, 28));
         
-        fieldsPrecio[indice].setToolTipText("Formato: Bs. 0,00 o 0.00");
+        fieldsPrecio[indice].setToolTipText("Formato: $ 0.00");
         
         panelPrecio.add(labelPrecio, BorderLayout.NORTH);
         panelPrecio.add(fieldsPrecio[indice], BorderLayout.CENTER);
@@ -311,12 +311,12 @@ public class MenuAdminUI extends JFrame {
             // Validar y actualizar precios
             preciosPlatillos[i] = fieldsPrecio[i].getText().trim();
             if (preciosPlatillos[i].isEmpty()) {
-                preciosPlatillos[i] = "Bs. 0,00";
+                preciosPlatillos[i] = "$ 0.00";
                 fieldsPrecio[i].setText(preciosPlatillos[i]);
             } else {
                 // Formatear precio si es necesario
-                if (!preciosPlatillos[i].startsWith("Bs.")) {
-                    preciosPlatillos[i] = "Bs. " + preciosPlatillos[i];
+                if (!preciosPlatillos[i].startsWith("$")) {
+                    preciosPlatillos[i] = "$ " + preciosPlatillos[i];
                     fieldsPrecio[i].setText(preciosPlatillos[i]);
                 }
             }

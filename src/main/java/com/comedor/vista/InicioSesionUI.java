@@ -1,12 +1,9 @@
 package com.comedor.vista;
 
-import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -24,8 +21,6 @@ import java.io.IOException;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
-import javax.swing.ButtonGroup;
-import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -33,7 +28,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -55,13 +49,10 @@ public class InicioSesionUI extends JFrame {
     private static final Color COLOR_INPUT_BG = new Color(0, 85, 170); // Azul más claro para inputs
     private static final Color COLOR_BTN_AZUL = new Color(0, 60, 120); // Azul botón
     private static final Color COLOR_TEXTO = new Color(0, 51, 102); // Texto azul oscuro
-    private static final Color COLOR_RADIO_BLUE = new Color(0, 102, 204); // Azul brillante para radios
 
     private BufferedImage backgroundImage;
     private ModernTextField txtCedula;
     private ModernPasswordField txtClave;
-    private JRadioButton usuarioRadio;
-    private JRadioButton adminRadio;
 
     // Inicializa la ventana y carga los recursos necesarios
     public InicioSesionUI() {
@@ -144,7 +135,7 @@ public class InicioSesionUI extends JFrame {
         ShadowRoundedPanel card = new ShadowRoundedPanel(new GridBagLayout());
         card.setBackground(COLOR_FORM_BG);
         card.setBorder(new EmptyBorder(50, 50, 50, 50));
-        card.setPreferredSize(new Dimension(450, 600)); // Aumentado para incluir radios
+        card.setPreferredSize(new Dimension(450, 550)); // Ajustado
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -156,34 +147,17 @@ public class InicioSesionUI extends JFrame {
         gbc.gridy = 0; gbc.insets = new Insets(0, 0, 30, 0);
         card.add(title, gbc);
 
-        txtCedula = new ModernTextField("Ej. V12345678");
+        txtCedula = new ModernTextField("Ej. 12345678");
         addLabelAndField(card, "Cédula:", txtCedula, gbc, 1);
 
         txtClave = new ModernPasswordField("••••••••");
         addLabelAndField(card, "Contraseña:", txtClave, gbc, 2);
 
-        JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 0));
-        radioPanel.setOpaque(false);
-        
-        usuarioRadio = createCustomRadio("Usuario");
-        adminRadio = createCustomRadio("Administrador");
-        
-        ButtonGroup group = new ButtonGroup();
-        group.add(usuarioRadio);
-        group.add(adminRadio);
-        usuarioRadio.setSelected(true);
-        
-        radioPanel.add(usuarioRadio);
-        radioPanel.add(adminRadio);
-        
-        gbc.gridy = 3; gbc.insets = new Insets(15, 0, 15, 0);
-        card.add(radioPanel, gbc);
-
         JButton btnEntrar = new JButton("Entrar");
         styleButton(btnEntrar);
         btnEntrar.addActionListener(e -> ejecutarLogin());
         
-        gbc.gridy = 4; gbc.insets = new Insets(30, 0, 10, 0);
+        gbc.gridy = 3; gbc.insets = new Insets(40, 0, 10, 0);
         card.add(btnEntrar, gbc);
 
         JButton btnIrRegistro = new JButton("¿No tienes cuenta? Regístrate");
@@ -195,7 +169,7 @@ public class InicioSesionUI extends JFrame {
             new RegistroUI().setVisible(true);
             this.dispose();
         });
-        gbc.gridy = 5;
+        gbc.gridy = 4;
         card.add(btnIrRegistro, gbc);
 
         panel.add(card);
@@ -218,13 +192,8 @@ public class InicioSesionUI extends JFrame {
         ServicioIS servicio = new ServicioIS();
         
         try {
-            // Crear instancia Usuario según selección
-            Usuario usuarioIngresado;
-            if (adminRadio.isSelected()) {
-                usuarioIngresado = new Administrador(cedula, clave, "");
-            } else {
-                usuarioIngresado = new Estudiante(cedula, clave, "", "");
-            }
+            // Creamos un usuario genérico (Estudiante) solo para transportar las credenciales
+            Usuario usuarioIngresado = new Estudiante(cedula, clave, "", "");
             
             Usuario usuarioReal = servicio.IniciarSesion(usuarioIngresado);
             
@@ -278,38 +247,6 @@ public class InicioSesionUI extends JFrame {
         b.setFocusPainted(false);
         b.setCursor(new Cursor(Cursor.HAND_CURSOR));
         b.setBorder(new EmptyBorder(12, 0, 12, 0));
-    }
-
-    // Crea un botón de radio personalizado con el estilo visual del sistema
-    private JRadioButton createCustomRadio(String texto) {
-        JRadioButton radio = new JRadioButton(texto);
-        radio.setOpaque(false);
-        radio.setFocusPainted(false); // ESTO ELIMINA EL RECUADRO AZUL
-        radio.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        radio.setForeground(COLOR_TEXTO);
-        radio.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
-        // Aplicamos los círculos dibujados manualmente (mismo que RegistroUI)
-        radio.setIcon(new CustomRadioIcon(false));
-        radio.setSelectedIcon(new CustomRadioIcon(true));
-        return radio;
-    }
-
-    private static class CustomRadioIcon implements Icon {
-        private boolean sel;
-        public CustomRadioIcon(boolean sel) { this.sel = sel; }
-        @Override
-        public void paintIcon(Component c, Graphics g, int x, int y) {
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(COLOR_RADIO_BLUE);
-            g2.setStroke(new BasicStroke(2.0f));
-            g2.drawOval(x, y + 2, 16, 16); // Círculo exterior
-            if (sel) g2.fillOval(x + 4, y + 6, 9, 9); // Punto interior
-            g2.dispose();
-        }
-        @Override public int getIconWidth() { return 25; }
-        @Override public int getIconHeight() { return 20; }
     }
 
     private class ModernTextField extends JTextField {

@@ -31,6 +31,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import com.comedor.vista.InicioSesionUI;
+import com.comedor.modelo.entidades.Usuario;
+import com.comedor.modelo.entidades.Estudiante;
 
 public class MainUserUI extends JFrame {
 
@@ -38,10 +40,17 @@ public class MainUserUI extends JFrame {
     private static final Color COLOR_AZUL_INST = new Color(0, 51, 102);            // Barras y Títulos
     private static final Color COLOR_OVERLAY = new Color(0, 51, 102, 140);      // Filtro sobre imagen
 
+    private Usuario usuario;
     private BufferedImage backgroundImage;
     // private double saldoActual = 0.0;
 
     public MainUserUI() {
+        // Constructor por defecto para pruebas (usa un usuario dummy)
+        this(new Estudiante("00000000", "1234", "General", "UCV"));
+    }
+
+    public MainUserUI(Usuario usuario) {
+        this.usuario = usuario;
         try {
             URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_reg_bg.jpg");
             if (imageUrl != null) backgroundImage = ImageIO.read(imageUrl);
@@ -239,7 +248,7 @@ public class MainUserUI extends JFrame {
         saldoLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
         saldoLabel.setForeground(new Color(255, 255, 255, 200));
 
-        JLabel montoLabel = new JLabel("Bs. 0,00");
+        JLabel montoLabel = new JLabel(String.format("$ %.2f", usuario.obtSaldo()));
         montoLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
         montoLabel.setForeground(Color.WHITE);
 
@@ -251,15 +260,22 @@ public class MainUserUI extends JFrame {
         recargarLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Lógica funcional para recargar saldo
-                // String input = JOptionPane.showInputDialog(
-                //     MainUserUI.this,
-                //     "Ingrese el monto a recargar (Bs.):\nEj: 100.50 o 100,50",
-                //     "Recargar Saldo",
-                JOptionPane.showMessageDialog(MainUserUI.this, 
-                    "Funcionalidad no implementada.", 
-                    "Recargar saldo", 
-                    JOptionPane.INFORMATION_MESSAGE);
+                // Abrir el panel de recarga en una ventana emergente (Pop-up)
+                PRecarga panelRecarga = new PRecarga(usuario, () -> {
+                    montoLabel.setText(String.format("$ %.2f", usuario.obtSaldo()));
+                });
+
+                Object[] options = {"Cerrar"};
+                JOptionPane.showOptionDialog(
+                    MainUserUI.this,
+                    panelRecarga,
+                    "Recargar Monedero",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    options,
+                    options[0]
+                );
             }
         });
                 //     JOptionPane.QUESTION_MESSAGE
@@ -372,6 +388,10 @@ public class MainUserUI extends JFrame {
         bottomBarContainer.add(saldoPanel, BorderLayout.EAST);
 
         backgroundPanel.add(bottomBarContainer, BorderLayout.SOUTH);
+
+        // --- AGREGAR PANEL DE RECARGA AL CENTRO ---
+        // Usamos el contentHost que ya estaba creado pero no añadido
+        backgroundPanel.add(contentHost, BorderLayout.CENTER);
     };
 
     private JLabel createTabLabel(String text) {

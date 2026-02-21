@@ -66,19 +66,16 @@ public class ServicioUtil {
 
     // --- SECCIÓN DE MONEDA ---
 
-    //Formatea un double a String de moneda (Ej: "Bs. 1.250,50").
+    //Formatea un double a String de moneda (Ej: "$ 1,250.50").
      
     public static String formatearMoneda(double monto) {
-        return String.format("Bs. %,.2f", monto)
-                .replace(",", "X")
-                .replace(".", ",")
-                .replace("X", ".");
+        return String.format("$ %,.2f", monto);
     }
 
-    //Parsea un String de moneda a double, manejando "Bs." y comas.
+    //Parsea un String de moneda a double, manejando "$" y comas.
      
     public static double parsearMoneda(String texto) throws NumberFormatException {
-        String limpio = texto.replace("Bs.", "").replace(".", "").replace(",", ".").trim();
+        String limpio = texto.replace("$", "").replace("USD", "").replace(",", "").trim();
         return Double.parseDouble(limpio);
     }
 }
