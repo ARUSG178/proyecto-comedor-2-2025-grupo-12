@@ -2,12 +2,15 @@ package com.comedor.vista.usuario;
 
 import com.comedor.modelo.entidades.Monedero;
 import com.comedor.modelo.entidades.Usuario;
+import com.comedor.modelo.persistencia.RepoUsuarios;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Componente gráfico reutilizable para gestionar la recarga de saldo del usuario.
@@ -36,6 +39,7 @@ public class PRecarga extends JPanel {
         actualizarSaldoVisual();
     }
 
+    // Inicializa los componentes del panel de recarga
     private void initUI() {
         setLayout(new BorderLayout(15, 15));
         setBackground(COLOR_FONDO);
@@ -105,10 +109,12 @@ public class PRecarga extends JPanel {
         setMaximumSize(new Dimension(500, 160));
     }
 
+    // Actualiza la etiqueta de saldo con el valor actual del monedero
     private void actualizarSaldoVisual() {
         lblSaldoActual.setText(String.format("Saldo disponible: $ %.2f", monedero.obtSaldo()));
     }
 
+    // Valida el monto ingresado y ejecuta la recarga y persistencia
     private void procesarRecarga() {
         String textoMonto = txtMontoRecarga.getText().trim();
         
@@ -137,11 +143,29 @@ public class PRecarga extends JPanel {
             // 1. Recargar
             monedero.recargar(monto);
             
-            // 2. Actualizar UI interna
+            // 2. Persistir el nuevo saldo en la base de datos (archivo)
+            try {
+                RepoUsuarios repo = new RepoUsuarios();
+                List<Usuario> usuarios = repo.listarUsuarios();
+                for (Usuario u : usuarios) {
+                    if (u.obtCedula().equals(usuario.obtCedula())) {
+                        u.setSaldo(monedero.obtSaldo()); // Actualizamos el saldo explícitamente
+                        break;
+                    }
+                }
+                repo.guardarTodos(usuarios);
+                
+                // Sincronizar el objeto usuario local por si acaso
+                usuario.setSaldo(monedero.obtSaldo());
+            } catch (IOException ioEx) {
+                JOptionPane.showMessageDialog(this, "Error al guardar el saldo: " + ioEx.getMessage(), "Error de Persistencia", JOptionPane.ERROR_MESSAGE);
+            }
+
+            // 3. Actualizar UI interna
             actualizarSaldoVisual();
             txtMontoRecarga.setText("");
             
-            // 3. Notificar a la ventana padre para que actualice otros componentes
+            // 4. Notificar a la ventana padre para que actualice otros componentes
             if (alRecargar != null) {
                 alRecargar.run();
             }

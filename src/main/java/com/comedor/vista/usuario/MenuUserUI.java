@@ -1,5 +1,7 @@
 package com.comedor.vista.usuario;
 
+import com.comedor.modelo.entidades.Estudiante;
+import com.comedor.modelo.entidades.Usuario;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -37,18 +39,25 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
-/**
- * Interfaz gráfica para el Menú del Comedor del sistema SAGC UCV.
- */
+
+  // Interfaz gráfica para el Menú del Comedor del sistema SAGC UCV.
 public class MenuUserUI extends JFrame {
 
     // --- PALETA DE COLORES (Basada en el diseño institucional) ---
     private static final Color COLOR_AZUL_INST = new Color(0, 51, 102);            // Barras y Títulos
     private static final Color COLOR_OVERLAY = new Color(0, 51, 102, 140);      // Filtro sobre imagen
 
+    private final Usuario usuario;
     private BufferedImage backgroundImage;
 
+    // Constructor por defecto para pruebas
     public MenuUserUI() {
+        this(new Estudiante("00000000", "1234", "General", "UCV"));
+    }
+
+    // Constructor principal que recibe el usuario autenticado
+    public MenuUserUI(Usuario usuario) {
+        this.usuario = usuario;
         try {
             URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_reg_bg.jpg");
             if (imageUrl != null) backgroundImage = ImageIO.read(imageUrl);
@@ -60,6 +69,7 @@ public class MenuUserUI extends JFrame {
         initUI();
     }
 
+    // Configura las propiedades de la ventana del menú
     private void configurarVentana() {
         setTitle("Menú del Comedor - SAGC UCV");
         setSize(1400, 950);
@@ -69,6 +79,7 @@ public class MenuUserUI extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Inicia en pantalla completa
     }
 
+    // Crea un panel individual para mostrar un platillo del menú
     private JPanel crearPlatilloPanel(String rutaImagen, int numeroPlatillo) {
         JPanel platilloPanel = new JPanel();
         platilloPanel.setLayout(new BorderLayout(0, 15));
@@ -138,6 +149,15 @@ public class MenuUserUI extends JFrame {
         btnSeleccionar.setFocusPainted(false);
         btnSeleccionar.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
         btnSeleccionar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        // Acción: Ir a Reconocimiento Facial
+        btnSeleccionar.addActionListener(e -> {
+            // Precio base simulado $5.00, aplicamos descuento según tipo de usuario
+            double precioFinal = usuario.calcularTarifa(5.00);
+            // Redirigir a selección de fecha primero
+            new ReservaFechaUI(usuario, precioFinal).setVisible(true);
+            MenuUserUI.this.dispose();
+        });
         
         JPanel botonPanel = new JPanel(new GridBagLayout());
         botonPanel.setOpaque(false);
@@ -154,6 +174,7 @@ public class MenuUserUI extends JFrame {
     }
 
 
+    // Inicializa y construye la interfaz gráfica del menú
     private void initUI() {
         
         JPanel backgroundPanel = new JPanel() {
@@ -196,7 +217,7 @@ public class MenuUserUI extends JFrame {
         brandLabel.addMouseListener(new MouseAdapter() {
             @Override 
             public void mouseClicked(MouseEvent e) {
-                new MainUserUI().setVisible(true);
+                new MainUserUI(usuario).setVisible(true);
                 MenuUserUI.this.dispose();
             }
         });
@@ -205,7 +226,7 @@ public class MenuUserUI extends JFrame {
             @Override 
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_UP) {
-                    new MainUserUI().setVisible(true);
+                    new MainUserUI(usuario).setVisible(true);
                     MenuUserUI.this.dispose();
                 }
             }

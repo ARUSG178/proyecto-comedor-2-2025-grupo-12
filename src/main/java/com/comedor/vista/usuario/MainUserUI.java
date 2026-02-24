@@ -44,11 +44,13 @@ public class MainUserUI extends JFrame {
     private BufferedImage backgroundImage;
     // private double saldoActual = 0.0;
 
+    // Constructor por defecto para pruebas
     public MainUserUI() {
         // Constructor por defecto para pruebas (usa un usuario dummy)
         this(new Estudiante("00000000", "1234", "General", "UCV"));
     }
 
+    // Constructor principal que recibe el usuario autenticado
     public MainUserUI(Usuario usuario) {
         this.usuario = usuario;
         try {
@@ -62,6 +64,7 @@ public class MainUserUI extends JFrame {
         initUI();
     }
 
+    // Configura las propiedades de la ventana principal
     private void configurarVentana() {
         setTitle("Usuario - SAGC UCV");
         setSize(1400, 950);
@@ -71,6 +74,7 @@ public class MainUserUI extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH); 
     }
 
+    // Inicializa y construye todos los componentes de la interfaz
     private void initUI() {
         
         JPanel backgroundPanel = new JPanel() {
@@ -130,27 +134,13 @@ public class MainUserUI extends JFrame {
         tabsPanel.setOpaque(false);
 
         JLabel menuTab = createTabLabel("Menú");
-        JLabel reservasTab = createTabLabel("Reservas");
         JLabel historialTab = createTabLabel("Historial");
 
         menuTab.addMouseListener(new MouseAdapter() {
             @Override 
             public void mouseClicked(MouseEvent e) {
-                new MenuUserUI().setVisible(true);
+                new MenuUserUI(usuario).setVisible(true);
                 MainUserUI.this.dispose();
-            }
-        });
-
-        reservasTab.addMouseListener(new MouseAdapter() {
-            @Override 
-            public void mouseClicked(MouseEvent e) {
-                // Redirigir a Reservas
-                // new ReservasUI().setVisible(true);
-                // MainUserUI.this.dispose();
-                JOptionPane.showMessageDialog(MainUserUI.this, 
-                    "Funcionalidad no implementada.", 
-                    "Reservas", 
-                    JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
@@ -168,7 +158,6 @@ public class MainUserUI extends JFrame {
         });
 
         tabsPanel.add(menuTab);
-        tabsPanel.add(reservasTab);
         tabsPanel.add(historialTab);
 
         JPanel topBarContainer = new JPanel(new BorderLayout());
@@ -394,9 +383,10 @@ public class MainUserUI extends JFrame {
         backgroundPanel.add(contentHost, BorderLayout.CENTER);
     };
 
+    // Crea una etiqueta estilizada para las pestañas de navegación superior
     private JLabel createTabLabel(String text) {
     JLabel tab = new JLabel(text);
-    tab.setFont(new Font("Segoe UI", Font.BOLD, 18));
+    tab.setFont(new Font("Segoe UI", Font.BOLD, 24)); // Aumentado de 18 a 24
     tab.setForeground(Color.WHITE);
     tab.setCursor(new Cursor(Cursor.HAND_CURSOR));
     
@@ -404,13 +394,13 @@ public class MainUserUI extends JFrame {
         @Override
         public void mouseEntered(MouseEvent e) {
             tab.setForeground(new Color(255, 255, 255, 220));
-            tab.setFont(new Font("Segoe UI", Font.BOLD, 19));
+            tab.setFont(new Font("Segoe UI", Font.BOLD, 25)); // Efecto hover aumentado
         }
         
         @Override
         public void mouseExited(MouseEvent e) {
             tab.setForeground(Color.WHITE);
-            tab.setFont(new Font("Segoe UI", Font.BOLD, 18));
+            tab.setFont(new Font("Segoe UI", Font.BOLD, 24)); // Regresa a tamaño base aumentado
         }
     });
     
