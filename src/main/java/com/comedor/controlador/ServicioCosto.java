@@ -13,6 +13,7 @@ public class ServicioCosto {
     private List<RegistroCosto> costos = new ArrayList<>();
     private Map<String, Integer> produccionBandejas = new HashMap<>();
     private Map<String, Double> mermas = new HashMap<>();
+    private double ccbActual = 0.0; // Almacena el último CCB calculado
 
     // Registra la cantidad estimada de bandejas a producir en un periodo específico
     public void registrarProduccionBandejas(String periodo, int cantidad) {
@@ -62,7 +63,8 @@ public class ServicioCosto {
 
         // El CCB se calcula agregando el porcentaje de merma al costo unitario base
         double costoUnitario = totalCostos / cantidadPlanificada;
-        return costoUnitario * (1 + porcentajeMerma);
+        this.ccbActual = costoUnitario * (1 + porcentajeMerma);
+        return this.ccbActual;
     }
 
     // Registra un cambio de precio de platillo como costo variable en el periodo actual
@@ -72,5 +74,33 @@ public class ServicioCosto {
         String descripcion = String.format("Cambio precio %s por %s: %.2f -> %.2f (diff %.2f)", nombrePlatillo, actor, precioAnterior, precioNuevo, diferencia);
         agregarCosto(periodo, RegistroCosto.TipoCosto.VARIABLE, descripcion, precioNuevo);
         System.out.println("Registro de cambio de precio creado: " + descripcion);
+    }
+
+    // --- MÉTODOS AGREGADOS PARA CUMPLIR CON REQUERIMIENTOS DE SERVICIOMENU ---
+
+    // Retorna el último CCB calculado para aplicar tarifas
+    public double obtenerCCBActual() {
+        return this.ccbActual;
+    }
+
+    // Método helper para registrar todo en un solo paso (usado por ServicioMenu)
+    public void registrarValoresCCB(String periodo, double fijos, double variables, int produccion) {
+        agregarCosto(periodo, RegistroCosto.TipoCosto.FIJO, "Costos Fijos Mensuales", fijos);
+        agregarCosto(periodo, RegistroCosto.TipoCosto.VARIABLE, "Costos Variables Mensuales", variables);
+        registrarProduccionBandejas(periodo, produccion);
+    }
+
+    // Calcula y guarda el CCB completo (usado por DialogoCCB y ServicioMenu)
+    public double calcularRegistrarCCBCompleto(double fijos, double variables, int produccion, int mermaBandejas) {
+        String periodo = ServicioUtil.obtenerPeriodoActual();
+        registrarValoresCCB(periodo, fijos, variables, produccion);
+        // Convertir merma de bandejas a porcentaje si es necesario, o usar lógica simple
+        double porcentajeMerma = (produccion > 0) ? (double) mermaBandejas / produccion : 0.0;
+        registrarMerma(periodo, porcentajeMerma);
+        return calcularCCB(periodo);
+    }
+
+    public String obtenerPeriodoActual() {
+        return ServicioUtil.obtenerPeriodoActual();
     }
 }
