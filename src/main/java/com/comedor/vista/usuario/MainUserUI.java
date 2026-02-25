@@ -25,6 +25,7 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -98,6 +99,22 @@ public class MainUserUI extends JFrame {
 
         JPanel contentHost = new JPanel(new GridBagLayout());
         contentHost.setOpaque(false);
+        
+        JLabel welcomeTitle = new JLabel("Bienvenido al Comedor Universitario", SwingConstants.CENTER);
+        welcomeTitle.setFont(new Font("Segoe UI", Font.BOLD, 36));
+        welcomeTitle.setForeground(Color.WHITE);
+        
+        JLabel welcomeSub = new JLabel("<html><center>Gestione su saldo y acceda al menú del día<br>desde la barra superior.</center></html>", SwingConstants.CENTER);
+        welcomeSub.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+        welcomeSub.setForeground(new Color(230, 230, 230));
+
+        GridBagConstraints gbcHost = new GridBagConstraints();
+        gbcHost.gridx = 0; gbcHost.gridy = 0;
+        gbcHost.insets = new Insets(0, 0, 20, 0);
+        contentHost.add(welcomeTitle, gbcHost);
+        
+        gbcHost.gridy = 1;
+        contentHost.add(welcomeSub, gbcHost);
 
         JLabel brandLabel = new JLabel("SAGC") {
             @Override

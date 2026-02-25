@@ -227,6 +227,16 @@ public class RegistroUI extends JFrame {
         formCard.add(titleLabel, gbc);
 
         txtCedula = new ModernTextField("Ej. 12345678");
+        // Validación: Solo permitir números
+        txtCedula.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
+                    e.consume();
+                }
+            }
+        });
         addLabelAndField(formCard, "Cédula:", txtCedula, gbc, 1);
 
         txtContrasena = new ModernTextField("Mín. 6 caracteres");

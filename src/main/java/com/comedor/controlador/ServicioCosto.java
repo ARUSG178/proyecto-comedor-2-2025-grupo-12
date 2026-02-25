@@ -90,12 +90,10 @@ public class ServicioCosto {
         registrarProduccionBandejas(periodo, produccion);
     }
 
-    // Calcula y guarda el CCB completo (usado por DialogoCCB y ServicioMenu)
-    public double calcularRegistrarCCBCompleto(double fijos, double variables, int produccion, int mermaBandejas) {
+    // Calcula y guarda el CCB completo recibiendo el porcentaje de merma directo (0.0 a 1.0)
+    public double calcularRegistrarCCBCompleto(double fijos, double variables, int produccion, double porcentajeMerma) {
         String periodo = ServicioUtil.obtenerPeriodoActual();
         registrarValoresCCB(periodo, fijos, variables, produccion);
-        // Convertir merma de bandejas a porcentaje si es necesario, o usar lógica simple
-        double porcentajeMerma = (produccion > 0) ? (double) mermaBandejas / produccion : 0.0;
         registrarMerma(periodo, porcentajeMerma);
         return calcularCCB(periodo);
     }

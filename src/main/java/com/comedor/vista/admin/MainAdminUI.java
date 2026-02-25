@@ -28,6 +28,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
+import com.comedor.vista.DialogoCCB;
+
 /**
  * Interfaz gráfica para el registro de usuarios del sistema SAGC UCV.
  */
@@ -85,7 +87,7 @@ public class MainAdminUI extends JFrame {
 
                 // Barras sólidas superior e inferior
                 g2d.setColor(COLOR_AZUL_INST);
-                int barHeight = 135;
+                int barHeight = 160;
                 g2d.fillRect(0, 0, getWidth(), barHeight);
                 g2d.fillRect(0, getHeight() - barHeight, getWidth(), barHeight);
             }
@@ -124,6 +126,7 @@ public class MainAdminUI extends JFrame {
         JLabel usuarioTab = createTabLabel("Usuario");
         JLabel menuTab = createTabLabel("Editar Menú");
         JLabel reservasTab = createTabLabel("Reservas");
+        JLabel costosTab = createTabLabel("Costos CCB");
         
         menuTab.addMouseListener(new MouseAdapter() {
             @Override 
@@ -146,25 +149,33 @@ public class MainAdminUI extends JFrame {
             }
         });
 
+        costosTab.addMouseListener(new MouseAdapter() {
+            @Override 
+            public void mouseClicked(MouseEvent e) {
+                new DialogoCCB(MainAdminUI.this).setVisible(true);
+            }
+        });
+
         // Añadir pestañas al panel
         tabsPanel.add(usuarioTab);
         tabsPanel.add(menuTab);
         tabsPanel.add(reservasTab);
+        tabsPanel.add(costosTab);
         
         // --- BARRA INFERIOR ---
         JPanel bottomBarContainer = new JPanel(new BorderLayout());
         bottomBarContainer.setOpaque(false);
-        bottomBarContainer.setPreferredSize(new Dimension(getWidth(), 135));
+        bottomBarContainer.setPreferredSize(new Dimension(getWidth(), 160));
         
         // --- CONTENEDOR PRINCIPAL DE LA BARRA SUPERIOR ---
         JPanel topBarContainer = new JPanel(new BorderLayout());
         topBarContainer.setOpaque(false);
-        topBarContainer.setPreferredSize(new Dimension(getWidth(), 135));
+        topBarContainer.setPreferredSize(new Dimension(getWidth(), 160));
 
         // Panel para el logo (izquierda)
         JPanel logoPanel = new JPanel(new GridBagLayout());
         logoPanel.setOpaque(false);
-        logoPanel.setPreferredSize(new Dimension(500, 135));
+        logoPanel.setPreferredSize(new Dimension(500, 160));
 
         GridBagConstraints gbcLogo = new GridBagConstraints();
         gbcLogo.gridx = 0;
@@ -214,6 +225,19 @@ public class MainAdminUI extends JFrame {
         
         // Panel contenedor con márgenes y posible fondo
         JPanel welcomeContainer = new JPanel(new GridBagLayout());
+        // Fondo semitransparente redondeado para el mensaje
+        welcomeContainer.setOpaque(false); 
+        welcomeContainer = new JPanel(new GridBagLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(new Color(0, 0, 0, 80)); // Fondo negro semitransparente
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
+                g2.dispose();
+            }
+        };
         welcomeContainer.setOpaque(false);
         welcomeContainer.setBorder(new EmptyBorder(20, 40, 20, 40));
         

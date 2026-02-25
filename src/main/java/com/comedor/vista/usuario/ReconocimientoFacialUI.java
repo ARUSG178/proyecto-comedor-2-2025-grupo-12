@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.time.LocalDateTime;
 
 public class ReconocimientoFacialUI extends JFrame {
@@ -27,13 +28,23 @@ public class ReconocimientoFacialUI extends JFrame {
     private JButton btnConfirmar;
 
     private static final Color COLOR_AZUL_INST = new Color(0, 51, 102);
-    private static final Color COLOR_FONDO = new Color(245, 245, 250);
+    private static final Color COLOR_OVERLAY = new Color(0, 51, 102, 140);
+
+    private BufferedImage backgroundImage;
 
     // Constructor principal que recibe los datos de la transacción
     public ReconocimientoFacialUI(Usuario usuario, double costoPlatillo, LocalDateTime fechaReserva) {
         this.usuario = usuario;
         this.costoPlatillo = costoPlatillo;
         this.fechaReserva = fechaReserva;
+        
+        try {
+            URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_reg_bg.jpg");
+            if (imageUrl != null) backgroundImage = ImageIO.read(imageUrl);
+        } catch (IOException e) {
+            System.err.println("Imagen de fondo no encontrada.");
+        }
+
         configurarVentana();
         initUI();
     }
@@ -50,12 +61,28 @@ public class ReconocimientoFacialUI extends JFrame {
 
     // Inicializa los componentes de la interfaz de reconocimiento
     private void initUI() {
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(COLOR_FONDO);
+        JPanel mainPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                if (backgroundImage != null) {
+                    g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+                }
+                g2d.setColor(COLOR_OVERLAY);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+                
+                g2d.setColor(COLOR_AZUL_INST);
+                int barHeight = 80;
+                g2d.fillRect(0, 0, getWidth(), barHeight);
+                g2d.fillRect(0, getHeight() - barHeight, getWidth(), barHeight);
+            }
+        };
+        mainPanel.setLayout(new BorderLayout());
 
         // Header
         JPanel headerPanel = new JPanel(new BorderLayout());
-        headerPanel.setBackground(COLOR_AZUL_INST);
+        headerPanel.setOpaque(false);
         headerPanel.setPreferredSize(new Dimension(getWidth(), 80));
         
         JLabel lblTitulo = new JLabel("Validación de Identidad", SwingConstants.CENTER);
@@ -70,8 +97,10 @@ public class ReconocimientoFacialUI extends JFrame {
         btnBack.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Regresar a selección de fecha
-                new ReservaFechaUI(usuario, costoPlatillo).setVisible(true);
+                // Regresar a selección de turno
+                // Se necesita el tipo de comida para reconstruir la UI de turnos
+                String tipoComida = (fechaReserva.getHour() < 11) ? "Desayuno" : "Almuerzo";
+                new SeleccionarTurnoUI(usuario, costoPlatillo, tipoComida).setVisible(true);
                 dispose();
             }
         });
@@ -86,6 +115,7 @@ public class ReconocimientoFacialUI extends JFrame {
 
         JLabel lblInstruccion = new JLabel("<html><center>Suba una foto de su rostro para autorizar<br>el cobro de <b>$ " + String.format("%.2f", costoPlatillo) + "</b></center></html>");
         lblInstruccion.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        lblInstruccion.setForeground(Color.WHITE);
         gbc.gridy = 0;
         centerPanel.add(lblInstruccion, gbc);
 
@@ -108,7 +138,7 @@ public class ReconocimientoFacialUI extends JFrame {
 
         lblEstado = new JLabel("Esperando imagen...");
         lblEstado.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblEstado.setForeground(Color.GRAY);
+        lblEstado.setForeground(new Color(220, 220, 220));
         gbc.gridy = 3;
         centerPanel.add(lblEstado, gbc);
 
