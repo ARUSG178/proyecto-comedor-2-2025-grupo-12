@@ -29,6 +29,7 @@ import java.net.URL;
 import java.util.Properties;
 
 import javax.imageio.ImageIO;
+import com.comedor.vista.admin.PrincipalAdminUI;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -54,9 +55,13 @@ public class VerMenuAdminUI extends JFrame {
     private BufferedImage backgroundImage;
     
     // Datos del platillo
-    private String nombrePlatillo = "Platillo 1";
-    private String precioPlatillo = "$ 5.00";
-    private String rutaImagenPlatillo = "/com/comedor/resources/images/menu/base.jpg";
+    private String nombreDesayuno = "Desayuno";
+    private String precioDesayuno = "$ 0.00";
+    private String rutaImagenDesayuno = "/com/comedor/resources/images/menu/base.jpg";
+
+    private String nombreAlmuerzo = "Almuerzo";
+    private String precioAlmuerzo = "$ 0.00";
+    private String rutaImagenAlmuerzo = "/com/comedor/resources/images/menu/base.jpg";
 
     /**
      * Inicializa la interfaz del menú del comedor y carga recursos.
@@ -78,9 +83,13 @@ public class VerMenuAdminUI extends JFrame {
         Properties props = new Properties();
         try (FileInputStream in = new FileInputStream("menu_config.properties")) {
             props.load(in);
-            nombrePlatillo = props.getProperty("nombre_0", "Platillo 1");
-            precioPlatillo = props.getProperty("precio_0", "$ 5.00");
-            rutaImagenPlatillo = props.getProperty("imagen_0", "/com/comedor/resources/images/menu/base.jpg");
+            nombreDesayuno = props.getProperty("desayuno_nombre", "Desayuno");
+            precioDesayuno = props.getProperty("desayuno_precio", "$ 0.00");
+            rutaImagenDesayuno = props.getProperty("desayuno_imagen", "/com/comedor/resources/images/menu/base.jpg");
+
+            nombreAlmuerzo = props.getProperty("almuerzo_nombre", "Almuerzo");
+            precioAlmuerzo = props.getProperty("almuerzo_precio", "$ 0.00");
+            rutaImagenAlmuerzo = props.getProperty("almuerzo_imagen", "/com/comedor/resources/images/menu/base.jpg");
         } catch (Exception e) {}
     }
 
@@ -99,11 +108,18 @@ public class VerMenuAdminUI extends JFrame {
     /**
      * Crea un panel de platillo individual con solo imagen y botón.
      */
-    private JPanel crearPlatilloPanel(String rutaImagen, int numeroPlatillo) {
+    private JPanel crearPlatilloPanel(String titulo, String rutaImagen, String nombre, String precio) {
         JPanel platilloPanel = new JPanel();
         platilloPanel.setLayout(new BorderLayout(0, 15));
         platilloPanel.setOpaque(false);
         
+        // Título del platillo (Desayuno/Almuerzo)
+        JLabel lblTituloPlatillo = new JLabel(titulo, SwingConstants.CENTER);
+        lblTituloPlatillo.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        lblTituloPlatillo.setForeground(Color.WHITE);
+        lblTituloPlatillo.setBorder(new EmptyBorder(0, 0, 10, 0));
+        platilloPanel.add(lblTituloPlatillo, BorderLayout.NORTH);
+
         // Panel para la imagen (250x300)
         JPanel imagenPanel = new JPanel(new GridBagLayout()) {
             @Override
@@ -123,15 +139,15 @@ public class VerMenuAdminUI extends JFrame {
                 
                 // Dibujar número del platillo
                 g2d.setColor(new Color(100, 100, 100, 200));
-                g2d.setFont(new Font("Segoe UI", Font.BOLD, 28));
+                g2d.setFont(new Font("Segoe UI", Font.BOLD, 20));
                 FontMetrics fm = g2d.getFontMetrics();
-                String numero = nombrePlatillo;
+                String numero = nombre;
                 int x = (getWidth() - fm.stringWidth(numero)) / 2;
                 int y = 30;
                 g2d.drawString(numero, x, y);
                 
                 // Dibujar icono de placeholder
-                g2d.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 100));
+                g2d.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 70));
                 String icono = "🍽️";
                 fm = g2d.getFontMetrics();
                 x = (getWidth() - fm.stringWidth(icono)) / 2;
@@ -141,7 +157,7 @@ public class VerMenuAdminUI extends JFrame {
                 // Texto indicativo
                 g2d.setFont(new Font("Segoe UI", Font.ITALIC, 12));
                 g2d.setColor(new Color(120, 120, 120, 180));
-                String texto = precioPlatillo;
+                String texto = precio;
                 fm = g2d.getFontMetrics();
                 x = (getWidth() - fm.stringWidth(texto)) / 2;
                 y = getHeight() - 20;
@@ -149,10 +165,10 @@ public class VerMenuAdminUI extends JFrame {
             }
         };
         
-        // Tamaño fijo 400x500
-        imagenPanel.setPreferredSize(new Dimension(400, 500));
-        imagenPanel.setMinimumSize(new Dimension(400, 500));
-        imagenPanel.setMaximumSize(new Dimension(400, 500));
+        // Tamaño fijo 280x350 (Reducido ~30%)
+        imagenPanel.setPreferredSize(new Dimension(280, 350));
+        imagenPanel.setMinimumSize(new Dimension(280, 350));
+        imagenPanel.setMaximumSize(new Dimension(280, 350));
         imagenPanel.setBackground(new Color(245, 245, 245));
         
         // Aquí iría la carga de la imagen real cuando esté implementada
@@ -166,7 +182,7 @@ public class VerMenuAdminUI extends JFrame {
                 if (f.exists()) img = ImageIO.read(f);
             }
             if (img != null) {
-                Image scaled = img.getScaledInstance(396, 496, Image.SCALE_SMOOTH);
+                Image scaled = img.getScaledInstance(276, 346, Image.SCALE_SMOOTH);
                 JLabel imagenLabel = new JLabel(new ImageIcon(scaled));
                 imagenLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 imagenPanel.add(imagenLabel);
@@ -176,7 +192,7 @@ public class VerMenuAdminUI extends JFrame {
         }
         
         // Botón para seleccionar
-        JButton btnSeleccionar = new JButton("SELECCIONAR");
+        JButton btnSeleccionar = new JButton("VISTA PREVIA");
         btnSeleccionar.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnSeleccionar.setBackground(new Color(0, 60, 120));
         btnSeleccionar.setForeground(Color.WHITE);
@@ -277,7 +293,7 @@ public class VerMenuAdminUI extends JFrame {
         brandLabel.addMouseListener(new MouseAdapter() {
             @Override 
             public void mouseClicked(MouseEvent e) {
-                new MainAdminUI().setVisible(true);
+                new PrincipalAdminUI().setVisible(true);
                 VerMenuAdminUI.this.dispose();
             }
         });
@@ -286,7 +302,7 @@ public class VerMenuAdminUI extends JFrame {
             @Override 
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_UP) {
-                    new MainAdminUI().setVisible(true);
+                    new PrincipalAdminUI().setVisible(true);
                     VerMenuAdminUI.this.dispose();
                 }
             }
@@ -298,7 +314,7 @@ public class VerMenuAdminUI extends JFrame {
         
         // Crear pestañas
         JLabel usuarioTab = createTabLabel("Usuario");
-        JLabel menuTab = createTabLabel("Editar Menú");
+        JLabel menuTab = createTabLabel("AggPlatillo");
         
         tabsPanel.add(usuarioTab);
         tabsPanel.add(menuTab);
@@ -319,7 +335,7 @@ public class VerMenuAdminUI extends JFrame {
         menuTab.addMouseListener(new MouseAdapter() {
             @Override 
             public void mouseClicked(MouseEvent e) {
-                new MenuAdminUI().setVisible(true);
+                new MenuAdminUI().setVisible(true); // This should probably go to PrincipalAdminUI and then to MenuAdminUI
                 VerMenuAdminUI.this.dispose();
             }
         });
@@ -392,11 +408,13 @@ public class VerMenuAdminUI extends JFrame {
         filaPlatillos.setOpaque(false);
         filaPlatillos.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-        // Crear el platillo
-        JPanel platillo1 = crearPlatilloPanel(rutaImagenPlatillo, 1);
+        // Crear los platillos
+        JPanel platillo1 = crearPlatilloPanel("Desayuno", rutaImagenDesayuno, nombreDesayuno, precioDesayuno);
+        JPanel platillo2 = crearPlatilloPanel("Almuerzo", rutaImagenAlmuerzo, nombreAlmuerzo, precioAlmuerzo);
         
         // Añadir los platillos en horizontal
         filaPlatillos.add(platillo1);
+        filaPlatillos.add(platillo2);
         
         contentPanel.add(menuTitle);
         contentPanel.add(filaPlatillos);

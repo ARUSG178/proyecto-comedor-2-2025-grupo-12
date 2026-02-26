@@ -38,8 +38,8 @@ import com.comedor.modelo.entidades.Administrador;
 import com.comedor.modelo.entidades.Estudiante;
 import com.comedor.modelo.entidades.Usuario;
 import com.comedor.modelo.excepciones.InvalidCredentialsException;
-import com.comedor.vista.admin.MainAdminUI;
-import com.comedor.vista.usuario.MainUserUI;
+import com.comedor.vista.admin.PrincipalAdminUI;
+import com.comedor.vista.usuario.PrincipalUserUI;
 
 // Interfaz gráfica principal para el inicio de sesión del sistema SAGC UCV
 public class InicioSesionUI extends JFrame {
@@ -205,12 +205,12 @@ public class InicioSesionUI extends JFrame {
             if (usuarioReal instanceof Administrador) {
                 SwingUtilities.invokeLater(() -> {
                     this.dispose();
-                    new MainAdminUI().setVisible(true);
+                    new PrincipalAdminUI(usuarioReal).setVisible(true);
                 });
             } else {
                 SwingUtilities.invokeLater(() -> {
                     this.dispose();
-                    new MainUserUI().setVisible(true);
+                    new PrincipalUserUI(usuarioReal).setVisible(true);
                 });
             }
             

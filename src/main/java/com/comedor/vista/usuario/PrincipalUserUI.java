@@ -35,7 +35,7 @@ import com.comedor.vista.InicioSesionUI;
 import com.comedor.modelo.entidades.Usuario;
 import com.comedor.modelo.entidades.Estudiante;
 
-public class MainUserUI extends JFrame {
+public class PrincipalUserUI extends JFrame {
 
     // --- PALETA DE COLORES (Basada en el diseño institucional) ---
     private static final Color COLOR_AZUL_INST = new Color(0, 51, 102);            // Barras y Títulos
@@ -46,13 +46,13 @@ public class MainUserUI extends JFrame {
     // private double saldoActual = 0.0;
 
     // Constructor por defecto para pruebas
-    public MainUserUI() {
+    public PrincipalUserUI() {
         // Constructor por defecto para pruebas (usa un usuario dummy)
         this(new Estudiante("00000000", "1234", "General", "UCV"));
     }
 
     // Constructor principal que recibe el usuario autenticado
-    public MainUserUI(Usuario usuario) {
+    public PrincipalUserUI(Usuario usuario) {
         this.usuario = usuario;
         try {
             URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_reg_bg.jpg");
@@ -141,7 +141,7 @@ public class MainUserUI extends JFrame {
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_UP) {
                     new InicioSesionUI().setVisible(true);
-                    MainUserUI.this.dispose();
+                    PrincipalUserUI.this.dispose();
                 }
             }
         });
@@ -152,12 +152,13 @@ public class MainUserUI extends JFrame {
 
         JLabel menuTab = createTabLabel("Menú");
         JLabel historialTab = createTabLabel("Historial");
+        JLabel cerrarSesionTab = createTabLabel("Cerrar Sesión");
 
         menuTab.addMouseListener(new MouseAdapter() {
             @Override 
             public void mouseClicked(MouseEvent e) {
                 new MenuUserUI(usuario).setVisible(true);
-                MainUserUI.this.dispose();
+                PrincipalUserUI.this.dispose();
             }
         });
 
@@ -167,15 +168,31 @@ public class MainUserUI extends JFrame {
                 // Redirigir a Historial
                 // new HistorialUI().setVisible(true);
                 // MainUserUI.this.dispose();
-                JOptionPane.showMessageDialog(MainUserUI.this, 
+                JOptionPane.showMessageDialog(PrincipalUserUI.this, 
                     "Funcionalidad no implementada.", 
                     "Historial", 
                     JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
+        cerrarSesionTab.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int confirm = JOptionPane.showConfirmDialog(PrincipalUserUI.this,
+                        "¿Está seguro de que desea cerrar la sesión?",
+                        "Confirmar Cierre de Sesión",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    new InicioSesionUI().setVisible(true);
+                    PrincipalUserUI.this.dispose();
+                }
+            }
+        });
+
         tabsPanel.add(menuTab);
         tabsPanel.add(historialTab);
+        tabsPanel.add(cerrarSesionTab);
 
         JPanel topBarContainer = new JPanel(new BorderLayout());
         topBarContainer.setOpaque(false);
@@ -273,7 +290,7 @@ public class MainUserUI extends JFrame {
 
                 Object[] options = {"Cerrar"};
                 JOptionPane.showOptionDialog(
-                    MainUserUI.this,
+                    PrincipalUserUI.this,
                     panelRecarga,
                     "Recargar Monedero",
                     JOptionPane.DEFAULT_OPTION,
@@ -425,7 +442,7 @@ public class MainUserUI extends JFrame {
     };
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new MainUserUI().setVisible(true));
+        SwingUtilities.invokeLater(() -> new PrincipalUserUI().setVisible(true));
     };
 
 };

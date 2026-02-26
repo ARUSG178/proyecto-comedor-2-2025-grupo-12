@@ -39,10 +39,15 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+
+import com.comedor.vista.usuario.PrincipalUserUI;
+import com.comedor.vista.admin.PrincipalAdminUI;
+import com.comedor.vista.InicioSesionUI;
 
 
   // Interfaz gráfica para el Menú del Comedor del sistema SAGC UCV.
@@ -155,7 +160,7 @@ public class MenuUserUI extends JFrame {
         
         // Título del platillo (Desayuno/Almuerzo)
         JLabel lblTituloPlatillo = new JLabel(titulo, SwingConstants.CENTER);
-        lblTituloPlatillo.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        lblTituloPlatillo.setFont(new Font("Segoe UI", Font.BOLD, 22));
         lblTituloPlatillo.setForeground(Color.WHITE);
         lblTituloPlatillo.setBorder(new EmptyBorder(0, 0, 10, 0));
         
@@ -175,14 +180,14 @@ public class MenuUserUI extends JFrame {
                 g2d.drawRoundRect(1, 1, getWidth()-2, getHeight()-2, 10, 10);
                 
                 g2d.setColor(new Color(100, 100, 100, 200));
-                g2d.setFont(new Font("Segoe UI", Font.BOLD, 28));
+                g2d.setFont(new Font("Segoe UI", Font.BOLD, 20));
                 FontMetrics fm = g2d.getFontMetrics();
                 String numero = nombre;
                 int x = (getWidth() - fm.stringWidth(numero)) / 2;
                 int y = 30;
                 g2d.drawString(numero, x, y);
                 
-                g2d.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 100));
+                g2d.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 70));
                 String icono = "🍽️";
                 fm = g2d.getFontMetrics();
                 x = (getWidth() - fm.stringWidth(icono)) / 2;
@@ -199,10 +204,10 @@ public class MenuUserUI extends JFrame {
             }
         };
         
-        // Tamaño fijo 400x500
-        imagenPanel.setPreferredSize(new Dimension(400, 500));
-        imagenPanel.setMinimumSize(new Dimension(400, 500));
-        imagenPanel.setMaximumSize(new Dimension(400, 500));
+        // Tamaño fijo 280x350 (Reducido para armonía con admin)
+        imagenPanel.setPreferredSize(new Dimension(280, 350));
+        imagenPanel.setMinimumSize(new Dimension(280, 350));
+        imagenPanel.setMaximumSize(new Dimension(280, 350));
         imagenPanel.setBackground(new Color(245, 245, 245));
         
         // Aquí iría la carga de la imagen real cuando esté implementada
@@ -218,7 +223,7 @@ public class MenuUserUI extends JFrame {
                 if (url != null) img = ImageIO.read(url);
             }
             if (img != null) {
-                Image scaled = img.getScaledInstance(396, 496, Image.SCALE_SMOOTH);
+                Image scaled = img.getScaledInstance(276, 346, Image.SCALE_SMOOTH);
                 JLabel imagenLabel = new JLabel(new ImageIcon(scaled));
                 imagenLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 imagenPanel.add(imagenLabel);
@@ -301,7 +306,11 @@ public class MenuUserUI extends JFrame {
         brandLabel.addMouseListener(new MouseAdapter() {
             @Override 
             public void mouseClicked(MouseEvent e) {
-                new MainUserUI(usuario).setVisible(true);
+                if (usuario instanceof Administrador) {
+                    new PrincipalAdminUI(usuario).setVisible(true);
+                } else {
+                    new PrincipalUserUI(usuario).setVisible(true);
+                }
                 MenuUserUI.this.dispose();
             }
         });
@@ -310,7 +319,11 @@ public class MenuUserUI extends JFrame {
             @Override 
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_UP) {
-                    new MainUserUI(usuario).setVisible(true);
+                    if (usuario instanceof Administrador) {
+                        new PrincipalAdminUI(usuario).setVisible(true);
+                    } else {
+                        new PrincipalUserUI(usuario).setVisible(true);
+                    }
                     MenuUserUI.this.dispose();
                 }
             }

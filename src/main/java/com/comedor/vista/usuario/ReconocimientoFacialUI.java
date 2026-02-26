@@ -2,6 +2,7 @@ package com.comedor.vista.usuario;
 
 import com.comedor.controlador.ServicioBiometrico;
 import com.comedor.controlador.ServicioPago;
+import com.comedor.vista.usuario.PrincipalUserUI;
 import com.comedor.modelo.entidades.Usuario;
 
 import javax.imageio.ImageIO;
@@ -218,7 +219,7 @@ public class ReconocimientoFacialUI extends JFrame {
                 String mensaje = String.format("¡Pago Exitoso!\nSimilitud Biométrica: %.2f%%\nReserva confirmada para: %s", 
                                              similitud, fechaReserva.toString().replace("T", " "));
                 JOptionPane.showMessageDialog(this, mensaje, "Acceso Concedido", JOptionPane.INFORMATION_MESSAGE);
-                new MainUserUI(usuario).setVisible(true);
+                new PrincipalUserUI(usuario).setVisible(true);
                 dispose();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Fallo", JOptionPane.ERROR_MESSAGE);

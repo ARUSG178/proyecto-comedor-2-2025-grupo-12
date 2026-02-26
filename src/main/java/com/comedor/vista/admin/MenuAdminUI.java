@@ -31,6 +31,8 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Properties;
 
+import com.comedor.vista.admin.PrincipalAdminUI;
+import com.comedor.vista.InicioSesionUI;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -475,7 +477,7 @@ public class MenuAdminUI extends JFrame {
         brandLabel.addMouseListener(new MouseAdapter() {
             @Override 
             public void mouseClicked(MouseEvent e) {
-                new MainAdminUI().setVisible(true);
+                new PrincipalAdminUI().setVisible(true);
                 MenuAdminUI.this.dispose();
             }
         });
@@ -484,7 +486,7 @@ public class MenuAdminUI extends JFrame {
             @Override 
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_UP) {
-                    new MainAdminUI().setVisible(true);
+                    new PrincipalAdminUI().setVisible(true);
                     MenuAdminUI.this.dispose();
                 }
             }
@@ -510,34 +512,6 @@ public class MenuAdminUI extends JFrame {
         JPanel tabsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 30, 0));
         tabsPanel.setOpaque(false);
         
-        JLabel usuarioTab = createTabLabel("Usuario");
-        JLabel menuTab = createTabLabel("Visualizar menú");
-        
-        tabsPanel.add(usuarioTab);
-        tabsPanel.add(menuTab);
-
-        usuarioTab.addMouseListener(new MouseAdapter() {
-            @Override 
-            public void mouseClicked(MouseEvent e) {
-                // Redirigir a Usuario
-                // new UsuarioUI().setVisible(true);
-                // MainAdminUI.this.dispose();
-                JOptionPane.showMessageDialog(MenuAdminUI.this, 
-                    "Funcionalidad no implementada.", 
-                    "Usuario", 
-                    JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
-
-        menuTab.addMouseListener(new MouseAdapter() {
-            @Override 
-            public void mouseClicked(MouseEvent e) {
-                new VerMenuAdminUI().setVisible(true);
-                MenuAdminUI.this.dispose();
-            }
-        });
-
-
         JPanel tabsContainer = new JPanel(new GridBagLayout());
         tabsContainer.setOpaque(false);
         
@@ -650,7 +624,7 @@ public class MenuAdminUI extends JFrame {
         btnCerrar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnCerrar.addActionListener(e -> {
             SwingUtilities.invokeLater(() -> {
-                new MainAdminUI().setVisible(true);
+                new PrincipalAdminUI().setVisible(true);
                 MenuAdminUI.this.dispose();
             });
         });
