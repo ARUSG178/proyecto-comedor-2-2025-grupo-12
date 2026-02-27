@@ -1,5 +1,9 @@
 package com.comedor.vista.usuario;
 
+import com.comedor.modelo.entidades.Estudiante;
+import com.comedor.modelo.entidades.Usuario;
+import com.comedor.modelo.entidades.Empleado;
+import com.comedor.modelo.entidades.Administrador;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -21,8 +25,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Properties;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -32,23 +39,44 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
-/**
- * Interfaz gráfica para el Menú del Comedor del sistema SAGC UCV.
- */
+import com.comedor.vista.usuario.PrincipalUserUI;
+import com.comedor.vista.admin.PrincipalAdminUI;
+import com.comedor.vista.InicioSesionUI;
+
+
+  // Interfaz gráfica para el Menú del Comedor del sistema SAGC UCV.
 public class MenuUserUI extends JFrame {
 
     // --- PALETA DE COLORES (Basada en el diseño institucional) ---
     private static final Color COLOR_AZUL_INST = new Color(0, 51, 102);            // Barras y Títulos
     private static final Color COLOR_OVERLAY = new Color(0, 51, 102, 140);      // Filtro sobre imagen
 
+    private final Usuario usuario;
     private BufferedImage backgroundImage;
+    
+    // Datos del platillo
+    private String nombreDesayuno, precioDesayuno, rutaImagenDesayuno;
+    private String nombreAlmuerzo, precioAlmuerzo, rutaImagenAlmuerzo;
 
+    private double ccbActual = 0.0;
+    private double precioCalculadoDesayuno = 0.0;
+    private double precioCalculadoAlmuerzo = 0.0;
+
+    // Constructor por defecto para pruebas
     public MenuUserUI() {
+        this(new Estudiante("00000000", "1234", "General", "UCV"));
+    }
+
+    // Constructor principal que recibe el usuario autenticado
+    public MenuUserUI(Usuario usuario) {
+        this.usuario = usuario;
+        cargarDatosPlatillo();
         try {
             URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_reg_bg.jpg");
             if (imageUrl != null) backgroundImage = ImageIO.read(imageUrl);
@@ -59,7 +87,62 @@ public class MenuUserUI extends JFrame {
         configurarVentana();
         initUI();
     }
+    
+    private void cargarDatosPlatillo() {
+        Properties props = new Properties();
+        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
+            props.load(in);
+            nombreDesayuno = props.getProperty("desayuno_nombre", "Desayuno no disponible");
+            precioDesayuno = props.getProperty("desayuno_precio", "$ 0.00");
+            rutaImagenDesayuno = props.getProperty("desayuno_imagen", "/com/comedor/resources/images/menu/base.jpg");
 
+            nombreAlmuerzo = props.getProperty("almuerzo_nombre", "Almuerzo no disponible");
+            precioAlmuerzo = props.getProperty("almuerzo_precio", "$ 0.00");
+            rutaImagenAlmuerzo = props.getProperty("almuerzo_imagen", "/com/comedor/resources/images/menu/base.jpg");
+            
+            // Cargar CCB si existe
+            String ccbStr = props.getProperty("ccb_actual", "0.0");
+            ccbActual = Double.parseDouble(ccbStr);
+            
+            // Calcular precios para ambos
+            precioCalculadoDesayuno = calcularPrecioParaUsuario(precioDesayuno);
+            precioCalculadoAlmuerzo = calcularPrecioParaUsuario(precioAlmuerzo);
+        } catch (Exception e) {}
+    }
+
+    private double calcularPrecioParaUsuario(String precioConfigurado) {
+        // Lógica de negocio basada en el enunciado:
+        // Estudiantes: 20% del CCB
+        // Empleados: 50% del CCB (ejemplo, enunciado dice 90-110%, ajustamos a lógica simple o lo que definas)
+        // Profesores/Admin: 100% CCB
+        
+        double base = 5.00; // Valor por defecto
+
+        // 1. Intentar usar el precio configurado en el menú como base
+        try {
+            String pLimpio = precioConfigurado.replace("$", "").replace(" ", "").replace(",", ".").trim();
+            base = Double.parseDouble(pLimpio);
+        } catch (Exception e) {
+            // Si falla el parseo, se mantiene 5.00 o el valor anterior
+        }
+
+        // 2. Si existe un CCB calculado, este tiene prioridad como base del costo
+        if (ccbActual > 0) {
+            base = ccbActual;
+        }
+        
+        double precioFinal;
+        if (usuario instanceof Estudiante) {
+            precioFinal = base * 0.20; // 20%
+        } else if (usuario instanceof Empleado) {
+            precioFinal = base * 0.50; // 50%
+        } else {
+            precioFinal = base; // 100%
+        }
+        return precioFinal;
+    }
+
+    // Configura las propiedades de la ventana del menú
     private void configurarVentana() {
         setTitle("Menú del Comedor - SAGC UCV");
         setSize(1400, 950);
@@ -69,10 +152,17 @@ public class MenuUserUI extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Inicia en pantalla completa
     }
 
-    private JPanel crearPlatilloPanel(String rutaImagen, int numeroPlatillo) {
+    // Crea un panel individual para mostrar un platillo del menú
+    private JPanel crearPlatilloPanel(String titulo, String rutaImagen, String nombre, double precioCalculado) {
         JPanel platilloPanel = new JPanel();
         platilloPanel.setLayout(new BorderLayout(0, 15));
         platilloPanel.setOpaque(false);
+        
+        // Título del platillo (Desayuno/Almuerzo)
+        JLabel lblTituloPlatillo = new JLabel(titulo, SwingConstants.CENTER);
+        lblTituloPlatillo.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        lblTituloPlatillo.setForeground(Color.WHITE);
+        lblTituloPlatillo.setBorder(new EmptyBorder(0, 0, 10, 0));
         
         // Panel para la imagen (250x300)
         JPanel imagenPanel = new JPanel(new GridBagLayout()) {
@@ -92,12 +182,12 @@ public class MenuUserUI extends JFrame {
                 g2d.setColor(new Color(100, 100, 100, 200));
                 g2d.setFont(new Font("Segoe UI", Font.BOLD, 20));
                 FontMetrics fm = g2d.getFontMetrics();
-                String numero = "PLATO " + numeroPlatillo;
+                String numero = nombre;
                 int x = (getWidth() - fm.stringWidth(numero)) / 2;
                 int y = 30;
                 g2d.drawString(numero, x, y);
                 
-                g2d.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 60));
+                g2d.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 70));
                 String icono = "🍽️";
                 fm = g2d.getFontMetrics();
                 x = (getWidth() - fm.stringWidth(icono)) / 2;
@@ -106,7 +196,7 @@ public class MenuUserUI extends JFrame {
                 
                 g2d.setFont(new Font("Segoe UI", Font.ITALIC, 12));
                 g2d.setColor(new Color(120, 120, 120, 180));
-                String texto = "Imagen 250x300";
+                String texto = String.format("$ %.2f", precioCalculado);
                 fm = g2d.getFontMetrics();
                 x = (getWidth() - fm.stringWidth(texto)) / 2;
                 y = getHeight() - 20;
@@ -114,19 +204,30 @@ public class MenuUserUI extends JFrame {
             }
         };
         
-        // Tamaño fijo 250x300
-        imagenPanel.setPreferredSize(new Dimension(250, 300));
-        imagenPanel.setMinimumSize(new Dimension(250, 300));
-        imagenPanel.setMaximumSize(new Dimension(250, 300));
+        // Tamaño fijo 280x350 (Reducido para armonía con admin)
+        imagenPanel.setPreferredSize(new Dimension(280, 350));
+        imagenPanel.setMinimumSize(new Dimension(280, 350));
+        imagenPanel.setMaximumSize(new Dimension(280, 350));
         imagenPanel.setBackground(new Color(245, 245, 245));
         
         // Aquí iría la carga de la imagen real cuando esté implementada
         try {
-            ImageIcon imagen = new ImageIcon(getClass().getResource(rutaImagen));
-            Image scaled = imagen.getImage().getScaledInstance(246, 296, Image.SCALE_SMOOTH);
-            JLabel imagenLabel = new JLabel(new ImageIcon(scaled));
-            imagenLabel.setHorizontalAlignment(SwingConstants.CENTER);
-            imagenPanel.add(imagenLabel);
+            Image img = null;
+            // Prioridad a archivo local (cargado por admin)
+            File f = new File(rutaImagen);
+            if (f.exists()) {
+                img = ImageIO.read(f);
+            } else {
+                // Fallback a recursos
+                URL url = getClass().getResource(rutaImagen);
+                if (url != null) img = ImageIO.read(url);
+            }
+            if (img != null) {
+                Image scaled = img.getScaledInstance(276, 346, Image.SCALE_SMOOTH);
+                JLabel imagenLabel = new JLabel(new ImageIcon(scaled));
+                imagenLabel.setHorizontalAlignment(SwingConstants.CENTER);
+                imagenPanel.add(imagenLabel);
+            }
         } catch (Exception e) {
         }
         
@@ -138,6 +239,13 @@ public class MenuUserUI extends JFrame {
         btnSeleccionar.setFocusPainted(false);
         btnSeleccionar.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
         btnSeleccionar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        // Acción: Ir a Reconocimiento Facial
+        btnSeleccionar.addActionListener(e -> {
+            // Redirigir a selección de turno
+            new SeleccionarTurnoUI(usuario, precioCalculado, titulo).setVisible(true);
+            MenuUserUI.this.dispose();
+        });
         
         JPanel botonPanel = new JPanel(new GridBagLayout());
         botonPanel.setOpaque(false);
@@ -147,6 +255,7 @@ public class MenuUserUI extends JFrame {
         gbc.anchor = GridBagConstraints.CENTER;
         botonPanel.add(btnSeleccionar, gbc);
         
+        platilloPanel.add(lblTituloPlatillo, BorderLayout.NORTH);
         platilloPanel.add(imagenPanel, BorderLayout.CENTER);
         platilloPanel.add(botonPanel, BorderLayout.SOUTH);
         
@@ -154,6 +263,7 @@ public class MenuUserUI extends JFrame {
     }
 
 
+    // Inicializa y construye la interfaz gráfica del menú
     private void initUI() {
         
         JPanel backgroundPanel = new JPanel() {
@@ -196,7 +306,11 @@ public class MenuUserUI extends JFrame {
         brandLabel.addMouseListener(new MouseAdapter() {
             @Override 
             public void mouseClicked(MouseEvent e) {
-                new MainUserUI().setVisible(true);
+                if (usuario instanceof Administrador) {
+                    new PrincipalAdminUI(usuario).setVisible(true);
+                } else {
+                    new PrincipalUserUI(usuario).setVisible(true);
+                }
                 MenuUserUI.this.dispose();
             }
         });
@@ -205,7 +319,11 @@ public class MenuUserUI extends JFrame {
             @Override 
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_UP) {
-                    new MainUserUI().setVisible(true);
+                    if (usuario instanceof Administrador) {
+                        new PrincipalAdminUI(usuario).setVisible(true);
+                    } else {
+                        new PrincipalUserUI(usuario).setVisible(true);
+                    }
                     MenuUserUI.this.dispose();
                 }
             }
@@ -256,15 +374,11 @@ public class MenuUserUI extends JFrame {
         filaPlatillos.setOpaque(false);
         filaPlatillos.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-        JPanel platillo1 = crearPlatilloPanel("/com/comedor/resources/images/menu/base.jpg", 1);
-        JPanel platillo2 = crearPlatilloPanel("/com/comedor/resources/images/menu/base.jpg", 2);
-        JPanel platillo3 = crearPlatilloPanel("/com/comedor/resources/images/menu/base.jpg", 3);
-        JPanel platillo4 = crearPlatilloPanel("/com/comedor/resources/images/menu/base.jpg", 4);
+        JPanel panelDesayuno = crearPlatilloPanel("Desayuno", rutaImagenDesayuno, nombreDesayuno, precioCalculadoDesayuno);
+        JPanel panelAlmuerzo = crearPlatilloPanel("Almuerzo", rutaImagenAlmuerzo, nombreAlmuerzo, precioCalculadoAlmuerzo);
         
-        filaPlatillos.add(platillo1);
-        filaPlatillos.add(platillo2);
-        filaPlatillos.add(platillo3);
-        filaPlatillos.add(platillo4);
+        filaPlatillos.add(panelDesayuno);
+        filaPlatillos.add(panelAlmuerzo);
         
         contentPanel.add(menuTitle);
         contentPanel.add(filaPlatillos);

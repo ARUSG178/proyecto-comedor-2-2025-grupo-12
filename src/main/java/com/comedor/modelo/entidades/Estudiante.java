@@ -27,4 +27,10 @@ public class Estudiante extends Usuario {
     
     // Establece la facultad del estudiante
     public void setFacultad(String facultad) { this.facultad = facultad; }
+
+    @Override
+    public double calcularTarifa(double precioBase) {
+        // Los estudiantes tienen un subsidio del 80%, pagan solo el 20% del precio base
+        return precioBase * 0.20;
+    }
 }

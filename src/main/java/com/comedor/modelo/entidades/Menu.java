@@ -5,25 +5,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Menu {
-    private static Menu instance;
     private String nombre;
+    private String tipo; // Desayuno, Almuerzo, etc.
     private String menuID;
     private boolean estado;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
     private List<Platillo> platillos;
 
-    // Constructor privado para inicializar la lista de platillos (Singleton)
-    private Menu() {
+    // Constructor público para permitir múltiples instancias (Desayuno, Almuerzo)
+    public Menu(String tipo) {
+        this.tipo = tipo;
+        this.nombre = tipo; // Por defecto el nombre es el tipo
         this.platillos = new ArrayList<>();
-    }
-
-    // Retorna la instancia única de la clase Menu
-    public static Menu getInstance() {
-        if (instance == null) {
-            instance = new Menu();
-        }
-        return instance;
     }
 
     // Agrega un nuevo platillo a la lista del menú
@@ -57,6 +51,12 @@ public class Menu {
     
     // Establece el nombre descriptivo del menú
     public void setNombre(String nombre) { this.nombre = nombre; }
+
+    // Retorna el tipo de menú (ej. Desayuno, Almuerzo)
+    public String obtTipo() { return tipo; }
+
+    // Establece el tipo de menú
+    public void setTipo(String tipo) { this.tipo = tipo; }
 
     // Indica si el menú está activo
     public boolean obtEstado() {return estado;}

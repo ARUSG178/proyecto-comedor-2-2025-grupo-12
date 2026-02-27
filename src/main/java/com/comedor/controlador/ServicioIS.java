@@ -1,7 +1,6 @@
 package com.comedor.controlador;
 
 import com.comedor.modelo.entidades.Usuario;
-import com.comedor.modelo.entidades.Administrador;
 import com.comedor.modelo.excepciones.*;
 import com.comedor.modelo.validaciones.VSesion;
 import com.comedor.modelo.persistencia.RepoUsuarios;
@@ -22,8 +21,6 @@ public class ServicioIS {
             throw new InvalidCredentialsException("Usuario no encontrado");
         }
 
-        vTipoUsuario(uBD, uIngresado);
-
         VSesion validador = new VSesion(uIngresado, uBD);
         try {
             validador.validar();
@@ -37,30 +34,11 @@ public class ServicioIS {
 
     // Busca un usuario en la lista por su cédula
     private Usuario usuarioPorCedula(String cedula, List<Usuario> usuarios) {
-        for (Usuario u : usuarios) {
-            if (u != null && u.obtCedula() != null && u.obtCedula().trim().equalsIgnoreCase(cedula.trim())) {
-                return u;
-            }
-        }
-        return null;
-    }
-
-    // Valida que el tipo de usuario seleccionado en la UI coincida con el de la BD
-    private void vTipoUsuario(Usuario usuarioBD, Usuario usuarioIngresado) throws InvalidCredentialsException {
-        boolean esAdminBD = usuarioBD instanceof Administrador;
-        boolean esAdminIngresado = usuarioIngresado instanceof Administrador;
-
-        if (esAdminBD && !esAdminIngresado) {
-            throw new InvalidCredentialsException(
-                "Esta cuenta es de administrador. " +
-                "Por favor, seleccione 'Administrador' en el tipo de usuario.");
-        }
-        
-        if (!esAdminBD && esAdminIngresado) {
-            throw new InvalidCredentialsException(
-                "Esta cuenta es de usuario. " +
-                "Por favor, seleccione 'Usuario' en el tipo de usuario.");
-        }
+        return usuarios.stream()
+                .filter(u -> u != null && u.obtCedula() != null && 
+                             u.obtCedula().trim().equalsIgnoreCase(cedula.trim()))
+                .findFirst()
+                .orElse(null);
     }
 
     // Procesa un inicio de sesión exitoso, reseteando intentos y guardando

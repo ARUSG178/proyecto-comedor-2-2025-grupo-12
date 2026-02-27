@@ -25,23 +25,35 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import com.comedor.vista.InicioSesionUI;
+import com.comedor.modelo.entidades.Usuario;
+import com.comedor.modelo.entidades.Estudiante;
 
-public class MainUserUI extends JFrame {
+public class PrincipalUserUI extends JFrame {
 
     // --- PALETA DE COLORES (Basada en el diseño institucional) ---
     private static final Color COLOR_AZUL_INST = new Color(0, 51, 102);            // Barras y Títulos
     private static final Color COLOR_OVERLAY = new Color(0, 51, 102, 140);      // Filtro sobre imagen
 
+    private Usuario usuario;
     private BufferedImage backgroundImage;
     // private double saldoActual = 0.0;
 
-    public MainUserUI() {
+    // Constructor por defecto para pruebas
+    public PrincipalUserUI() {
+        // Constructor por defecto para pruebas (usa un usuario dummy)
+        this(new Estudiante("00000000", "1234", "General", "UCV"));
+    }
+
+    // Constructor principal que recibe el usuario autenticado
+    public PrincipalUserUI(Usuario usuario) {
+        this.usuario = usuario;
         try {
             URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_reg_bg.jpg");
             if (imageUrl != null) backgroundImage = ImageIO.read(imageUrl);
@@ -53,6 +65,7 @@ public class MainUserUI extends JFrame {
         initUI();
     }
 
+    // Configura las propiedades de la ventana principal
     private void configurarVentana() {
         setTitle("Usuario - SAGC UCV");
         setSize(1400, 950);
@@ -62,6 +75,7 @@ public class MainUserUI extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH); 
     }
 
+    // Inicializa y construye todos los componentes de la interfaz
     private void initUI() {
         
         JPanel backgroundPanel = new JPanel() {
@@ -85,6 +99,22 @@ public class MainUserUI extends JFrame {
 
         JPanel contentHost = new JPanel(new GridBagLayout());
         contentHost.setOpaque(false);
+        
+        JLabel welcomeTitle = new JLabel("Bienvenido al Comedor Universitario", SwingConstants.CENTER);
+        welcomeTitle.setFont(new Font("Segoe UI", Font.BOLD, 36));
+        welcomeTitle.setForeground(Color.WHITE);
+        
+        JLabel welcomeSub = new JLabel("<html><center>Gestione su saldo y acceda al menú del día<br>desde la barra superior.</center></html>", SwingConstants.CENTER);
+        welcomeSub.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+        welcomeSub.setForeground(new Color(230, 230, 230));
+
+        GridBagConstraints gbcHost = new GridBagConstraints();
+        gbcHost.gridx = 0; gbcHost.gridy = 0;
+        gbcHost.insets = new Insets(0, 0, 20, 0);
+        contentHost.add(welcomeTitle, gbcHost);
+        
+        gbcHost.gridy = 1;
+        contentHost.add(welcomeSub, gbcHost);
 
         JLabel brandLabel = new JLabel("SAGC") {
             @Override
@@ -111,7 +141,7 @@ public class MainUserUI extends JFrame {
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_UP) {
                     new InicioSesionUI().setVisible(true);
-                    MainUserUI.this.dispose();
+                    PrincipalUserUI.this.dispose();
                 }
             }
         });
@@ -121,27 +151,14 @@ public class MainUserUI extends JFrame {
         tabsPanel.setOpaque(false);
 
         JLabel menuTab = createTabLabel("Menú");
-        JLabel reservasTab = createTabLabel("Reservas");
         JLabel historialTab = createTabLabel("Historial");
+        JLabel cerrarSesionTab = createTabLabel("Cerrar Sesión");
 
         menuTab.addMouseListener(new MouseAdapter() {
             @Override 
             public void mouseClicked(MouseEvent e) {
-                new MenuUserUI().setVisible(true);
-                MainUserUI.this.dispose();
-            }
-        });
-
-        reservasTab.addMouseListener(new MouseAdapter() {
-            @Override 
-            public void mouseClicked(MouseEvent e) {
-                // Redirigir a Reservas
-                // new ReservasUI().setVisible(true);
-                // MainUserUI.this.dispose();
-                JOptionPane.showMessageDialog(MainUserUI.this, 
-                    "Funcionalidad no implementada.", 
-                    "Reservas", 
-                    JOptionPane.INFORMATION_MESSAGE);
+                new MenuUserUI(usuario).setVisible(true);
+                PrincipalUserUI.this.dispose();
             }
         });
 
@@ -151,16 +168,31 @@ public class MainUserUI extends JFrame {
                 // Redirigir a Historial
                 // new HistorialUI().setVisible(true);
                 // MainUserUI.this.dispose();
-                JOptionPane.showMessageDialog(MainUserUI.this, 
+                JOptionPane.showMessageDialog(PrincipalUserUI.this, 
                     "Funcionalidad no implementada.", 
                     "Historial", 
                     JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
+        cerrarSesionTab.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int confirm = JOptionPane.showConfirmDialog(PrincipalUserUI.this,
+                        "¿Está seguro de que desea cerrar la sesión?",
+                        "Confirmar Cierre de Sesión",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    new InicioSesionUI().setVisible(true);
+                    PrincipalUserUI.this.dispose();
+                }
+            }
+        });
+
         tabsPanel.add(menuTab);
-        tabsPanel.add(reservasTab);
         tabsPanel.add(historialTab);
+        tabsPanel.add(cerrarSesionTab);
 
         JPanel topBarContainer = new JPanel(new BorderLayout());
         topBarContainer.setOpaque(false);
@@ -239,7 +271,7 @@ public class MainUserUI extends JFrame {
         saldoLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
         saldoLabel.setForeground(new Color(255, 255, 255, 200));
 
-        JLabel montoLabel = new JLabel("Bs. 0,00");
+        JLabel montoLabel = new JLabel(String.format("$ %.2f", usuario.obtSaldo()));
         montoLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
         montoLabel.setForeground(Color.WHITE);
 
@@ -251,15 +283,22 @@ public class MainUserUI extends JFrame {
         recargarLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Lógica funcional para recargar saldo
-                // String input = JOptionPane.showInputDialog(
-                //     MainUserUI.this,
-                //     "Ingrese el monto a recargar (Bs.):\nEj: 100.50 o 100,50",
-                //     "Recargar Saldo",
-                JOptionPane.showMessageDialog(MainUserUI.this, 
-                    "Funcionalidad no implementada.", 
-                    "Recargar saldo", 
-                    JOptionPane.INFORMATION_MESSAGE);
+                // Abrir el panel de recarga en una ventana emergente (Pop-up)
+                PRecarga panelRecarga = new PRecarga(usuario, () -> {
+                    montoLabel.setText(String.format("$ %.2f", usuario.obtSaldo()));
+                });
+
+                Object[] options = {"Cerrar"};
+                JOptionPane.showOptionDialog(
+                    PrincipalUserUI.this,
+                    panelRecarga,
+                    "Recargar Monedero",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    options,
+                    options[0]
+                );
             }
         });
                 //     JOptionPane.QUESTION_MESSAGE
@@ -372,11 +411,16 @@ public class MainUserUI extends JFrame {
         bottomBarContainer.add(saldoPanel, BorderLayout.EAST);
 
         backgroundPanel.add(bottomBarContainer, BorderLayout.SOUTH);
+
+        // --- AGREGAR PANEL DE RECARGA AL CENTRO ---
+        // Usamos el contentHost que ya estaba creado pero no añadido
+        backgroundPanel.add(contentHost, BorderLayout.CENTER);
     };
 
+    // Crea una etiqueta estilizada para las pestañas de navegación superior
     private JLabel createTabLabel(String text) {
     JLabel tab = new JLabel(text);
-    tab.setFont(new Font("Segoe UI", Font.BOLD, 18));
+    tab.setFont(new Font("Segoe UI", Font.BOLD, 24)); // Aumentado de 18 a 24
     tab.setForeground(Color.WHITE);
     tab.setCursor(new Cursor(Cursor.HAND_CURSOR));
     
@@ -384,13 +428,13 @@ public class MainUserUI extends JFrame {
         @Override
         public void mouseEntered(MouseEvent e) {
             tab.setForeground(new Color(255, 255, 255, 220));
-            tab.setFont(new Font("Segoe UI", Font.BOLD, 19));
+            tab.setFont(new Font("Segoe UI", Font.BOLD, 25)); // Efecto hover aumentado
         }
         
         @Override
         public void mouseExited(MouseEvent e) {
             tab.setForeground(Color.WHITE);
-            tab.setFont(new Font("Segoe UI", Font.BOLD, 18));
+            tab.setFont(new Font("Segoe UI", Font.BOLD, 24)); // Regresa a tamaño base aumentado
         }
     });
     
@@ -398,7 +442,7 @@ public class MainUserUI extends JFrame {
     };
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new MainUserUI().setVisible(true));
+        SwingUtilities.invokeLater(() -> new PrincipalUserUI().setVisible(true));
     };
 
 };

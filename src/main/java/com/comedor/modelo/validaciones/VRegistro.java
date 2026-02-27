@@ -80,10 +80,10 @@ public class VRegistro {
     // Ejecuta todas las validaciones necesarias para registrar un usuario
     public void validar() throws InvalidCredentialsException, DuplicateUserException, IOException {
         if (!ValidacionUtil.formatoCedula(uIngresado.obtCedula())) {
-            throw new InvalidCredentialsException("La cédula no es válida");
+            throw new InvalidCredentialsException("Error en el campo Cédula: El formato no es válido. Solo debe contener números.");
         }
         if (!ValidacionUtil.formatoContraseña(uIngresado.obtContraseña())) {
-            throw new InvalidCredentialsException("La contraseña no cumple requisitos mínimos");
+            throw new InvalidCredentialsException("Error en el campo Contraseña: No cumple con los requisitos mínimos (ej. 6 caracteres).");
         }
         if (!validarDuplicado()) {
             throw new DuplicateUserException("El usuario ya existe en la base de datos");
@@ -95,18 +95,18 @@ public class VRegistro {
         if (uIngresado instanceof Administrador) {
             String codigo = ((Administrador) uIngresado).obtCodigoAdministrador();
             if (codigo == null || !codigo.trim().matches("[A-Za-z0-9]{8}")) {
-                throw new InvalidCredentialsException("Código de administrador inválido");
+                throw new InvalidCredentialsException("Error en el campo Código Admin: El código debe ser alfanumérico de 8 caracteres.");
             }
             RepoAdminCdg repoCdg = new RepoAdminCdg();
             if (!repoCdg.existeCodigo(codigo.trim())) {
-                throw new InvalidCredentialsException("Código de administrador no encontrado");
+                throw new InvalidCredentialsException("Error en el campo Código Admin: El código de administrador no fue encontrado o no es válido.");
             }
         }
         if (!validarEstudiante()) {
-            throw new InvalidCredentialsException("Datos de estudiante incompletos o inválidos");
+            throw new InvalidCredentialsException("Error en los datos de Estudiante: La Facultad y/o Carrera son inválidas o no se corresponden.");
         }
         if (!validarEmpleado()) {
-            throw new InvalidCredentialsException("Datos de empleado incompletos o inválidos");
+            throw new InvalidCredentialsException("Error en los datos de Empleado: El Cargo y/o Departamento no pueden estar vacíos.");
         }
     }
 

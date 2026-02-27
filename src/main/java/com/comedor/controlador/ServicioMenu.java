@@ -10,7 +10,8 @@ import com.comedor.modelo.entidades.Empleado;
 import com.comedor.modelo.entidades.Administrador;
 
 public class ServicioMenu {
-    private final Menu menu = Menu.getInstance();
+    private final Menu menuDesayuno = new Menu("Desayuno");
+    private final Menu menuAlmuerzo = new Menu("Almuerzo");
     private final ServicioCosto servicioCosto = new ServicioCosto();
 
     // Factores de cobro según tipo de usuario (1.0 = 100%, 0.2 = 20%)
@@ -23,6 +24,9 @@ public class ServicioMenu {
             System.out.println("Acceso denegado: solo administradores pueden modificar el menú.");
             return;
         }
+
+        // Seleccionamos qué menú actualizar según el tipo del nuevo menú
+        Menu menu = "Desayuno".equalsIgnoreCase(nuevoMenu.obtTipo()) ? menuDesayuno : menuAlmuerzo;
 
         menu.setNombre(nuevoMenu.obtNombre());
         menu.setMenuID(nuevoMenu.obtMenuID());
@@ -42,7 +46,7 @@ public class ServicioMenu {
     }
 
     // Agrega un nuevo platillo al menú actual si el usuario es administrador
-    public void agregarPlatillo(Usuario actor, Platillo p) {
+    public void agregarPlatillo(Usuario actor, Platillo p, String tipoMenu) {
         if (!(actor instanceof Administrador)) {
             System.out.println("Acceso denegado: solo administradores pueden agregar platillos.");
             return;
@@ -51,12 +55,16 @@ public class ServicioMenu {
             System.out.println("Platillo nulo.");
             return;
         }
+        
+        Menu menu = "Desayuno".equalsIgnoreCase(tipoMenu) ? menuDesayuno : menuAlmuerzo;
+        // REQUERIMIENTO: Solo un platillo diario. Se limpia la lista antes de agregar.
+        menu.obtPlatillos().clear();
         menu.agregarPlatillo(p);
-        System.out.println("Platillo agregado: " + p.obtNombre());
+        System.out.println("Platillo agregado a " + menu.obtTipo() + ": " + p.obtNombre());
     }
 
     // Elimina un platillo del menú por su nombre si el usuario es administrador
-    public void quitarPlatillo(Usuario actor, String nombrePlatillo) {
+    public void quitarPlatillo(Usuario actor, String nombrePlatillo, String tipoMenu) {
         if (!(actor instanceof Administrador)) {
             System.out.println("Acceso denegado: solo administradores pueden quitar platillos.");
             return;
@@ -65,6 +73,7 @@ public class ServicioMenu {
             System.out.println("Nombre de platillo inválido.");
             return;
         }
+        Menu menu = "Desayuno".equalsIgnoreCase(tipoMenu) ? menuDesayuno : menuAlmuerzo;
         boolean removed = menu.obtPlatillos().removeIf(p -> nombrePlatillo.equalsIgnoreCase(p.obtNombre()));
         if (removed) {
             System.out.println("Platillo eliminado: " + nombrePlatillo);
@@ -74,7 +83,7 @@ public class ServicioMenu {
     }
 
     // Actualiza el precio de un platillo y registra el cambio en costos si el usuario es administrador
-    public void actualizarPrecioPlatillo(Usuario actor, String nombrePlatillo, double nuevoPrecio) {
+    public void actualizarPrecioPlatillo(Usuario actor, String nombrePlatillo, double nuevoPrecio, String tipoMenu) {
         if (!(actor instanceof Administrador)) {
             System.out.println("Acceso denegado: solo administradores pueden actualizar precios.");
             return;
@@ -83,6 +92,7 @@ public class ServicioMenu {
             System.out.println("Nombre de platillo inválido.");
             return;
         }
+        Menu menu = "Desayuno".equalsIgnoreCase(tipoMenu) ? menuDesayuno : menuAlmuerzo;
         for (Platillo p : menu.obtPlatillos()) {
             if (nombrePlatillo.equalsIgnoreCase(p.obtNombre())) {
                 double anterior = p.obtPrecio();
@@ -101,16 +111,18 @@ public class ServicioMenu {
             System.out.println("Acceso denegado: solo administradores pueden registrar costos.");
             return;
         }
-        String periodo = servicioCosto.obtenerPeriodoActual();
-        servicioCosto.registrarValoresCCB(periodo, fijos, variables, produccion);
-        System.out.println("Costos mensuales actualizados por: " + actor.getNombre());
+        // Se elimina la llamada redundante a registrarValoresCCB porque calcularRegistrarCCBCompleto ya lo hace internamente
+        // Se asume 0 merma para este registro manual simplificado
+        servicioCosto.calcularRegistrarCCBCompleto(fijos, variables, produccion, 0);
+        System.out.println("Costos mensuales actualizados por: " + actor.obtCedula());
     }
 
     // Calcula la tarifa automática basada en el rol del usuario y el precio base del platillo.
     public double calcularTarifaPorUsuario(Usuario usuario, Platillo p) {
         // 1. Obtenemos el CCB real del periodo. Si es 0 (no hay datos), usamos el precio referencial del platillo.
         double ccb = servicioCosto.obtenerCCBActual();
-        double precioBase = (ccb > 0) ? ccb : p.getPrecio();
+        // Corrección: Eliminada declaración duplicada y uso de método correcto obtPrecio()
+        double precioBase = (ccb > 0) ? ccb : p.obtPrecio();
         
         if (usuario instanceof Estudiante) {
             return precioBase * FACTOR_PAGO_ESTUDIANTE;
@@ -123,19 +135,26 @@ public class ServicioMenu {
 
     // Muestra en consola la información del menú actual y sus platillos
     public void visualizarMenu(Usuario actor) {
-        if (menu.obtPlatillos() == null || menu.obtPlatillos().isEmpty()) {
-            System.out.println("No hay menú configurado.");
+        visualizarMenuIndividual(menuDesayuno);
+        System.out.println("-------------------------");
+        visualizarMenuIndividual(menuAlmuerzo);
+    }
+
+    private void visualizarMenuIndividual(Menu m) {
+        if (m.obtPlatillos() == null || m.obtPlatillos().isEmpty()) {
+            System.out.println("Menú " + m.obtTipo() + ": No configurado.");
             return;
         }
-
-        System.out.println("Menú: " + (menu.obtNombre() != null ? menu.obtNombre() : "(sin nombre)"));
-        System.out.println("Periodo: " + menu.obtFechaInicio() + " - " + menu.obtFechaFin());
+        System.out.println("Menú " + m.obtTipo() + ": " + (m.obtNombre() != null ? m.obtNombre() : "(sin nombre)"));
+        System.out.println("Periodo: " + m.obtFechaInicio() + " - " + m.obtFechaFin());
         System.out.println("Platillos:");
-        for (Platillo p : menu.getPlatillos()) {
+        for (Platillo p : m.obtPlatillos()) {
             System.out.println(" - " + p);
         }
     }
 
-    // Retorna la instancia actual del menú
-    public Menu obtenerMenu() { return menu; }
+    // Retorna la instancia del menú solicitado
+    public Menu obtenerMenu(String tipo) { 
+        return "Desayuno".equalsIgnoreCase(tipo) ? menuDesayuno : menuAlmuerzo; 
+    }
 }

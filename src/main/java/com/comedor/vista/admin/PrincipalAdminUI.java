@@ -28,21 +28,33 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
+import com.comedor.modelo.entidades.Administrador;
+import com.comedor.modelo.entidades.Usuario;
+import com.comedor.vista.usuario.MenuUserUI;
+import com.comedor.vista.DialogoCCB;
+import com.comedor.vista.InicioSesionUI;
+
 /**
  * Interfaz gráfica para el registro de usuarios del sistema SAGC UCV.
  */
-public class MainAdminUI extends JFrame {
+public class PrincipalAdminUI extends JFrame {
 
     // --- PALETA DE COLORES (Basada en el diseño institucional) ---
     private static final Color COLOR_AZUL_INST = new Color(0, 51, 102);            // Barras y Títulos
     private static final Color COLOR_OVERLAY = new Color(0, 51, 102, 140);      // Filtro sobre imagen
 
     private BufferedImage backgroundImage;
+    private Usuario usuario;
 
     /**
      * Inicializa la interfaz de registro y carga recursos (imagen de fondo).
      */
-    public MainAdminUI() {
+    public PrincipalAdminUI() {
+        this(new Administrador("00000000", "admin", "00000000"));
+    }
+
+    public PrincipalAdminUI(Usuario usuario) {
+        this.usuario = usuario;
         try {
             URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_reg_bg.jpg");
             if (imageUrl != null) backgroundImage = ImageIO.read(imageUrl);
@@ -85,7 +97,7 @@ public class MainAdminUI extends JFrame {
 
                 // Barras sólidas superior e inferior
                 g2d.setColor(COLOR_AZUL_INST);
-                int barHeight = 135;
+                int barHeight = 160;
                 g2d.fillRect(0, 0, getWidth(), barHeight);
                 g2d.fillRect(0, getHeight() - barHeight, getWidth(), barHeight);
             }
@@ -122,27 +134,75 @@ public class MainAdminUI extends JFrame {
         tabsPanel.setOpaque(false);
 
         JLabel usuarioTab = createTabLabel("Usuario");
-        JLabel menuTab = createTabLabel("Editar Menú");
-        JLabel reservasTab = createTabLabel("Reservas");
+        JLabel menuTab = createTabLabel("AggPlatillo");
+        JLabel reservasTab = createTabLabel("AdministrarTurnos");
+        JLabel costosTab = createTabLabel("Costos CCB");
+        JLabel menuOrdenTab = createTabLabel("Menú");
+        JLabel cerrarSesionTab = createTabLabel("Cerrar Sesión");
         
+        usuarioTab.addMouseListener(new MouseAdapter() {
+            @Override 
+            public void mouseClicked(MouseEvent e) {
+                new ListaUsuariosUI(usuario).setVisible(true);
+                PrincipalAdminUI.this.dispose();
+            }
+        });
+
         menuTab.addMouseListener(new MouseAdapter() {
             @Override 
             public void mouseClicked(MouseEvent e) {
                 new MenuAdminUI().setVisible(true);
-                MainAdminUI.this.dispose();
+                PrincipalAdminUI.this.dispose();
             }
         });
 
         reservasTab.addMouseListener(new MouseAdapter() {
             @Override 
             public void mouseClicked(MouseEvent e) {
-                // Redirigir a Reservas
-                // new ReservasUI().setVisible(true);
-                // MainAdminUI.this.dispose();
-                JOptionPane.showMessageDialog(MainAdminUI.this, 
-                    "Funcionalidad no implementada.", 
-                    "Reservas", 
+                String mensaje = "Turnos Actuales del Comedor:\n\n" +
+                                 "DESAYUNO:\n" +
+                                 "• 07:00 - 08:00\n" +
+                                 "• 08:00 - 09:00\n" +
+                                 "• 09:00 - 10:00\n\n" +
+                                 "ALMUERZO:\n" +
+                                 "• 12:00 - 13:00\n" +
+                                 "• 13:00 - 14:00\n" +
+                                 "• 14:00 - 15:00";
+                
+                JOptionPane.showMessageDialog(PrincipalAdminUI.this, 
+                    mensaje, 
+                    "Administración de Turnos", 
                     JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        costosTab.addMouseListener(new MouseAdapter() {
+            @Override 
+            public void mouseClicked(MouseEvent e) {
+                new DialogoCCB(PrincipalAdminUI.this).setVisible(true);
+            }
+        });
+
+        menuOrdenTab.addMouseListener(new MouseAdapter() {
+            @Override 
+            public void mouseClicked(MouseEvent e) {
+                new MenuUserUI(usuario).setVisible(true);
+                PrincipalAdminUI.this.dispose();
+            }
+        });
+
+        cerrarSesionTab.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int confirm = JOptionPane.showConfirmDialog(PrincipalAdminUI.this,
+                        "¿Está seguro de que desea cerrar la sesión?",
+                        "Confirmar Cierre de Sesión",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    new InicioSesionUI().setVisible(true);
+                    PrincipalAdminUI.this.dispose();
+                }
             }
         });
 
@@ -150,21 +210,24 @@ public class MainAdminUI extends JFrame {
         tabsPanel.add(usuarioTab);
         tabsPanel.add(menuTab);
         tabsPanel.add(reservasTab);
+        tabsPanel.add(costosTab);
+        tabsPanel.add(menuOrdenTab);
+        tabsPanel.add(cerrarSesionTab);
         
         // --- BARRA INFERIOR ---
         JPanel bottomBarContainer = new JPanel(new BorderLayout());
         bottomBarContainer.setOpaque(false);
-        bottomBarContainer.setPreferredSize(new Dimension(getWidth(), 135));
+        bottomBarContainer.setPreferredSize(new Dimension(getWidth(), 160));
         
         // --- CONTENEDOR PRINCIPAL DE LA BARRA SUPERIOR ---
         JPanel topBarContainer = new JPanel(new BorderLayout());
         topBarContainer.setOpaque(false);
-        topBarContainer.setPreferredSize(new Dimension(getWidth(), 135));
+        topBarContainer.setPreferredSize(new Dimension(getWidth(), 160));
 
         // Panel para el logo (izquierda)
         JPanel logoPanel = new JPanel(new GridBagLayout());
         logoPanel.setOpaque(false);
-        logoPanel.setPreferredSize(new Dimension(500, 135));
+        logoPanel.setPreferredSize(new Dimension(500, 160));
 
         GridBagConstraints gbcLogo = new GridBagConstraints();
         gbcLogo.gridx = 0;
@@ -214,6 +277,19 @@ public class MainAdminUI extends JFrame {
         
         // Panel contenedor con márgenes y posible fondo
         JPanel welcomeContainer = new JPanel(new GridBagLayout());
+        // Fondo semitransparente redondeado para el mensaje
+        welcomeContainer.setOpaque(false); 
+        welcomeContainer = new JPanel(new GridBagLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(new Color(0, 0, 0, 80)); // Fondo negro semitransparente
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
+                g2.dispose();
+            }
+        };
         welcomeContainer.setOpaque(false);
         welcomeContainer.setBorder(new EmptyBorder(20, 40, 20, 40));
         
@@ -304,7 +380,7 @@ public class MainAdminUI extends JFrame {
     };
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new MainAdminUI().setVisible(true));
+        SwingUtilities.invokeLater(() -> new PrincipalAdminUI().setVisible(true));
     };
 
 };

@@ -227,6 +227,16 @@ public class RegistroUI extends JFrame {
         formCard.add(titleLabel, gbc);
 
         txtCedula = new ModernTextField("Ej. 12345678");
+        // Validación: Solo permitir números
+        txtCedula.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
+                    e.consume();
+                }
+            }
+        });
         addLabelAndField(formCard, "Cédula:", txtCedula, gbc, 1);
 
         txtContrasena = new ModernTextField("Mín. 6 caracteres");
@@ -293,7 +303,7 @@ public class RegistroUI extends JFrame {
         String contr = txtContrasena.getText();
 
         if (cedula.isEmpty() || contr.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Complete todos los campos obligatorios", "Aviso", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Los campos Cédula y Contraseña son obligatorios.", "Campos Incompletos", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -302,7 +312,7 @@ public class RegistroUI extends JFrame {
             String carrera = txtCarrera.getText().trim();
             String facultad = txtFacultad.getText().trim();
             if (facultad.isEmpty() || carrera.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Complete Facultad y Carrera para estudiantes.", "Campos incompletos", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Para registrarse como Estudiante, los campos Facultad y Carrera son obligatorios.", "Campos Incompletos", JOptionPane.WARNING_MESSAGE);
                 return;
             }
             nuevo = new Estudiante(cedula, contr, carrera, facultad);
@@ -310,14 +320,14 @@ public class RegistroUI extends JFrame {
             String cargo = txtCargo.getText().trim();
             String departamento = txtDepartamento.getText().trim();
             if (cargo.isEmpty() || departamento.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Complete Cargo y Departamento para empleados.", "Campos incompletos", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Para registrarse como Empleado, los campos Cargo y Departamento son obligatorios.", "Campos Incompletos", JOptionPane.WARNING_MESSAGE);
                 return;
             }
             nuevo = new Empleado(cedula, contr, cargo, departamento, "0000");
         } else { 
             String codigo = txtAdminCodigo.getText().trim();
             if (codigo.isEmpty() || !codigo.matches("[A-Za-z0-9]{8}")) {
-                JOptionPane.showMessageDialog(this, "Ingrese un código de administrador válido (8 caracteres alfanum.).", "Código inválido", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "El Código de Administrador es obligatorio y debe tener 8 caracteres alfanuméricos.", "Código Inválido", JOptionPane.WARNING_MESSAGE);
                 return;
             }
             nuevo = new Administrador(cedula, contr, codigo);
