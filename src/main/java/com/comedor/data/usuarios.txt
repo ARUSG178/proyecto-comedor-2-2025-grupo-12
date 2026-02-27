@@ -1,7 +1,7 @@
 Estudiante;29617475;123456;true;0;50.0;Computación;Ciencias
 Estudiante;12345678;pass123;true;0;10.0;Biología;Ciencias
 Estudiante;33333333;clave33;true;0;0.0;Derecho;Ciencias Jurídicas y Políticas
-Estudiante;29508052;juan123;true;0;25.5;Computación;Ciencias
+Estudiante;29508052;juan123;true;0;115.5;Computación;Ciencias
 Estudiante;20111222;geo2025;true;0;5.0;Geoquímica;Ciencias
 Estudiante;21444555;arq2024;true;0;100.0;Arquitectura;Arquitectura y Urbanismo
 Estudiante;22777888;med2023;true;1;0.0;Medicina;Medicina
