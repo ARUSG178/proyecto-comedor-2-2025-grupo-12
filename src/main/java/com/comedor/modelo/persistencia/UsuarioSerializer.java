@@ -2,16 +2,10 @@ package com.comedor.modelo.persistencia;
 
 import com.comedor.modelo.entidades.*;
 
-/**
- * Clase responsable de serializar y deserializar usuarios a/desde formato CSV.
- */
+// Clase responsable de serializar y deserializar usuarios a/desde formato CSV.
 public class UsuarioSerializer {
     
-    /**
-     * Convierte un objeto Usuario a su representación en formato CSV.
-     * @param usuario El usuario a serializar
-     * @return La representación CSV del usuario
-     */
+    // Convierte un objeto Usuario a su representación en formato CSV.
     public String serializar(Usuario usuario) {
         StringBuilder buffer = new StringBuilder();
         buffer.append(usuario.obtTipo()).append(";");
@@ -53,11 +47,7 @@ public class UsuarioSerializer {
         return buffer.toString();
     }
     
-    /**
-     * Convierte una línea de texto CSV a un objeto Usuario.
-     * @param linea La línea CSV a deserializar
-     * @return El usuario deserializado o null si la línea es inválida
-     */
+    // Convierte una línea de texto CSV a un objeto Usuario.
     public Usuario deserializar(String linea) {
         String[] datos = linea.split(";");
         if (datos.length < 7) return null;

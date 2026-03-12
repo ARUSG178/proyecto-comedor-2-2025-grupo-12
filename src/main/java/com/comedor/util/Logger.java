@@ -6,10 +6,7 @@ import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-/**
- * Utilidad centralizada para logging en el sistema SAGC UCV
- * Reemplaza todos los System.out.println y maneja errores de forma consistente
- */
+// Utilidad centralizada para logging en el sistema SAGC UCV. Reemplaza System.out.println y maneja errores consistentemente.
 public class Logger {
     private static final String LOG_FILE = "src/main/resources/logs/sagc_log.txt";
     private static final DateTimeFormatter TIMESTAMP_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -18,44 +15,32 @@ public class Logger {
         INFO, WARNING, ERROR, DEBUG
     }
     
-    /**
-     * Registra un mensaje con nivel INFO
-     */
+    // Registra un mensaje con nivel INFO
     public static void info(String mensaje) {
         log(Level.INFO, mensaje, null);
     }
     
-    /**
-     * Registra un mensaje con nivel WARNING
-     */
+    // Registra un mensaje con nivel WARNING
     public static void warning(String mensaje) {
         log(Level.WARNING, mensaje, null);
     }
     
-    /**
-     * Registra un mensaje con nivel ERROR
-     */
+    // Registra un mensaje con nivel ERROR
     public static void error(String mensaje) {
         log(Level.ERROR, mensaje, null);
     }
     
-    /**
-     * Registra un mensaje con nivel ERROR incluyendo la excepción
-     */
+    // Registra un mensaje con nivel ERROR incluyendo la excepción
     public static void error(String mensaje, Exception excepcion) {
         log(Level.ERROR, mensaje, excepcion);
     }
     
-    /**
-     * Registra un mensaje con nivel DEBUG
-     */
+    // Registra un mensaje con nivel DEBUG
     public static void debug(String mensaje) {
         log(Level.DEBUG, mensaje, null);
     }
     
-    /**
-     * Método central de logging
-     */
+    // Método central de logging
     private static void log(Level nivel, String mensaje, Exception excepcion) {
         String timestamp = LocalDateTime.now().format(TIMESTAMP_FORMAT);
         String logEntry = String.format("[%s] %s: %s", timestamp, nivel, mensaje);
@@ -78,9 +63,7 @@ public class Logger {
         }
     }
     
-    /**
-     * Limpia el archivo de log (útil para pruebas o reinicio del sistema)
-     */
+    // Limpia el archivo de log (útil para pruebas o reinicio del sistema)
     public static void limpiarLog() {
         try (PrintWriter writer = new PrintWriter(new FileWriter(LOG_FILE, false))) {
             writer.print("");

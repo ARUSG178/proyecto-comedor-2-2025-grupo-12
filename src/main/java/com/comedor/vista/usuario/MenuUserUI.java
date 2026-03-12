@@ -75,13 +75,11 @@ public class MenuUserUI extends JFrame {
     }
 
     private static class PrecioBreakdown {
-        private final double original;
         private final double base;
         private final double factor;
         private final double finalCobro;
 
-        private PrecioBreakdown(double original, double base, double factor, double finalCobro) {
-            this.original = original;
+        private PrecioBreakdown(double base, double factor, double finalCobro) {
             this.base = base;
             this.factor = factor;
             this.finalCobro = finalCobro;
@@ -89,19 +87,21 @@ public class MenuUserUI extends JFrame {
     }
 
     private PrecioBreakdown calcularBreakdown(String precioConfigurado) {
-        double original = 5.00;
-        try {
-            String pLimpio = precioConfigurado.replace("$", "").replace(" ", "").replace(",", ".").trim();
-            original = Double.parseDouble(pLimpio);
-        } catch (Exception e) {
-            // fallback
+        double base = ccbActual;
+        
+        // Si no hay CCB, usar precio configurado como fallback
+        if (base <= 0) {
+            try {
+                String pLimpio = precioConfigurado.replace("$", "").replace(" ", "").replace(",", ".").trim();
+                base = Double.parseDouble(pLimpio);
+            } catch (Exception e) {
+                base = 5.00; // fallback
+            }
         }
-
-        double base = (ccbActual > 0) ? ccbActual : original;
 
         double factor = new ServicioMenu().factorParaUsuario(usuario);
         double finalCobro = base * factor;
-        return new PrecioBreakdown(original, base, factor, finalCobro);
+        return new PrecioBreakdown(base, factor, finalCobro);
     }
 
     private String toHtmlPrecioBreakdown(PrecioBreakdown b) {
@@ -111,7 +111,6 @@ public class MenuUserUI extends JFrame {
 
         return "<html>"
                 + "<div style='text-align:center; width: 390px;'>"
-                + "<div style='font-size:10px; color:#cfcfcf;'>Precio original: $ " + String.format("%.2f", b.original) + "</div>"
                 + "<div style='font-size:10px; color:#cfcfcf;'>Base (CCB): $ " + String.format("%.2f", b.base) + "</div>"
                 + "<div style='font-size:10px; color:#cfcfcf;'>Tarifa aplicada (" + tipo + "): " + pct + "%</div>"
                 + "<div style='font-size:10px; color:#cfcfcf;'>Subsidio: $ " + String.format("%.2f", subsidio) + "</div>"

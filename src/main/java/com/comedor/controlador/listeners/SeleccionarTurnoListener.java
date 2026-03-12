@@ -13,9 +13,7 @@ import java.util.Properties;
 import javax.swing.*;
 import java.io.FileOutputStream;
 
-/**
- * Listener para procesar la selección de turno y redirigir a verificación
- */
+// Listener para procesar la selección de turno y redirigir a verificación
 public class SeleccionarTurnoListener implements ActionListener {
     private final Usuario usuario;
     private final double costoPlatillo;

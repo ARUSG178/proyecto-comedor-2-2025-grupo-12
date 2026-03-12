@@ -13,18 +13,16 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 import java.util.List;
 
-/**
- * UI exclusiva para Secretaría - Gestión de datos sin editar archivos manualmente
- */
+// UI exclusiva para Secretaría - Gestión de datos sin editar archivos manualmente
 public class PanelSecretariaUI extends JFrame {
 
     private static final Color COLOR_AZUL_INST = new Color(0, 51, 102);
-    private static final Color COLOR_OVERLAY = new Color(0, 51, 102, 140);
+    private static final Color COLOR_OVERLAY = new Color(0, 51, 102, 140); // Color de overlay para el fondo
     
     private BufferedImage backgroundImage;
     private RepoSecretaria repoSecretaria;
     
-    private JTable tableUsuarios;
+    private JTable tableUsuarios; // Tabla para mostrar los usuarios
     private DefaultTableModel modelUsuarios;
     private List<Usuario> usuariosList;
 

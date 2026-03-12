@@ -3,9 +3,7 @@ package com.comedor.modelo.entidades;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-/**
- * Representa el registro de asistencia de un comensal a un servicio específico
- */
+// Representa el registro de asistencia de un comensal a un servicio específico
 public class AsistenciaComedor {
     private Usuario comensal;
     private String tipoServicio; // "Desayuno" o "Almuerzo"

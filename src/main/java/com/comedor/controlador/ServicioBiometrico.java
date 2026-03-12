@@ -70,7 +70,6 @@ public class ServicioBiometrico {
     }
 
     // Compara dos imágenes píxel a píxel y retorna el porcentaje de similitud
-    // MÉTODO MEJORADO: Usa comparación de histogramas por cuadrantes (Grid Histogram).
     // Esto valida no solo los colores, sino dónde están ubicados (ej. cabello arriba, cara centro).
     private double compararImagenes(BufferedImage imgA, BufferedImage imgB) {
         // Normalización de tamaño (150x150)

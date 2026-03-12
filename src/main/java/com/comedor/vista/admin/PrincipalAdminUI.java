@@ -19,7 +19,7 @@ public class PrincipalAdminUI extends JFrame {
     private final Usuario usuario;
     private BufferedImage backgroundImage;
 
-    // Colores ORIGINALES AZULES
+    // Colores 
     private static final Color COLOR_AZUL_INST = new Color(0, 51, 102); // Azul institucional ORIGINAL
     public PrincipalAdminUI(Usuario usuario) {
         this.usuario = usuario;
@@ -28,9 +28,7 @@ public class PrincipalAdminUI extends JFrame {
             URL imageUrl = getClass().getResource("/images/ui/com_reg_bg.jpg");
             if (imageUrl != null)
                 backgroundImage = ImageIO.read(imageUrl);
-        } catch (IOException e) {
-            // Imagen de fondo opcional
-        }
+        } catch (IOException e) { }
 
         configurarVentana();
         initUI();

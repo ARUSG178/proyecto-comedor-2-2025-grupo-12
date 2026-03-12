@@ -7,26 +7,17 @@ import java.util.List;
 import com.comedor.modelo.entidades.Usuario;
 import com.comedor.util.ServicioUtil;
 
-/**
- * Implementación del repositorio de usuarios que persiste en archivo CSV.
- * Aplica el Principio de Responsabilidad Única (SRP) delegando serialización.
- * Aplica el Principio de Inversión de Dependencias (DIP) implementando interfaz.
- */
+// Implementación del repositorio de usuarios que persiste en archivo CSV. Aplica SRP delegando serialización. Aplica DIP implementando interfaz.
 public class RepoUsuarios implements IRepositorioUsuarios {
     private static final String RUTA_ARCHIVO = "src/main/java/com/comedor/data/usuarios.txt";
     private final UsuarioSerializer serializer;
     
-    /**
-     * Constructor que permite inyección del serializador.
-     * @param serializer El serializador a usar
-     */
+    // Constructor que permite inyección del serializador.
     public RepoUsuarios(UsuarioSerializer serializer) {
         this.serializer = serializer;
     }
     
-    /**
-     * Constructor por defecto que crea un serializador interno.
-     */
+    // Constructor por defecto que crea un serializador interno.
     public RepoUsuarios() {
         this.serializer = new UsuarioSerializer();
     }

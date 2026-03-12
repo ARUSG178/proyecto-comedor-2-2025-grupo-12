@@ -7,9 +7,7 @@ import com.comedor.util.Logger;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-/**
- * Listener para el botón de volver al menú principal
- */
+// Listener para el botón de volver al menú principal
 public class VolverMenuListener extends MouseAdapter {
     private final Usuario usuario;
     private final java.awt.Window windowToClose;

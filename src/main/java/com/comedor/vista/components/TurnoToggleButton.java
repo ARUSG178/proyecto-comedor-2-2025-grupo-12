@@ -3,10 +3,7 @@ package com.comedor.vista.components;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Botón de toggle con estilo personalizado para selección de turnos
- * Cumple con SRP: Responsabilidad única de renderizar botones de turno
- */
+// Botón de toggle con estilo personalizado para selección de turnos. Cumple con SRP: Responsabilidad única de renderizar botones de turno
 public class TurnoToggleButton extends JToggleButton {
     private static final Color COLOR_AZUL_INST = new Color(0, 51, 102);
 

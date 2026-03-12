@@ -114,8 +114,14 @@ public class RepoReservas {
     }
     
     public static void guardarReserva(Reserva reserva) {
+        // Agregar a la lista en memoria
         reservas.add(reserva);
-        guardarReservasEnArchivo(); // Persistir inmediatamente
+        // Agregar al archivo sin truncar (preservar reservas existentes)
+        try {
+            ServicioUtil.escribirLinea(RUTA_ARCHIVO, serializarReserva(reserva), true);
+        } catch (Exception e) {
+            System.err.println("Error guardando reserva: " + e.getMessage());
+        }
     }
     
     public static List<Reserva> obtenerReservasPorUsuario(Usuario usuario) {

@@ -10,16 +10,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Repositorio para persistir ingresos del sistema (ganancia concesionario e ingresos propios)
- */
+// Repositorio para persistir ingresos del sistema (ganancia concesionario e ingresos propios)
 public class RepoIngresos {
     
     private static final String RUTA_ARCHIVO = "src/main/java/com/comedor/data/ingresos.txt";
     
-    /**
-     * Registra un ingreso del sistema con distribución
-     */
+    // Registra un ingreso del sistema con distribución
     public static void registrarIngreso(double montoTotal, double gananciaConcesionario, 
                                        double ingresosPropios, String tipoUsuario, 
                                        String tipoServicio, String cedula) {
@@ -61,9 +57,7 @@ public class RepoIngresos {
         }
     }
     
-    /**
-     * Obtiene todos los ingresos registrados
-     */
+    // Obtiene todos los ingresos registrados
     public static List<RegistroIngreso> obtenerTodosLosIngresos() {
         List<RegistroIngreso> ingresos = new ArrayList<>();
         
@@ -90,9 +84,7 @@ public class RepoIngresos {
         return ingresos;
     }
     
-    /**
-     * Obtiene ingresos de una fecha específica
-     */
+    // Obtiene ingresos de una fecha específica
     public static List<RegistroIngreso> obtenerIngresosPorFecha(LocalDate fecha) {
         List<RegistroIngreso> todos = obtenerTodosLosIngresos();
         List<RegistroIngreso> filtrados = new ArrayList<>();
@@ -106,9 +98,7 @@ public class RepoIngresos {
         return filtrados;
     }
     
-    /**
-     * Calcula totales por período
-     */
+    // Calcula totales por período
     public static ResumenFinanciero calcularResumenPeriodo(String periodo) {
         List<RegistroIngreso> ingresos = obtenerTodosLosIngresos();
         
@@ -148,9 +138,7 @@ public class RepoIngresos {
         return null;
     }
     
-    /**
-     * Clase interna para representar un registro de ingreso
-     */
+    // Clase interna para representar un registro de ingreso
     public static class RegistroIngreso {
         private final String fechaHora;
         private final double montoTotal;
@@ -196,9 +184,7 @@ public class RepoIngresos {
         }
     }
     
-    /**
-     * Clase para resumen financiero
-     */
+    // Clase para resumen financiero
     public static class ResumenFinanciero {
         private final double totalMonto;
         private final double totalConcesionario;

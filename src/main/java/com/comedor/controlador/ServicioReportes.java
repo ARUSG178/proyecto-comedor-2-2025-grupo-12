@@ -10,17 +10,10 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Servicio para generar reportes de comensales y asistencia basado en datos reales
- */
+// Servicio para generar reportes de comensales y asistencia basado en datos reales
 public class ServicioReportes {
     
-    /**
-     * Obtiene el listado de comensales que acudieron a un servicio específico
-     * @param tipoServicio "Desayuno" o "Almuerzo"
-     * @param fecha Fecha específica (null para hoy)
-     * @return Listado de comensales con desglose por tipo
-     */
+    // Obtiene el listado de comensales que acudieron a un servicio específico
     public ReporteComensales obtenerComensalesPorServicio(String tipoServicio, LocalDate fecha) {
         if (fecha == null) {
             fecha = LocalDate.now();
@@ -32,9 +25,7 @@ public class ServicioReportes {
         return new ReporteComensales(asistencias, tipoServicio, fecha);
     }
     
-    /**
-     * Obtiene asistencias reales basadas en reservas completadas/pagadas del día
-     */
+    // Obtiene asistencias reales basadas en reservas completadas/pagadas del día
     private List<AsistenciaComedor> obtenerAsistenciasReales(String tipoServicio, LocalDate fecha) {
         List<AsistenciaComedor> asistencias = new ArrayList<>();
         
@@ -95,9 +86,7 @@ public class ServicioReportes {
         return asistencias;
     }
     
-    /**
-     * Obtiene el CCB actual del sistema
-     */
+    // Obtiene el CCB actual del sistema
     private double obtenerCCBActual() {
         try {
             Properties props = new Properties();
@@ -110,9 +99,7 @@ public class ServicioReportes {
         }
     }
     
-    /**
-     * Calcula la tarifa según tipo de usuario
-     */
+    // Calcula la tarifa según tipo de usuario
     private double calcularTarifaPorUsuario(Usuario usuario, double ccb) {
         String tipoUsuario = usuario.obtTipo();
         
@@ -151,9 +138,7 @@ public class ServicioReportes {
         }
     }
     
-    /**
-     * Clase interna para representar el reporte de comensales
-     */
+    // Clase interna para representar el reporte de comensales
     public static class ReporteComensales {
         private final List<AsistenciaComedor> asistencias;
         private final String tipoServicio;
@@ -210,9 +195,7 @@ public class ServicioReportes {
                 .count();
         }
         
-        /**
-         * Genera reporte detallado en formato texto
-         */
+        // Genera reporte detallado en formato texto
         public String generarReporteDetallado() {
             StringBuilder reporte = new StringBuilder();
             reporte.append("=".repeat(80)).append("\n");

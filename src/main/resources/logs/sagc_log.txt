@@ -871,3 +871,65 @@ java.io.FileNotFoundException: menu_config.properties (El sistema no puede encon
 [2026-03-12 17:43:13] INFO: Reporte generado: 1 comensales para Desayuno del 2026-03-12
 [2026-03-12 17:43:13] INFO: Reporte de comensales generado: Desayuno - 2026-03-12
 [2026-03-12 17:43:13] INFO: Total: 1 comensales, Recaudado: $3.40
+[2026-03-12 18:25:31] INFO: Inicio de sesión exitoso para cédula: 29617475
+[2026-03-12 18:25:37] INFO: Turno seleccionado: 07:00 - 07:59 para usuario 29617475
+[2026-03-12 18:25:44] INFO: Inicio de sesión exitoso para cédula: 29617475
+[2026-03-12 18:26:07] INFO: Inicio de sesión exitoso para cédula: 10000004
+[2026-03-12 18:26:15] INFO: No hay monto en reserva para 6017761, usando cálculo: $3.404000000000001
+[2026-03-12 18:26:15] INFO: Monto desde reserva para 29617475: $0.4255000000000001
+[2026-03-12 18:26:15] INFO: Reporte generado: 2 comensales para Desayuno del 2026-03-12
+[2026-03-12 18:26:15] INFO: Reporte de comensales generado: Desayuno - 2026-03-12
+[2026-03-12 18:26:15] INFO: Total: 2 comensales, Recaudado: $3,83
+[2026-03-12 18:26:33] INFO: No hay monto en reserva para 6017761, usando cálculo: $3.404000000000001
+[2026-03-12 18:26:33] INFO: Monto desde reserva para 29617475: $0.4255000000000001
+[2026-03-12 18:26:33] INFO: Reporte generado: 2 comensales para Desayuno del 2026-03-12
+[2026-03-12 18:26:33] INFO: Reporte de comensales generado: Desayuno - 2026-03-12
+[2026-03-12 18:26:33] INFO: Total: 2 comensales, Recaudado: $3,83
+[2026-03-12 18:26:43] INFO: No hay monto en reserva para 6017761, usando cálculo: $3.404000000000001
+[2026-03-12 18:26:43] INFO: Monto desde reserva para 29617475: $0.4255000000000001
+[2026-03-12 18:26:43] INFO: Reporte generado: 2 comensales para Desayuno del 2026-03-12
+[2026-03-12 18:26:43] INFO: Reporte de comensales generado: Desayuno - 2026-03-12
+[2026-03-12 18:26:43] INFO: Total: 2 comensales, Recaudado: $3,83
+[2026-03-12 18:36:23] INFO: Inicio de sesión exitoso para cédula: 10000004
+[2026-03-12 18:36:48] INFO: No hay monto en reserva para 29617475, usando cálculo: $0.4255000000000001
+[2026-03-12 18:36:48] INFO: Reporte generado: 1 comensales para Desayuno del 2026-03-12
+[2026-03-12 18:36:48] INFO: Reporte de comensales generado: Desayuno - 2026-03-12
+[2026-03-12 18:36:48] INFO: Total: 1 comensales, Recaudado: $0,43
+[2026-03-12 18:37:50] INFO: Inicio de sesión exitoso para cédula: 29617475
+[2026-03-12 18:37:58] INFO: Turno seleccionado: 14:00 - 15:00 para usuario 29617475
+[2026-03-12 18:38:04] INFO: Inicio de sesión exitoso para cédula: 29617475
+[2026-03-12 18:38:28] INFO: Inicio de sesión exitoso para cédula: 10000004
+[2026-03-12 18:38:36] INFO: No hay monto en reserva para 29617475, usando cálculo: $0.4255000000000001
+[2026-03-12 18:38:36] INFO: Reporte generado: 1 comensales para Desayuno del 2026-03-12
+[2026-03-12 18:38:36] INFO: Reporte de comensales generado: Desayuno - 2026-03-12
+[2026-03-12 18:38:36] INFO: Total: 1 comensales, Recaudado: $0,43
+[2026-03-12 18:38:39] INFO: Monto desde reserva para 29617475: $0.4255000000000001
+[2026-03-12 18:38:39] INFO: Reporte generado: 1 comensales para Almuerzo del 2026-03-12
+[2026-03-12 18:38:39] INFO: Reporte de comensales generado: Almuerzo - 2026-03-12
+[2026-03-12 18:38:39] INFO: Total: 1 comensales, Recaudado: $0,43
+[2026-03-12 18:38:58] INFO: No hay monto en reserva para 29617475, usando cálculo: $0.4255000000000001
+[2026-03-12 18:38:58] INFO: Reporte generado: 1 comensales para Desayuno del 2026-03-12
+[2026-03-12 18:38:58] INFO: Reporte de comensales generado: Desayuno - 2026-03-12
+[2026-03-12 18:38:58] INFO: Total: 1 comensales, Recaudado: $0,43
+[2026-03-12 18:39:13] INFO: Inicio de sesión exitoso para cédula: 6827188
+[2026-03-12 18:39:47] INFO: Inicio de sesión exitoso para cédula: 6827188
+[2026-03-12 18:39:55] INFO: Turno seleccionado: 10:00 - 11:00 para usuario 6827188
+[2026-03-12 18:40:02] INFO: Inicio de sesión exitoso para cédula: 6017761
+[2026-03-12 18:40:27] INFO: Inicio de sesión exitoso para cédula: 10000004
+[2026-03-12 18:40:29] INFO: Monto desde reserva para 6017761: $1.0637500000000002
+[2026-03-12 18:40:29] INFO: Reporte generado: 1 comensales para Desayuno del 2026-03-12
+[2026-03-12 18:40:29] INFO: Reporte de comensales generado: Desayuno - 2026-03-12
+[2026-03-12 18:40:29] INFO: Total: 1 comensales, Recaudado: $1,06
+[2026-03-12 18:40:38] INFO: Monto desde reserva para 6017761: $1.0637500000000002
+[2026-03-12 18:40:38] INFO: Reporte generado: 1 comensales para Desayuno del 2026-03-12
+[2026-03-12 18:40:38] INFO: Reporte de comensales generado: Desayuno - 2026-03-12
+[2026-03-12 18:40:38] INFO: Total: 1 comensales, Recaudado: $1,06
+[2026-03-12 18:40:41] INFO: No hay monto en reserva para 29617475, usando cálculo: $0.4255000000000001
+[2026-03-12 18:40:41] INFO: Reporte generado: 1 comensales para Almuerzo del 2026-03-12
+[2026-03-12 18:40:41] INFO: Reporte de comensales generado: Almuerzo - 2026-03-12
+[2026-03-12 18:40:41] INFO: Total: 1 comensales, Recaudado: $0,43
+[2026-03-12 18:40:43] INFO: Monto desde reserva para 6017761: $1.0637500000000002
+[2026-03-12 18:40:43] INFO: Reporte generado: 1 comensales para Desayuno del 2026-03-12
+[2026-03-12 18:40:43] INFO: Reporte de comensales generado: Desayuno - 2026-03-12
+[2026-03-12 18:40:43] INFO: Total: 1 comensales, Recaudado: $1,06
+[2026-03-12 19:13:04] INFO: Inicio de sesión exitoso para cédula: 2000002

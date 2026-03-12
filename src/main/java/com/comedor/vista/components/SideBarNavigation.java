@@ -34,9 +34,7 @@ import com.comedor.vista.admin.VerMenuAdminUI;
 import com.comedor.vista.admin.GestionUsuariosUI;
 import com.comedor.vista.DialogoCCB;
 
-/**
- * Componente de barra lateral moderno y estilizado para el sistema SAGC UCV
- */
+// Componente de barra lateral moderno y estilizado para el sistema SAGC UCV
 public class SideBarNavigation extends JPanel {
 
     // --- PALETA DE COLORES ORIGINAL AZUL ---
@@ -405,9 +403,7 @@ public class SideBarNavigation extends JPanel {
         }));
     }
     
-    /**
-     * Muestra diálogo para generar reportes de comensales
-     */
+    // Muestra diálogo para generar reportes de comensales
     private void mostrarDialogoReportes() {
         javax.swing.JDialog dialog = new javax.swing.JDialog((java.awt.Frame) SwingUtilities.getWindowAncestor(this), "Reporte de Comensales", true);
         dialog.setSize(900, 700);

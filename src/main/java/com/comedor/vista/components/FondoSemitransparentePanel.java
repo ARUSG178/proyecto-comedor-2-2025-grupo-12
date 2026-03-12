@@ -3,10 +3,7 @@ package com.comedor.vista.components;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Panel con fondo semitransparente y bordes redondeados
- * Cumple con SRP: Responsabilidad única de renderizar el fondo
- */
+// Panel con fondo semitransparente y bordes redondeados. Cumple con SRP: Responsabilidad única de renderizar el fondo
 public class FondoSemitransparentePanel extends JPanel {
     
     public FondoSemitransparentePanel() {

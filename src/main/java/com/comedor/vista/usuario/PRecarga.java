@@ -13,9 +13,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-/**
- * Componente gráfico reutilizable para gestionar la recarga de saldo del usuario.
- */
+// Componente gráfico reutilizable para gestionar la recarga de saldo del usuario.
 public class PRecarga extends JPanel {
 
     private final Usuario usuario;

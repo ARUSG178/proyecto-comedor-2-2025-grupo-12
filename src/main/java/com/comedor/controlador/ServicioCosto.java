@@ -183,12 +183,7 @@ public class ServicioCosto {
         repo.guardarTodos(usuarios);
     }
     
-    /**
-     * Valida que solo los estudiantes puedan usar Saldo Pana.
-     * @param usuarioOrigen Usuario que intenta hacer la recarga
-     * @param cedulaDestino Cédula del usuario destino
-     * @throws IllegalArgumentException Si la validación falla
-     */
+    // Valida que solo los estudiantes puedan usar Saldo Pana.
     private void validarSaldoPana(Usuario usuarioOrigen, String cedulaDestino) throws Exception {
         // 0. Verificar que no se recargue a sí mismo
         if (usuarioOrigen.obtCedula().equals(cedulaDestino.trim())) {
@@ -217,11 +212,7 @@ public class ServicioCosto {
         throw new IllegalArgumentException("No se encontró el usuario destino en el sistema.");
     }
     
-    /**
-     * Verifica si un usuario es algún tipo de estudiante.
-     * @param usuario Usuario a verificar
-     * @return true si es estudiante (regular, becario o exonerado)
-     */
+    // Verifica si un usuario es algún tipo de estudiante.
     private boolean esEstudiante(Usuario usuario) {
         String tipo = usuario.obtTipo();
         return tipo.equals("Estudiante") || 
@@ -229,12 +220,7 @@ public class ServicioCosto {
                tipo.equals("EstudianteExonerado");
     }
     
-    /**
-     * Valida que el usuario tenga saldo suficiente para realizar la transferencia.
-     * @param usuario Usuario que envía el saldo
-     * @param monto Monto a transferir
-     * @throws IllegalArgumentException Si no tiene saldo suficiente
-     */
+    // Valida que el usuario tenga saldo suficiente para realizar la transferencia.
     private void validarSaldoSuficiente(Usuario usuario, double monto) {
         if (usuario.obtSaldo() < monto) {
             throw new IllegalArgumentException(

@@ -1,5 +1,5 @@
-Profesor;6017761;Miryam Soto;123456;true;0;3500.0;u;a
-EstudianteBecario;29617475;Jesús Soto;123456;true;0;818.3249999999998;Computación;Ciencias;90.0
+Profesor;6017761;Miryam Soto;123456;true;0;3498.93625;u;a
+EstudianteBecario;29617475;Jesús Soto;123456;true;0;817.4739999999997;Computación;Ciencias;90.0
 Estudiante;10000001;Estudiante Test;123456;true;0;1200.0;Computación;Ciencias
 Profesor;10000002;Profesor Test;123456;true;0;0.0;Matemáticas;PROF0001
 Empleado;10000003;Empleado Test;123456;true;0;50.0;Analista;Recursos Humanos;EMP00001
@@ -11,3 +11,4 @@ Estudiante;12345654;;123456;true;0;0.0;Medicina;Medicina
 Estudiante;12345665;Nose;123456;true;0;0.0;Medicina;Medicina
 Empleado;55555555;Maria Empleado;123456;true;0;300.0;Contadora;Finanzas;EMP00002
 EstudianteExonerado;66666666;Juan Exonerado;123456;true;0;0.0;Ingeniería;Ingeniería
+Profesor;2000002;Marcos Perez;123456;true;0;412412.0;Computación;Discretas

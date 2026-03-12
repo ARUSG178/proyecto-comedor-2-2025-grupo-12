@@ -44,9 +44,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.comedor.vista.components.SideBarNavigation;
 
-/**
- * Interfaz gráfica para el Menú del Comedor del sistema SAGC UCV.
- */
+// Interfaz gráfica para el Menú del Comedor del sistema SAGC UCV.
 public class VerMenuAdminUI extends JFrame {
 
     // --- PALETA DE COLORES (Basada en el diseño institucional) ---
@@ -71,9 +69,7 @@ public class VerMenuAdminUI extends JFrame {
     private String descAlmuerzo = "";
     private String nutAlmuerzo = "";
     
-    /**
-     * Inicializa la interfaz del menú del comedor y carga recursos.
-     */
+    // Inicializa la interfaz del menú del comedor y carga recursos.
     public VerMenuAdminUI(com.comedor.modelo.entidades.Usuario usuario) {
         this.usuario = usuario;
         cargarDatosPlatillo();
@@ -250,17 +246,6 @@ public class VerMenuAdminUI extends JFrame {
         editor.setLayout(new BoxLayout(editor, BoxLayout.Y_AXIS));
         editor.setBorder(new EmptyBorder(8, 10, 0, 10));
 
-        JLabel lblPrecio = new JLabel("Precio ($):");
-        lblPrecio.setForeground(Color.WHITE);
-        lblPrecio.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        lblPrecio.setAlignmentX(Component.CENTER_ALIGNMENT);
-        JTextField txtPrecio = new JTextField(precio != null ? precio.replace("$", "").trim() : "");
-        txtPrecio.setMaximumSize(new Dimension(260, 30));
-        txtPrecio.setAlignmentX(Component.CENTER_ALIGNMENT);
-        txtPrecio.setBackground(new Color(0, 0, 0, 110));
-        txtPrecio.setForeground(Color.WHITE);
-        txtPrecio.setCaretColor(Color.WHITE);
-
         JLabel lblDesc = new JLabel("Descripción:");
         lblDesc.setForeground(Color.WHITE);
         lblDesc.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -325,7 +310,7 @@ public class VerMenuAdminUI extends JFrame {
         btnGuardar.setOpaque(true);
         btnGuardar.setContentAreaFilled(true);
         btnGuardar.addActionListener(e -> {
-            guardarPlatillo(titulo, txtNombre.getText(), txtPrecio.getText(), txtDesc.getText(), txtNut.getText(), rutaImagenSeleccionada[0]);
+            guardarPlatillo(titulo, txtNombre.getText(), txtDesc.getText(), txtNut.getText(), rutaImagenSeleccionada[0]);
             SwingUtilities.invokeLater(() -> {
                 dispose();
                 new VerMenuAdminUI(usuario).setVisible(true);
@@ -339,9 +324,6 @@ public class VerMenuAdminUI extends JFrame {
 
         editor.add(lblNombreLabel);
         editor.add(txtNombre);
-        editor.add(Box.createRigidArea(new Dimension(0, 6)));
-        editor.add(lblPrecio);
-        editor.add(txtPrecio);
         editor.add(Box.createRigidArea(new Dimension(0, 6)));
         editor.add(lblDesc);
         editor.add(spDesc);
@@ -371,7 +353,7 @@ public class VerMenuAdminUI extends JFrame {
         return "";
     }
 
-    private void guardarPlatillo(String titulo, String nombreTxt, String precioTxt, String desc, String nut, String rutaImagen) {
+    private void guardarPlatillo(String titulo, String nombreTxt, String desc, String nut, String rutaImagen) {
         Properties props = new Properties();
         try (FileInputStream in = new FileInputStream("menu_config.properties")) {
             props.load(in);
@@ -379,20 +361,13 @@ public class VerMenuAdminUI extends JFrame {
             // sin archivo
         }
 
-        String precioNorm = (precioTxt == null) ? "0.00" : precioTxt.trim();
-        if (!precioNorm.startsWith("$")) {
-            precioNorm = "$ " + precioNorm;
-        }
-
         if ("Desayuno".equalsIgnoreCase(titulo)) {
             props.setProperty("desayuno_nombre", nombreTxt != null ? nombreTxt : "Desayuno");
-            props.setProperty("desayuno_precio", precioNorm);
             props.setProperty("desayuno_descripcion", desc != null ? desc : "");
             props.setProperty("desayuno_nutricion", nut != null ? nut : "");
             props.setProperty("desayuno_imagen", rutaImagen != null ? rutaImagen : "");
         } else if ("Almuerzo".equalsIgnoreCase(titulo)) {
             props.setProperty("almuerzo_nombre", nombreTxt != null ? nombreTxt : "Almuerzo");
-            props.setProperty("almuerzo_precio", precioNorm);
             props.setProperty("almuerzo_descripcion", desc != null ? desc : "");
             props.setProperty("almuerzo_nutricion", nut != null ? nut : "");
             props.setProperty("almuerzo_imagen", rutaImagen != null ? rutaImagen : "");

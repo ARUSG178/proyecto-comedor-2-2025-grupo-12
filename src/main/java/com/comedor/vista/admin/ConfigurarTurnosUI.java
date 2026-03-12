@@ -13,10 +13,7 @@ import java.time.LocalTime;
 import java.util.Properties;
 import javax.imageio.ImageIO;
 
-/**
- * UI para que el administrador configure los horarios de turnos
- * Solo permite editar hasta las 12:00 para desayuno y 17:00 para almuerzo
- */
+// UI para que el administrador configure los horarios de turnos. Solo permite editar hasta las 12:00 para desayuno y 17:00 para almuerzo
 public class ConfigurarTurnosUI extends JFrame {
 
     private static final String CONFIG_FILE = "src/main/resources/config/turnos_config.properties";

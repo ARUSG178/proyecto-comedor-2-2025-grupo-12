@@ -13,23 +13,14 @@ import com.comedor.modelo.persistencia.IRepositorioSecretaria;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Validador de registro que aplica el Principio de Inversión de Dependencias (DIP).
- * Recibe los repositorios por constructor en lugar de instanciarlos directamente.
- */
+// Validador de registro que aplica el Principio de Inversión de Dependencias (DIP). Recibe los repositorios por constructor en lugar de instanciarlos directamente.
 public class VRegistro {
     private final Usuario uIngresado;
     private final List<Usuario> usBaseDatos;
     private final IRepositorioSecretaria repoSecretaria;
     private final IRepositorioAdminCdg repoAdminCdg;
 
-    /**
-     * Constructor que permite inyección de dependencias.
-     * @param uIngresado El usuario a validar
-     * @param usBaseDatos La lista de usuarios existentes
-     * @param repoSecretaria El repositorio de secretaria
-     * @param repoAdminCdg El repositorio de códigos admin
-     */
+    // Constructor que permite inyección de dependencias.
     public VRegistro(Usuario uIngresado, List<Usuario> usBaseDatos, 
                      IRepositorioSecretaria repoSecretaria, 
                      IRepositorioAdminCdg repoAdminCdg) {
@@ -42,10 +33,7 @@ public class VRegistro {
         this.repoAdminCdg = repoAdminCdg;
     }
     
-    /**
-     * Constructor de compatibilidad para transición gradual.
-     * @deprecated Usar el constructor con inyección de dependencias
-     */
+    // Constructor de compatibilidad para transición gradual. @deprecated Usar constructor con inyección de dependencias
     @Deprecated
     public VRegistro(Usuario uIngresado, List<Usuario> usBaseDatos) {
         this(uIngresado, usBaseDatos, 

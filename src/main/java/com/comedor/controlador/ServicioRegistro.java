@@ -12,21 +12,14 @@ import com.comedor.modelo.entidades.Profesor;
 import com.comedor.modelo.validaciones.VRegistro;
 import java.util.List;
 
-/**
- * Servicio de registro que aplica el Principio de Inversión de Dependencias (DIP).
- * Recibe las dependencias por constructor en lugar de instanciarlas directamente.
- */
+// Servicio de registro que aplica el Principio de Inversión de Dependencias (DIP).
+// Recibe las dependencias por constructor en lugar de instanciarlas directamente.
 public class ServicioRegistro {
     private final IRepositorioUsuarios repositorio;
     private final IRepositorioSecretaria repoSecretaria;
     private final IRepositorioAdminCdg repoAdminCdg;
 
-    /**
-     * Constructor que permite inyección de dependencias.
-     * @param repositorio El repositorio de usuarios a usar
-     * @param repoSecretaria El repositorio de secretaria a usar
-     * @param repoAdminCdg El repositorio de códigos admin a usar
-     */
+    // Constructor que permite inyección de dependencias.
     public ServicioRegistro(IRepositorioUsuarios repositorio, 
                             IRepositorioSecretaria repoSecretaria,
                             IRepositorioAdminCdg repoAdminCdg) {

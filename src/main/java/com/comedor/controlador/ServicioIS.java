@@ -9,17 +9,11 @@ import com.comedor.util.Logger;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Servicio de inicio de sesión que aplica el Principio de Inversión de Dependencias (DIP).
- * Recibe el repositorio por constructor en lugar de instanciarlo directamente.
- */
+// Servicio de inicio de sesión que aplica el Principio de Inversión de Dependencias (DIP). Recibe el repositorio por constructor en lugar de instanciarlo directamente.
 public class ServicioIS {
     private final IRepositorioUsuarios repositorio;
     
-    /**
-     * Constructor que permite inyección de dependencias.
-     * @param repositorio El repositorio de usuarios a usar
-     */
+    // Constructor que permite inyección de dependencias.
     public ServicioIS(IRepositorioUsuarios repositorio) {
         this.repositorio = repositorio;
     }
