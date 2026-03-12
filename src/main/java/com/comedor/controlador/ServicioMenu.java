@@ -274,7 +274,7 @@ public class ServicioMenu {
         try (FileOutputStream out = new FileOutputStream("menu_config.properties")) {
             props.store(out, "Configuracion del Menu - SAGC");
         } catch (IOException e) {
-            System.err.println("Error guardando configuración del menú: " + e.getMessage());
+            Logger.warning("Error guardando configuración");
         }
     }
 

@@ -29,7 +29,7 @@ public class PrincipalAdminUI extends JFrame {
             if (imageUrl != null)
                 backgroundImage = ImageIO.read(imageUrl);
         } catch (IOException e) {
-            System.err.println("Imagen de fondo no encontrada.");
+            // Imagen de fondo opcional
         }
 
         configurarVentana();
@@ -216,7 +216,7 @@ public class PrincipalAdminUI extends JFrame {
                 return usuarioRepo.obtNombre();
             }
         } catch (Exception e) {
-            System.err.println("Error al obtener nombre desde repositorio: " + e.getMessage());
+            // Error silenciado al obtener nombre desde repositorio
         }
         // Último recurso
         return "Administrador";

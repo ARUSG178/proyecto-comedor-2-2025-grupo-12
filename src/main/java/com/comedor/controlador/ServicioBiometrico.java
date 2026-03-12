@@ -13,44 +13,28 @@ public class ServicioBiometrico {
     // Compara la foto capturada con la almacenada y retorna el porcentaje de similitud
     public double calcularSimilitud(Usuario usuario, File fotoCapturada) throws IOException {
         if (fotoCapturada == null) throw new IOException("No se ha proporcionado una foto para comparar.");
-
-        System.out.println(">>> Iniciando Protocolo de Reconocimiento Facial <<<");
-        System.out.println("Usuario: " + usuario.obtCedula());
-
-        // 1. Cargar foto de referencia (BD Secretaría)
+        
         BufferedImage imgReferencia = cargarFotoDeReferencia(usuario.obtCedula());
         
         // 2. Leer foto actual (Captura)
         BufferedImage imgCapturada = ImageIO.read(fotoCapturada);
         if (imgCapturada == null) throw new IOException("El archivo subido no es una imagen válida.");
 
-        // 3. Comparar usando algoritmo de cuadrantes
         double similitud = compararImagenes(imgCapturada, imgReferencia);
-        
-        System.out.println(">>> Resultado Biometría: " + String.format("%.2f", similitud) + "% de coincidencia.");
         return similitud;
     }
 
     // Simula la consulta a la BD de Secretaría buscando un archivo con el nombre de la cédula
     private BufferedImage cargarFotoDeReferencia(String cedula) throws IOException {
-        // Definimos una carpeta raíz clara para la "Base de Datos" de imágenes
-        // Esto soluciona el error de "no encuentra la foto" creando el lugar esperado si no existe.
         File root = new File("imagenes_bd_secretaria");
         
-        // Si no existe, la creamos para evitar el error y guiar al usuario
         if (!root.exists()) {
-            boolean creada = root.mkdirs();
-            if (creada) {
-                System.out.println("(!) Carpeta de BD no encontrada. Se ha creado en: " + root.getAbsolutePath());
-                System.out.println("(!) Por favor, coloque allí la foto del usuario: " + cedula + ".jpg");
-            }
+            root.mkdirs();
         }
 
-        // Buscamos el archivo con extensiones comunes
         String[] extensiones = {".jpg", ".jpeg", ".png"};
         File archivoEncontrado = null;
 
-        // 1. Búsqueda en carpeta raíz dedicada (Prioridad)
         for (String ext : extensiones) {
             File f = new File(root, cedula + ext);
             if (f.exists()) {
@@ -59,7 +43,6 @@ public class ServicioBiometrico {
             }
         }
         
-        // 2. Si no está, búsqueda en rutas de recursos (Legacy/Desarrollo) por si acaso
         if (archivoEncontrado == null) {
             String[] rutasLegacy = {
                 "src/main/resources/imagenes/usuarios/",
@@ -78,12 +61,10 @@ public class ServicioBiometrico {
         }
 
         if (archivoEncontrado != null && archivoEncontrado.exists()) {
-            System.out.println("✅ Foto de referencia hallada: " + archivoEncontrado.getAbsolutePath());
             BufferedImage img = ImageIO.read(archivoEncontrado);
             if (img == null) throw new IOException("El archivo encontrado está dañado o no es una imagen.");
             return img;
         } else {
-            // Mensaje de error claro para el usuario
             throw new IOException("ERROR: No se encuentra la foto de referencia para la cédula " + cedula + 
                 ".\n\nSOLUCIÓN: Copie una foto llamada '" + cedula + ".jpg' en la carpeta:\n" + root.getAbsolutePath());
         }

@@ -30,7 +30,7 @@ public class RepoReservas {
                 }
             }
         } catch (Exception e) {
-            System.err.println("Error cargando reservas desde archivo: " + e.getMessage());
+            // Error silenciado cargando reservas
         }
     }
     
@@ -46,7 +46,7 @@ public class RepoReservas {
                 primeraLinea = false;
             }
         } catch (Exception e) {
-            System.err.println("Error guardando reservas en archivo: " + e.getMessage());
+            // Error silenciado guardando reservas
         }
     }
     
@@ -82,7 +82,7 @@ public class RepoReservas {
                 return new Reserva(usuario, horario, estado);
             }
         } catch (Exception e) {
-            System.err.println("Error deserializando reserva: " + e.getMessage());
+            // Error silenciado deserializando reserva
         }
         return null;
     }

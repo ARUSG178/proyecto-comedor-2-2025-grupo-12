@@ -246,7 +246,7 @@ public class DialogoCCB extends JDialog {
             props.setProperty("tarifa_pct_profesor", String.valueOf(pctProfesor));
             props.store(out, "Actualizacion de Costos (CCB) y Tarifas");
         } catch (Exception e) {
-            System.err.println("Error guardando tarifas: " + e.getMessage());
+            // Error silenciado guardando tarifas
         }
     }
 }

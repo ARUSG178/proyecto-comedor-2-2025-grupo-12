@@ -31,7 +31,7 @@ public class HistorialReservasUI extends JFrame {
             URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_reg_bg.jpg");
             if (imageUrl != null) backgroundImage = ImageIO.read(imageUrl);
         } catch (IOException e) {
-            System.err.println("Imagen de fondo no encontrada.");
+            // Imagen de fondo opcional
         }
         
         configurarVentana();

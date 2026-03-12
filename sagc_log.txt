@@ -187,3 +187,4 @@
 [2026-03-12 01:24:07] INFO: Inicio de sesión exitoso para cédula: 12345654
 [2026-03-12 01:39:37] INFO: Inicio de sesión exitoso para cédula: 12345665
 [2026-03-12 01:39:53] INFO: Turno seleccionado: 07:00 - 07:59 para usuario 12345665
+[2026-03-12 11:22:00] INFO: Inicio de sesión exitoso para cédula: 29617475

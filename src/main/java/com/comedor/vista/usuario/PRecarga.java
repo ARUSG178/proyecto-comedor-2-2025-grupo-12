@@ -227,7 +227,7 @@ public class PRecarga extends JPanel {
                 }
             }
         } catch (Exception e) {
-            System.err.println("Error actualizando usuario desde archivo: " + e.getMessage());
+            // Error silenciado actualizando usuario
         }
     }
 

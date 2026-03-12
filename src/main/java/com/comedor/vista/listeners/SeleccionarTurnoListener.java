@@ -75,12 +75,19 @@ public class SeleccionarTurnoListener implements ActionListener {
 
             Logger.info("Turno seleccionado: " + turnoSeleccionado + " para usuario " + usuario.obtCedula());
 
-            // Abrir directamente ReconocimientoFacialUI
+            // Redirigir al menú principal con mensaje sobre reconocimiento facial
+            JOptionPane.showMessageDialog(parentFrame, 
+                "¡Tu selección ha sido registrada!\n\n" +
+                "Para completar la compra, debes abrir el módulo de \"Verificación Biométrica\"\n" +
+                "desde el menú principal y subir una foto de tu rostro para autorizar el pago.", 
+                "Continuar a Verificación", JOptionPane.INFORMATION_MESSAGE);
+            
+            // Abrir menú principal del usuario
             SwingUtilities.invokeLater(() -> {
-                new com.comedor.ReconocimientoFacialUI(usuario, costoPlatillo, fechaReserva).setVisible(true);
+                new com.comedor.vista.usuario.PrincipalUserUI(usuario).setVisible(true);
             });
             
-            // Cerrar ventana actual solo si la reserva fue exitosa
+            // Cerrar ventana actual
             parentFrame.dispose();
         } catch (Exception ex) {
             Logger.error("Error al procesar el turno", ex);

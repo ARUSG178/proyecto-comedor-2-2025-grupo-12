@@ -80,7 +80,7 @@ public class InicioSesionUI extends JFrame {
             URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_is_bg.jpg");
             if (imageUrl != null) backgroundImage = ImageIO.read(imageUrl);
         } catch (IOException e) {
-            System.err.println("Imagen de fondo no encontrada.");
+            // Imagen de fondo opcional
         }
         configurarVentana();
         initUI(mostrarRegistro);
@@ -306,7 +306,6 @@ public class InicioSesionUI extends JFrame {
                         new PrincipalAdminUI(usuarioReal).setVisible(true);
                         this.dispose();
                     } catch (Exception e) {
-                        e.printStackTrace();
                         JOptionPane.showMessageDialog(this, "Error al iniciar el panel de Administrador:\n" + e.getMessage(), "Error Crítico", JOptionPane.ERROR_MESSAGE);
                     }
                 });
@@ -316,7 +315,6 @@ public class InicioSesionUI extends JFrame {
                         new PrincipalUserUI(usuarioReal).setVisible(true);
                         this.dispose();
                     } catch (Exception e) {
-                        e.printStackTrace();
                         JOptionPane.showMessageDialog(this, "Error al iniciar el panel de Usuario:\n" + e.getMessage(), "Error Crítico", JOptionPane.ERROR_MESSAGE);
                     }
                 });
