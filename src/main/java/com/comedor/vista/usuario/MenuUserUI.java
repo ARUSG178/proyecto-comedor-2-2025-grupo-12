@@ -6,7 +6,7 @@ import com.comedor.modelo.entidades.Usuario;
 import com.comedor.modelo.entidades.Empleado;
 import com.comedor.vista.components.SideBarNavigation;
 import com.comedor.vista.utils.UIConstants;
-import com.comedor.utilidades.Logger;
+import com.comedor.util.Logger;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -145,7 +145,7 @@ public class MenuUserUI extends JFrame {
         this.usuario = usuario;
         cargarDatosPlatillo();
         try {
-            URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_reg_bg.jpg");
+            URL imageUrl = getClass().getResource("/images/ui/com_reg_bg.jpg");
             if (imageUrl != null) backgroundImage = ImageIO.read(imageUrl);
         } catch (IOException e) {
             // Imagen de fondo opcional
@@ -233,13 +233,13 @@ public class MenuUserUI extends JFrame {
             props.load(in);
             nombreDesayuno = props.getProperty("desayuno_nombre", "Desayuno no disponible");
             precioDesayuno = props.getProperty("desayuno_precio", "$ 0.00");
-            rutaImagenDesayuno = props.getProperty("desayuno_imagen", "/com/comedor/resources/images/menu/base.jpg");
+            rutaImagenDesayuno = props.getProperty("desayuno_imagen", "/images/ui/base.jpg");
             descDesayuno = props.getProperty("desayuno_descripcion", "Descripción no disponible.");
             infoNutricionalDesayuno = props.getProperty("desayuno_nutricion", "Información nutricional pendiente.");
 
             nombreAlmuerzo = props.getProperty("almuerzo_nombre", "Almuerzo no disponible");
             precioAlmuerzo = props.getProperty("almuerzo_precio", "$ 0.00");
-            rutaImagenAlmuerzo = props.getProperty("almuerzo_imagen", "/com/comedor/resources/images/menu/base.jpg");
+            rutaImagenAlmuerzo = props.getProperty("almuerzo_imagen", "/images/ui/base.jpg");
             descAlmuerzo = props.getProperty("almuerzo_descripcion", "Descripción no disponible.");
             infoNutricionalAlmuerzo = props.getProperty("almuerzo_nutricion", "Información nutricional pendiente.");
             

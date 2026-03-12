@@ -32,7 +32,7 @@ public class PanelSecretariaUI extends JFrame {
         this.repoSecretaria = new RepoSecretaria();
         
         try {
-            URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_reg_bg.jpg");
+            URL imageUrl = getClass().getResource("/images/ui/com_reg_bg.jpg");
             if (imageUrl != null) backgroundImage = ImageIO.read(imageUrl);
         } catch (IOException e) {
             // Imagen de fondo opcional

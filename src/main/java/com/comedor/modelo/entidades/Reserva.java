@@ -8,6 +8,7 @@ public class Reserva {
     private LocalDateTime horarioReservado;
     private String estado;
     private String clave_acceso;
+    private double montoPagado;
 
     // Crea una nueva reserva con propietario, horario y estado, generando una clave única
     public Reserva(Usuario propietario, LocalDateTime horarioReservado, String estado) {
@@ -15,6 +16,16 @@ public class Reserva {
         this.horarioReservado = horarioReservado;
         this.estado = estado;
         this.clave_acceso = genClaveAcceso();
+        this.montoPagado = 0.0;
+    }
+    
+    // Constructor con monto pagado
+    public Reserva(Usuario propietario, LocalDateTime horarioReservado, String estado, double montoPagado) {
+        this.propietario = propietario;
+        this.horarioReservado = horarioReservado;
+        this.estado = estado;
+        this.clave_acceso = genClaveAcceso();
+        this.montoPagado = montoPagado;
     }
 
     // Genera una clave de acceso aleatoria de 12 caracteres
@@ -33,6 +44,9 @@ public class Reserva {
     
     // Retorna la clave de acceso generada para la reserva
     public String obtClaveAcceso() { return clave_acceso; }
+    
+    // Retorna el monto pagado por la reserva
+    public double obtMontoPagado() { return montoPagado; }
 
     // Retorna una representación en texto de la reserva
     @Override

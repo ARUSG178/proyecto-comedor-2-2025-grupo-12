@@ -1,0 +1,2 @@
+fecha_hora;monto_total;ganancia_concesionario;ingresos_propios;tipo_usuario;tipo_servicio;cedula
+2026-03-12 15:34:29;2000,00;550,00;1450,00;Profesor;Servicio;6017761

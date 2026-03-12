@@ -14,7 +14,7 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.RenderingHints;
 
-import com.comedor.utilidades.Logger;
+import com.comedor.util.Logger;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -60,11 +60,11 @@ public class VerMenuAdminUI extends JFrame {
     // Datos del platillo
     private String nombreDesayuno = "Desayuno";
     private String precioDesayuno = "$ 0.00";
-    private String rutaImagenDesayuno = "/com/comedor/resources/images/menu/base.jpg";
+    private String rutaImagenDesayuno = "/images/ui/base.jpg";
 
     private String nombreAlmuerzo = "Almuerzo";
     private String precioAlmuerzo = "$ 0.00";
-    private String rutaImagenAlmuerzo = "/com/comedor/resources/images/menu/base.jpg";
+    private String rutaImagenAlmuerzo = "/images/ui/base.jpg";
 
     private String descDesayuno = "";
     private String nutDesayuno = "";
@@ -78,7 +78,7 @@ public class VerMenuAdminUI extends JFrame {
         this.usuario = usuario;
         cargarDatosPlatillo();
         try {
-            URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_reg_bg.jpg");
+            URL imageUrl = getClass().getResource("/images/ui/com_reg_bg.jpg");
             if (imageUrl != null) backgroundImage = ImageIO.read(imageUrl);
         } catch (IOException e) {
             // Imagen de fondo opcional
@@ -94,13 +94,13 @@ public class VerMenuAdminUI extends JFrame {
             props.load(in);
             nombreDesayuno = props.getProperty("desayuno_nombre", "Desayuno");
             precioDesayuno = props.getProperty("desayuno_precio", "$ 0.00");
-            rutaImagenDesayuno = props.getProperty("desayuno_imagen", "/com/comedor/resources/images/menu/base.jpg");
+            rutaImagenDesayuno = props.getProperty("desayuno_imagen", "/images/ui/base.jpg");
             descDesayuno = props.getProperty("desayuno_descripcion", "");
             nutDesayuno = props.getProperty("desayuno_nutricion", "");
 
             nombreAlmuerzo = props.getProperty("almuerzo_nombre", "Almuerzo");
             precioAlmuerzo = props.getProperty("almuerzo_precio", "$ 0.00");
-            rutaImagenAlmuerzo = props.getProperty("almuerzo_imagen", "/com/comedor/resources/images/menu/base.jpg");
+            rutaImagenAlmuerzo = props.getProperty("almuerzo_imagen", "/images/ui/base.jpg");
             descAlmuerzo = props.getProperty("almuerzo_descripcion", "");
             nutAlmuerzo = props.getProperty("almuerzo_nutricion", "");
         } catch (Exception e) {

@@ -32,5 +32,8 @@ public class ServicioPago {
         
         // Actualizar referencia local
         usuario.setSaldo(monedero.obtSaldo());
+        
+        // El monto se guardará en la reserva directamente (ReconocimientoFacialUI)
+        // Ya no se necesita guardar en ingresos.txt
     }
 }

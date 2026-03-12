@@ -26,7 +26,7 @@ public class ServicioBiometrico {
 
     // Simula la consulta a la BD de Secretaría buscando un archivo con el nombre de la cédula
     private BufferedImage cargarFotoDeReferencia(String cedula) throws IOException {
-        File root = new File("imagenes_bd_secretaria");
+        File root = new File("src/main/resources/images/secretaria");
         
         if (!root.exists()) {
             root.mkdirs();
@@ -45,8 +45,7 @@ public class ServicioBiometrico {
         
         if (archivoEncontrado == null) {
             String[] rutasLegacy = {
-                "src/main/resources/imagenes/usuarios/",
-                "src/main/java/com/comedor/resources/imagenes/usuarios/"
+                "src/main/resources/imagenes/usuarios/"
             };
             for (String ruta : rutasLegacy) {
                 for (String ext : extensiones) {

@@ -25,7 +25,7 @@ public class PrincipalAdminUI extends JFrame {
         this.usuario = usuario;
 
         try {
-            URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_reg_bg.jpg");
+            URL imageUrl = getClass().getResource("/images/ui/com_reg_bg.jpg");
             if (imageUrl != null)
                 backgroundImage = ImageIO.read(imageUrl);
         } catch (IOException e) {
@@ -94,7 +94,6 @@ public class PrincipalAdminUI extends JFrame {
 
         // --- CONTENIDO (BIENVENIDA) ---
         JPanel welcomePanel = crearPanelBienvenida();
-
         rightPanel.add(welcomePanel, BorderLayout.CENTER);
         backgroundPanel.add(rightPanel, BorderLayout.CENTER);
     }

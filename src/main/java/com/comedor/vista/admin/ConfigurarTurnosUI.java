@@ -19,7 +19,7 @@ import javax.imageio.ImageIO;
  */
 public class ConfigurarTurnosUI extends JFrame {
 
-    private static final String CONFIG_FILE = "turnos_config.properties";
+    private static final String CONFIG_FILE = "src/main/resources/config/turnos_config.properties";
     private static final Color COLOR_AZUL_INST = new Color(0, 51, 102);
     private static final Color COLOR_OVERLAY = new Color(0, 51, 102, 140);
 
@@ -33,7 +33,7 @@ public class ConfigurarTurnosUI extends JFrame {
         this.usuario = usuario;
 
         try {
-            URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_reg_bg.jpg");
+            URL imageUrl = getClass().getResource("/images/ui/com_reg_bg.jpg");
             if (imageUrl != null) backgroundImage = ImageIO.read(imageUrl);
         } catch (IOException e) {
             // Imagen de fondo opcional

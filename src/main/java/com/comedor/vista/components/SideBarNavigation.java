@@ -27,7 +27,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.comedor.modelo.entidades.Usuario;
 import com.comedor.modelo.entidades.Administrador;
-import com.comedor.vista.InicioSesionUI;
+import com.comedor.vista.auth.InicioSesionUI;
 import com.comedor.vista.usuario.MenuUserUI;
 import com.comedor.vista.usuario.RecargaSaldoUI;
 import com.comedor.vista.admin.VerMenuAdminUI;
@@ -157,6 +157,15 @@ public class SideBarNavigation extends JPanel {
         // --- Separador Inferior ---
         sideBar.add(crearSeparador());
         sideBar.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        // --- Botón de Reconocimiento Facial (SOLO PARA USUARIOS NO ADMIN) ---
+        if (!isAdminUser) {
+            sideBar.add(crearBotonNavegacion("\ud83d\udc64", "Reconocimiento Facial", () -> {
+                // Abrir LoginReconocimientoUI para el reconocimiento facial
+                new com.comedor.vista.auth.LoginReconocimientoUI().setVisible(true);
+                SwingUtilities.getWindowAncestor(this).dispose();
+            }));
+        }
 
         // --- Botón de Cerrar Sesión ---
         sideBar.add(crearBotonNavegacion("\ud83d\udeaa", "Cerrar Sesión", () -> {
@@ -388,6 +397,79 @@ public class SideBarNavigation extends JPanel {
                 JOptionPane.showMessageDialog(this, "Error al abrir Vista Previa de Menú:\n" + e.getMessage(), "Error de Navegación", JOptionPane.ERROR_MESSAGE);
             }
         }));
+        sideBar.add(Box.createRigidArea(new Dimension(0, 20))); // Espaciado entre botones
+        
+        // Botón de Reporte de Comensales para administrador
+        sideBar.add(crearBotonNavegacion("\ud83d\udcca", "Reporte Comensales", () -> {
+            mostrarDialogoReportes();
+        }));
+    }
+    
+    /**
+     * Muestra diálogo para generar reportes de comensales
+     */
+    private void mostrarDialogoReportes() {
+        javax.swing.JDialog dialog = new javax.swing.JDialog((java.awt.Frame) SwingUtilities.getWindowAncestor(this), "Reporte de Comensales", true);
+        dialog.setSize(900, 700);
+        dialog.setLocationRelativeTo(SwingUtilities.getWindowAncestor(this));
+        
+        javax.swing.JPanel panel = new javax.swing.JPanel(new java.awt.BorderLayout(10, 10));
+        panel.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        panel.setBackground(java.awt.Color.WHITE);
+        
+        // Panel de selección
+        javax.swing.JPanel selectionPanel = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 10, 5));
+        selectionPanel.setBackground(java.awt.Color.WHITE);
+        
+        javax.swing.JComboBox<String> cmbServicio = new javax.swing.JComboBox<>(new String[]{"Desayuno", "Almuerzo"});
+        cmbServicio.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        
+        javax.swing.JButton btnGenerar = new javax.swing.JButton("Generar Reporte");
+        btnGenerar.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnGenerar.setBackground(new Color(0, 102, 204));
+        btnGenerar.setForeground(java.awt.Color.WHITE);
+        btnGenerar.setFocusPainted(false);
+        btnGenerar.setOpaque(true);
+        
+        selectionPanel.add(new javax.swing.JLabel("Servicio:"));
+        selectionPanel.add(cmbServicio);
+        selectionPanel.add(btnGenerar);
+        
+        // Área de texto para el reporte
+        javax.swing.JTextArea txtReporte = new javax.swing.JTextArea();
+        txtReporte.setFont(new Font("Consolas", Font.PLAIN, 12));
+        txtReporte.setEditable(false);
+        txtReporte.setBackground(new Color(245, 245, 245));
+        javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(txtReporte);
+        scrollPane.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(200, 200, 200)));
+        
+        // Acción del botón generar
+        btnGenerar.addActionListener(e -> {
+            String tipoServicio = (String) cmbServicio.getSelectedItem();
+            com.comedor.controlador.ServicioReportes servicioReportes = new com.comedor.controlador.ServicioReportes();
+            com.comedor.controlador.ServicioReportes.ReporteComensales reporte = 
+                servicioReportes.obtenerComensalesPorServicio(tipoServicio, null);
+            txtReporte.setText(reporte.generarReporteDetallado());
+        });
+        
+        // Generar reporte inicial
+        btnGenerar.doClick();
+        
+        panel.add(selectionPanel, java.awt.BorderLayout.NORTH);
+        panel.add(scrollPane, java.awt.BorderLayout.CENTER);
+        
+        // Botón cerrar
+        javax.swing.JButton btnCerrar = new javax.swing.JButton("Cerrar");
+        btnCerrar.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btnCerrar.addActionListener(e -> dialog.dispose());
+        
+        javax.swing.JPanel bottomPanel = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+        bottomPanel.setBackground(java.awt.Color.WHITE);
+        bottomPanel.add(btnCerrar);
+        panel.add(bottomPanel, java.awt.BorderLayout.SOUTH);
+        
+        dialog.add(panel);
+        dialog.setVisible(true);
     }
 
     private void agregarBotonesUsuario() {

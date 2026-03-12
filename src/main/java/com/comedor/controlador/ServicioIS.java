@@ -4,7 +4,7 @@ import com.comedor.modelo.entidades.Usuario;
 import com.comedor.modelo.excepciones.*;
 import com.comedor.modelo.validaciones.VSesion;
 import com.comedor.modelo.persistencia.IRepositorioUsuarios;
-import com.comedor.utilidades.Logger;
+import com.comedor.util.Logger;
 
 import java.io.IOException;
 import java.util.List;

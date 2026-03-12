@@ -11,7 +11,7 @@ import com.comedor.modelo.entidades.Usuario;
 import com.comedor.modelo.entidades.RegistroCosto;
 import com.comedor.modelo.persistencia.RepoUsuarios;
 import com.comedor.util.ServicioUtil;
-import com.comedor.utilidades.Logger;
+import com.comedor.util.Logger;
 
 public class ServicioCosto {
     private List<RegistroCosto> costos = new ArrayList<>();
@@ -66,9 +66,22 @@ public class ServicioCosto {
         if (cantidadPlanificada <= 0) return 0.0;
 
         // El CCB se calcula agregando el porcentaje de merma al costo unitario base
+        // Según documento: CCB = [(CF + CV)/NB] * (1 + %_Merma)
         double costoUnitario = totalCostos / cantidadPlanificada;
         this.ccbActual = costoUnitario * (1 + porcentajeMerma);
         return this.ccbActual;
+    }
+    
+    // CCB de producción sin ganancia del concesionario (para análisis interno)
+    public double calcularCCBProduccion(String periodo) {
+        double totalCostos = obtenerTotalCostosPorPeriodo(periodo);
+        int cantidadPlanificada = produccionBandejas.getOrDefault(periodo, 0);
+        double porcentajeMerma = mermas.getOrDefault(periodo, 0.0);
+
+        if (cantidadPlanificada <= 0) return 0.0;
+
+        double costoUnitario = totalCostos / cantidadPlanificada;
+        return costoUnitario * (1 + porcentajeMerma);
     }
 
     // Registra un cambio de precio de platillo como costo variable en el periodo actual

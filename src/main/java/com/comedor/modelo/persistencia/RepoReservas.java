@@ -51,10 +51,11 @@ public class RepoReservas {
     }
     
     private static String serializarReserva(Reserva reserva) {
-        return String.format("%s;%s;%s", 
+        return String.format("%s;%s;%s;%.2f", 
             reserva.obtPropietario().obtCedula(),
             reserva.obtHorarioReservado().toString(),
-            reserva.obtEstado());
+            reserva.obtEstado(),
+            reserva.obtMontoPagado());
     }
     
     private static Reserva deserializarReserva(String linea) {
@@ -64,22 +65,47 @@ public class RepoReservas {
                 String cedula = datos[0].trim();
                 LocalDateTime horario = LocalDateTime.parse(datos[1].trim());
                 String estado = datos[2].trim();
+                double montoPagado = 0.0;
+                if (datos.length >= 4) {
+                    try {
+                        montoPagado = Double.parseDouble(datos[3].trim());
+                    } catch (Exception e) {
+                        // Error silenciado parseando monto
+                    }
+                }
                 
-                // Crear usuario temporal (solo para la reserva)
-                Usuario usuario = new Usuario(cedula, "") {
-                    @Override public double calcularTarifa(double precioBase) { return precioBase; }
-                    @Override public String obtTipo() { return "Usuario"; }
-                    @Override public boolean obtEstado() { return true; }
-                    @Override public int obtIntentosFallidos() { return 0; }
-                    @Override public double obtSaldo() { return 0.0; }
-                    @Override public void setNombre(String nombre) {}
-                    @Override public void setEstado(boolean estado) {}
-                    @Override public void setSaldo(double saldo) {}
-                    @Override public void setIntentosFallidos(int intentos) {}
-                };
-                usuario.setNombre("Usuario Reserva");
+                // Buscar usuario real desde el repositorio
+                Usuario usuario = null;
+                try {
+                    RepoUsuarios repoUsuarios = new RepoUsuarios();
+                    List<Usuario> usuarios = repoUsuarios.listarUsuarios();
+                    for (Usuario u : usuarios) {
+                        if (u.obtCedula().equals(cedula)) {
+                            usuario = u;
+                            break;
+                        }
+                    }
+                } catch (Exception e) {
+                    // Error silenciado buscando usuario real
+                }
                 
-                return new Reserva(usuario, horario, estado);
+                // Si no se encuentra el usuario, crear uno temporal
+                if (usuario == null) {
+                    usuario = new Usuario(cedula, "") {
+                        @Override public double calcularTarifa(double precioBase) { return precioBase; }
+                        @Override public String obtTipo() { return "Usuario"; }
+                        @Override public boolean obtEstado() { return true; }
+                        @Override public int obtIntentosFallidos() { return 0; }
+                        @Override public double obtSaldo() { return 0.0; }
+                        @Override public void setNombre(String nombre) {}
+                        @Override public void setEstado(boolean estado) {}
+                        @Override public void setSaldo(double saldo) {}
+                        @Override public void setIntentosFallidos(int intentos) {}
+                    };
+                    usuario.setNombre("Usuario Reserva");
+                }
+                
+                return new Reserva(usuario, horario, estado, montoPagado);
             }
         } catch (Exception e) {
             // Error silenciado deserializando reserva
@@ -120,5 +146,30 @@ public class RepoReservas {
                     
                     return (esDesayunoNuevo && esDesayunoExistente) || (esAlmuerzoNuevo && esAlmuerzoExistente);
                 });
+    }
+    
+    // Elimina una reserva específica de un usuario
+    public static boolean eliminarReserva(Usuario usuario, LocalDateTime horarioReservado) {
+        boolean eliminada = reservas.removeIf(r -> 
+            r.obtPropietario().obtCedula().equals(usuario.obtCedula()) &&
+            r.obtHorarioReservado().equals(horarioReservado)
+        );
+        
+        if (eliminada) {
+            guardarReservasEnArchivo(); // Persistir cambios
+        }
+        
+        return eliminada;
+    }
+    
+    // Elimina una reserva por su clave de acceso
+    public static boolean eliminarReservaPorClave(String claveAcceso) {
+        boolean eliminada = reservas.removeIf(r -> r.obtClaveAcceso().equals(claveAcceso));
+        
+        if (eliminada) {
+            guardarReservasEnArchivo(); // Persistir cambios
+        }
+        
+        return eliminada;
     }
 }

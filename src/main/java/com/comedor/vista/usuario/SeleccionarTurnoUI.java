@@ -4,7 +4,7 @@ import com.comedor.modelo.entidades.Usuario;
 import com.comedor.vista.components.FondoSemitransparentePanel;
 import com.comedor.vista.components.TurnoToggleButton;
 import com.comedor.vista.components.SideBarNavigation;
-import com.comedor.vista.listeners.SeleccionarTurnoListener;
+import com.comedor.controlador.listeners.SeleccionarTurnoListener;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -34,7 +34,7 @@ public class SeleccionarTurnoUI extends JFrame {
         this.tipoComida = tipoComida;
 
         try {
-            URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_reg_bg.jpg");
+            URL imageUrl = getClass().getResource("/images/ui/com_reg_bg.jpg");
             if (imageUrl != null) backgroundImage = ImageIO.read(imageUrl);
         } catch (IOException e) {
             // Imagen de fondo opcional
@@ -189,7 +189,7 @@ public class SeleccionarTurnoUI extends JFrame {
 
     private String[] cargarTurnosDesdeConfiguracion() {
         Properties props = new Properties();
-        File configFile = new File("turnos_config.properties");
+        File configFile = new File("src/main/resources/config/turnos_config.properties");
 
         // Valores por defecto
         String[] turnosDefault;

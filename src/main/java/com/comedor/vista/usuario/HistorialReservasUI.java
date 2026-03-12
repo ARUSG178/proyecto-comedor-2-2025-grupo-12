@@ -28,7 +28,7 @@ public class HistorialReservasUI extends JFrame {
         this.usuario = usuario;
         
         try {
-            URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_reg_bg.jpg");
+            URL imageUrl = getClass().getResource("/images/ui/com_reg_bg.jpg");
             if (imageUrl != null) backgroundImage = ImageIO.read(imageUrl);
         } catch (IOException e) {
             // Imagen de fondo opcional
@@ -144,7 +144,12 @@ public class HistorialReservasUI extends JFrame {
         card.setOpaque(false);
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         card.setBorder(UIConstants.CARD_PADDING);
-        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 140));
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 160));
+
+        // Panel superior con información
+        JPanel infoPanel = new JPanel();
+        infoPanel.setOpaque(false);
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
 
         JLabel lblFecha = new JLabel(r.obtHorarioReservado().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")), SwingConstants.LEFT);
         lblFecha.setFont(UIConstants.FONT_CARD_SUBTITLE);
@@ -162,13 +167,65 @@ public class HistorialReservasUI extends JFrame {
         lblEstado.setFont(UIConstants.FONT_BODY_SMALL);
         lblEstado.setForeground(r.obtEstado().equalsIgnoreCase("Completado") ? new Color(100, 255, 100) : new Color(255, 150, 150));
 
-        card.add(lblFecha);
-        card.add(Box.createVerticalStrut(UIConstants.SPACING_XS));
-        card.add(lblPlatillo);
-        card.add(Box.createVerticalStrut(UIConstants.SPACING_XS));
-        card.add(lblMonto);
-        card.add(Box.createVerticalStrut(UIConstants.SPACING_XS));
-        card.add(lblEstado);
+        infoPanel.add(lblFecha);
+        infoPanel.add(Box.createVerticalStrut(UIConstants.SPACING_XS));
+        infoPanel.add(lblPlatillo);
+        infoPanel.add(Box.createVerticalStrut(UIConstants.SPACING_XS));
+        infoPanel.add(lblMonto);
+        infoPanel.add(Box.createVerticalStrut(UIConstants.SPACING_XS));
+        infoPanel.add(lblEstado);
+
+        // Panel inferior con botón de eliminar
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 5));
+        buttonPanel.setOpaque(false);
+        
+        JButton btnEliminar = new JButton("Cancelar Reserva");
+        btnEliminar.setFont(UIConstants.FONT_BODY_SMALL);
+        btnEliminar.setBackground(new Color(220, 53, 69)); // Rojo
+        btnEliminar.setForeground(Color.WHITE);
+        btnEliminar.setFocusPainted(false);
+        btnEliminar.setBorderPainted(false);
+        btnEliminar.setOpaque(true);
+        btnEliminar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnEliminar.setMaximumSize(new Dimension(120, 30));
+        
+        btnEliminar.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "¿Está seguro que desea cancelar esta reserva?\n\n" +
+                "Fecha: " + r.obtHorarioReservado().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + "\n" +
+                "Clave: " + r.obtClaveAcceso(),
+                "Confirmar Cancelación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+            );
+            
+            if (confirm == JOptionPane.YES_OPTION) {
+                boolean eliminada = RepoReservas.eliminarReserva(usuario, r.obtHorarioReservado());
+                if (eliminada) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Reserva cancelada exitosamente", 
+                        "Éxito", 
+                        JOptionPane.INFORMATION_MESSAGE);
+                    // Recargar la interfaz
+                    SwingUtilities.invokeLater(() -> {
+                        dispose();
+                        new HistorialReservasUI(usuario).setVisible(true);
+                    });
+                } else {
+                    JOptionPane.showMessageDialog(this, 
+                        "No se pudo cancelar la reserva", 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        
+        buttonPanel.add(btnEliminar);
+
+        card.add(infoPanel);
+        card.add(Box.createVerticalStrut(UIConstants.SPACING_SM));
+        card.add(buttonPanel);
 
         return card;
     }

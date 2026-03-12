@@ -15,13 +15,20 @@ import com.comedor.modelo.entidades.EstudianteExonerado;
 import com.comedor.modelo.entidades.Empleado;
 import com.comedor.modelo.entidades.Profesor;
 import com.comedor.modelo.entidades.Administrador;
-import com.comedor.utilidades.Logger;
+import com.comedor.util.Logger;
 
 public class ServicioMenu {
     private final Menu menuDesayuno = new Menu("Desayuno");
     private final Menu menuAlmuerzo = new Menu("Almuerzo");
     private final ServicioCosto servicioCosto = new ServicioCosto();
 
+    public ServicioMenu() {
+        cargarMenuDesdeArchivo();
+    }
+
+    
+    //Convierte un porcentaje en formato string a factor decimal (ej: "20" -> 0.20)
+     
     private double parseFactor(String pct, double fallback) {
         if (pct == null || pct.trim().isEmpty()) {
             return fallback;
@@ -35,7 +42,7 @@ public class ServicioMenu {
 
     public double factorParaUsuario(Usuario usuario) {
         Properties props = new Properties();
-        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
+        try (FileInputStream in = new FileInputStream("src/main/resources/config/menu_config.properties")) {
             props.load(in);
         } catch (Exception e) {
             // Sin config
@@ -45,22 +52,23 @@ public class ServicioMenu {
             return 0.0;
         }
         if (usuario instanceof EstudianteBecario) {
-            return 0.05;
+            EstudianteBecario becario = (EstudianteBecario) usuario;
+            // Usar el porcentaje real del becario: si tiene 95% descuento, paga 5%
+            return (100.0 - becario.obtPorcentajeDescuento()) / 100.0;
         }
         if (usuario instanceof Estudiante) {
-            return parseFactor(props.getProperty("tarifa_pct_estudiante"), 0.20);
-        }
-        if (usuario instanceof Empleado) {
-            return parseFactor(props.getProperty("tarifa_pct_empleado"), 1.00);
+            // Los estudiantes tienen un subsidio del 80%, pagan solo el 20%
+            return parseFactor(props.getProperty("tarifa_pct_estudiante"), 20.0);
         }
         if (usuario instanceof Profesor) {
-            return parseFactor(props.getProperty("tarifa_pct_profesor"), 1.00);
+            // Profesores pagan tarifa completa (100%)
+            return parseFactor(props.getProperty("tarifa_pct_profesor"), 100.0);
         }
-        return 1.00;
-    }
-
-    public ServicioMenu() {
-        cargarMenuDesdeArchivo();
+        if (usuario instanceof Empleado) {
+            // Los empleados tienen un subsidio del 50%, pagan la mitad
+            return parseFactor(props.getProperty("tarifa_pct_empleado"), 50.0);
+        }
+        return 1.0; // Administrador o tipo desconocido paga 100%
     }
 
     // Permite a un administrador actualizar la configuración del menú semanal
@@ -271,7 +279,7 @@ public class ServicioMenu {
         // Guardar CCB
         props.setProperty("ccb_actual", String.valueOf(servicioCosto.obtenerCCBActual()));
 
-        try (FileOutputStream out = new FileOutputStream("menu_config.properties")) {
+        try (FileOutputStream out = new FileOutputStream("src/main/resources/config/menu_config.properties")) {
             props.store(out, "Configuracion del Menu - SAGC");
         } catch (IOException e) {
             Logger.warning("Error guardando configuración");
@@ -280,7 +288,7 @@ public class ServicioMenu {
 
     private void cargarMenuDesdeArchivo() {
         Properties props = new Properties();
-        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
+        try (FileInputStream in = new FileInputStream("src/main/resources/config/menu_config.properties")) {
             props.load(in);
             
             cargarPlatilloEnMenu(menuDesayuno, props, "desayuno");

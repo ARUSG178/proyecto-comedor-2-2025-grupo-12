@@ -6,21 +6,24 @@ import com.comedor.modelo.entidades.EstudianteBecario;
 import com.comedor.modelo.entidades.EstudianteExonerado;
 import com.comedor.modelo.persistencia.RepoUsuarios;
 import com.comedor.modelo.persistencia.RepoSecretaria;
-import com.comedor.utilidades.Logger;
+import com.comedor.util.Logger;
 import com.comedor.vista.components.SideBarNavigation;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import javax.imageio.ImageIO;
 
 public class GestionUsuariosUI extends JFrame {
 
     private static final Color COLOR_AZUL_INST = new Color(0, 51, 102);
-    private static final Color COLOR_OVERLAY = new Color(0, 51, 102, 140);
+    private BufferedImage backgroundImage;
 
     private final Usuario usuarioAdmin;
     private List<Usuario> usuarios = new ArrayList<>();
@@ -30,6 +33,15 @@ public class GestionUsuariosUI extends JFrame {
 
     public GestionUsuariosUI(Usuario usuarioAdmin) {
         this.usuarioAdmin = usuarioAdmin;
+        
+        try {
+            URL imageUrl = getClass().getResource("/images/ui/com_reg_bg.jpg");
+            if (imageUrl != null)
+                backgroundImage = ImageIO.read(imageUrl);
+        } catch (IOException e) {
+            // Imagen de fondo opcional
+        }
+        
         configurarVentana();
         initUI();
         cargarUsuarios();
@@ -50,12 +62,16 @@ public class GestionUsuariosUI extends JFrame {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 Graphics2D g2d = (Graphics2D) g;
-                g2d.setColor(COLOR_OVERLAY);
+                if (backgroundImage != null) {
+                    g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+                }
+                g2d.setColor(new Color(0, 51, 102, 140)); // Overlay
                 g2d.fillRect(0, 0, getWidth(), getHeight());
 
-                g2d.setColor(COLOR_AZUL_INST);
+                // Barras azules consistentes
                 int topBarHeight = 60;
                 int bottomBarHeight = 30;
+                g2d.setColor(COLOR_AZUL_INST);
                 g2d.fillRect(0, 0, getWidth(), topBarHeight);
                 g2d.fillRect(0, getHeight() - bottomBarHeight, getWidth(), bottomBarHeight);
             }

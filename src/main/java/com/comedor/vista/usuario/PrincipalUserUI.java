@@ -52,7 +52,7 @@ public class PrincipalUserUI extends JFrame {
     public PrincipalUserUI(Usuario usuario) {
         this.usuario = usuario;
         try {
-            URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_reg_bg.jpg");
+            URL imageUrl = getClass().getResource("/images/ui/com_reg_bg.jpg");
             if (imageUrl != null) backgroundImage = ImageIO.read(imageUrl);
         } catch (IOException e) {
             // Imagen de fondo opcional
@@ -186,7 +186,7 @@ public class PrincipalUserUI extends JFrame {
                         g2.drawImage(scaled, 10, 10, getWidth()-20, getHeight()-20, this);
                     } else {
                         // Si no existe en imagenes_bd_secretaria, intentar desde resources
-                        URL imageUrl = getClass().getResource("/com/comedor/resources/images/usuarios/" + usuario.obtCedula() + ".jpg");
+                        URL imageUrl = getClass().getResource("/images/secretaria/" + usuario.obtCedula() + ".jpg");
                         if (imageUrl != null) {
                             BufferedImage foto = ImageIO.read(imageUrl);
                             // Escalar foto para que quepa en el círculo
