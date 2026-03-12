@@ -5,6 +5,7 @@ import com.comedor.modelo.persistencia.RepoReservas;
 import com.comedor.modelo.persistencia.RepoUsuarios;
 import com.comedor.util.Logger;
 import java.time.LocalDate;
+import java.io.FileInputStream;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -99,10 +100,13 @@ public class ServicioReportes {
      */
     private double obtenerCCBActual() {
         try {
-            ServicioCosto servicioCosto = new ServicioCosto();
-            return servicioCosto.obtenerCCBActual();
+            Properties props = new Properties();
+            try (FileInputStream in = new FileInputStream("menu_config.properties")) {
+                props.load(in);
+            }
+            return Double.parseDouble(props.getProperty("ccb_actual", "0.0"));
         } catch (Exception e) {
-            return 100.0; // Valor por defecto si no hay CCB calculado
+            return 0.0; // Valor por defecto si no hay CCB calculado
         }
     }
     
@@ -141,7 +145,7 @@ public class ServicioReportes {
             case "Empleado":
                 return ccb * 0.50;
             case "Administrador":
-                return ccb;
+                return ccb * 0.50; // Se ajusta para igualar la tarifa de Empleado
             default:
                 return ccb; // Valor por defecto
         }

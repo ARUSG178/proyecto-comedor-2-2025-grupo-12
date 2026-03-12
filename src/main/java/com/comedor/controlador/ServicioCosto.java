@@ -102,6 +102,9 @@ public class ServicioCosto {
 
     // Método helper para registrar todo en un solo paso (usado por ServicioMenu)
     public void registrarValoresCCB(String periodo, double fijos, double variables, int produccion) {
+        // CORRECCIÓN: Limpiar costos previos del mismo periodo para evitar duplicados al recalcular
+        costos.removeIf(c -> c.obtPeriodo().equals(periodo));
+        
         agregarCosto(periodo, RegistroCosto.TipoCosto.FIJO, "Costos Fijos Mensuales", fijos);
         agregarCosto(periodo, RegistroCosto.TipoCosto.VARIABLE, "Costos Variables Mensuales", variables);
         registrarProduccionBandejas(periodo, produccion);

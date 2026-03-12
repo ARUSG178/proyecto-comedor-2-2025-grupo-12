@@ -31,18 +31,19 @@ public class ServicioMenu {
      
     private double parseFactor(String pct, double fallback) {
         if (pct == null || pct.trim().isEmpty()) {
-            return fallback;
+            // Se divide entre 100 para convertir el porcentaje por defecto (ej. 20.0) a factor (0.20)
+            return fallback / 100.0;
         }
         try {
             return Double.parseDouble(pct.trim()) / 100.0;
         } catch (Exception e) {
-            return fallback;
+            return fallback / 100.0;
         }
     }
 
     public double factorParaUsuario(Usuario usuario) {
         Properties props = new Properties();
-        try (FileInputStream in = new FileInputStream("src/main/resources/config/menu_config.properties")) {
+        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
             props.load(in);
         } catch (Exception e) {
             // Sin config
@@ -68,7 +69,11 @@ public class ServicioMenu {
             // Los empleados tienen un subsidio del 50%, pagan la mitad
             return parseFactor(props.getProperty("tarifa_pct_empleado"), 50.0);
         }
-        return 1.0; // Administrador o tipo desconocido paga 100%
+        if (usuario instanceof Administrador) {
+            // Administradores pagan la misma tarifa que los empleados
+            return parseFactor(props.getProperty("tarifa_pct_empleado"), 50.0);
+        }
+        return 1.0; // Tipo desconocido paga 100%
     }
 
     // Permite a un administrador actualizar la configuración del menú semanal
@@ -213,9 +218,17 @@ public class ServicioMenu {
 
     // Calcula la tarifa automática basada en el rol del usuario y el precio base del platillo.
     public double calcularTarifaPorUsuario(Usuario usuario, Platillo p) {
-        // 1. Obtenemos el CCB real del periodo. Si es 0 (no hay datos), usamos el precio referencial del platillo.
-        double ccb = servicioCosto.obtenerCCBActual();
-        // Corrección: Eliminada declaración duplicada y uso de método correcto obtPrecio()
+        // 1. Intentamos leer el CCB real desde el archivo de configuración
+        double ccb = 0.0;
+        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
+            Properties props = new Properties();
+            props.load(in);
+            ccb = Double.parseDouble(props.getProperty("ccb_actual", "0.0"));
+        } catch (Exception e) {
+            ccb = 0.0;
+        }
+
+        // 2. Si hay CCB (> 0), se usa como base. Si no, se usa el precio manual del platillo.
         double precioBase = (ccb > 0) ? ccb : p.obtPrecio();
         
         return precioBase * factorParaUsuario(usuario);
@@ -256,6 +269,13 @@ public class ServicioMenu {
     private void guardarMenuEnArchivo() {
         Properties props = new Properties();
         
+        // 1. Cargar configuración existente para NO borrar tarifas ni el CCB del Admin
+        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
+            props.load(in);
+        } catch (IOException e) {
+            // Si no existe, se inicia vacío
+        }
+        
         // Guardar Desayuno
         if (!menuDesayuno.obtPlatillos().isEmpty()) {
             Platillo p = menuDesayuno.obtPlatillos().get(0);
@@ -277,9 +297,13 @@ public class ServicioMenu {
         }
 
         // Guardar CCB
-        props.setProperty("ccb_actual", String.valueOf(servicioCosto.obtenerCCBActual()));
+        // CORRECCIÓN: Solo sobrescribimos ccb_actual si este servicio calculó un nuevo valor (> 0).
+        // Si es 0.0 (porque solo estamos editando el menú), mantenemos el valor que ya estaba en el archivo.
+        if (servicioCosto.obtenerCCBActual() > 0) {
+            props.setProperty("ccb_actual", String.valueOf(servicioCosto.obtenerCCBActual()));
+        }
 
-        try (FileOutputStream out = new FileOutputStream("src/main/resources/config/menu_config.properties")) {
+        try (FileOutputStream out = new FileOutputStream("menu_config.properties")) {
             props.store(out, "Configuracion del Menu - SAGC");
         } catch (IOException e) {
             Logger.warning("Error guardando configuración");
@@ -288,7 +312,7 @@ public class ServicioMenu {
 
     private void cargarMenuDesdeArchivo() {
         Properties props = new Properties();
-        try (FileInputStream in = new FileInputStream("src/main/resources/config/menu_config.properties")) {
+        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
             props.load(in);
             
             cargarPlatilloEnMenu(menuDesayuno, props, "desayuno");

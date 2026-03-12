@@ -815,3 +815,59 @@ java.io.FileNotFoundException: menu_config.properties (El sistema no puede encon
 [2026-03-12 15:37:51] INFO: Merma registrada para 2026-03: 15.0%
 [2026-03-12 15:38:00] INFO: Inicio de sesi�n exitoso para c�dula: 29617475
 [2026-03-12 15:42:28] INFO: Inicio de sesi�n exitoso para c�dula: 10000004
+[2026-03-12 16:50:32] INFO: Inicio de sesión exitoso para cédula: 10000004
+[2026-03-12 16:50:43] INFO: No hay monto en reserva para 6017761, usando cálculo: $0.0
+[2026-03-12 16:50:43] INFO: Reporte generado: 1 comensales para Desayuno del 2026-03-12
+[2026-03-12 16:50:43] INFO: Reporte de comensales generado: Desayuno - 2026-03-12
+[2026-03-12 16:50:43] INFO: Total: 1 comensales, Recaudado: $0.00
+[2026-03-12 17:10:17] INFO: Inicio de sesión exitoso para cédula: 10000004
+[2026-03-12 17:10:31] INFO: Costo agregado: Costos Fijos Mensuales (FIJO)
+[2026-03-12 17:10:31] INFO: Costo agregado: Costos Variables Mensuales (VARIABLE)
+[2026-03-12 17:10:31] INFO: Producción estimada de bandejas para 2026-03: 1
+[2026-03-12 17:10:31] INFO: Merma registrada para 2026-03: 2.0%
+[2026-03-12 17:11:19] INFO: Inicio de sesión exitoso para cédula: 10000003
+[2026-03-12 17:11:49] INFO: Inicio de sesión exitoso para cédula: 10000004
+[2026-03-12 17:12:02] INFO: Costo agregado: Costos Fijos Mensuales (FIJO)
+[2026-03-12 17:12:02] INFO: Costo agregado: Costos Variables Mensuales (VARIABLE)
+[2026-03-12 17:12:02] INFO: Producción estimada de bandejas para 2026-03: 8
+[2026-03-12 17:12:02] INFO: Merma registrada para 2026-03: 90.0%
+[2026-03-12 17:12:15] INFO: Inicio de sesión exitoso para cédula: 10000003
+[2026-03-12 17:18:19] INFO: Inicio de sesión exitoso para cédula: 10000004
+[2026-03-12 17:18:55] INFO: Costo agregado: Costos Fijos Mensuales (FIJO)
+[2026-03-12 17:18:55] INFO: Costo agregado: Costos Variables Mensuales (VARIABLE)
+[2026-03-12 17:18:55] INFO: Producción estimada de bandejas para 2026-03: 34
+[2026-03-12 17:18:55] INFO: Merma registrada para 2026-03: 86.0%
+[2026-03-12 17:19:05] INFO: Inicio de sesión exitoso para cédula: 10000003
+[2026-03-12 17:22:02] INFO: Inicio de sesión exitoso para cédula: 10000004
+[2026-03-12 17:22:13] INFO: Costo agregado: Costos Fijos Mensuales (FIJO)
+[2026-03-12 17:22:13] INFO: Costo agregado: Costos Variables Mensuales (VARIABLE)
+[2026-03-12 17:22:13] INFO: Producción estimada de bandejas para 2026-03: 12
+[2026-03-12 17:22:13] INFO: Merma registrada para 2026-03: 11.0%
+[2026-03-12 17:22:26] INFO: Inicio de sesión exitoso para cédula: 10000003
+[2026-03-12 17:26:02] INFO: Inicio de sesión exitoso para cédula: 10000004
+[2026-03-12 17:26:18] INFO: Costo agregado: Costos Fijos Mensuales (FIJO)
+[2026-03-12 17:26:18] INFO: Costo agregado: Costos Variables Mensuales (VARIABLE)
+[2026-03-12 17:26:18] INFO: Producción estimada de bandejas para 2026-03: 12
+[2026-03-12 17:26:18] INFO: Merma registrada para 2026-03: 11.0%
+[2026-03-12 17:27:08] INFO: Inicio de sesión exitoso para cédula: 10000003
+[2026-03-12 17:32:10] INFO: Inicio de sesión exitoso para cédula: 10000004
+[2026-03-12 17:32:36] INFO: Costo agregado: Costos Fijos Mensuales (FIJO)
+[2026-03-12 17:32:36] INFO: Costo agregado: Costos Variables Mensuales (VARIABLE)
+[2026-03-12 17:32:36] INFO: Producción estimada de bandejas para 2026-03: 12
+[2026-03-12 17:32:36] INFO: Merma registrada para 2026-03: 11.0%
+[2026-03-12 17:32:52] INFO: Costo agregado: Costos Fijos Mensuales (FIJO)
+[2026-03-12 17:32:52] INFO: Costo agregado: Costos Variables Mensuales (VARIABLE)
+[2026-03-12 17:32:52] INFO: Producción estimada de bandejas para 2026-03: 12
+[2026-03-12 17:32:52] INFO: Merma registrada para 2026-03: 11.0%
+[2026-03-12 17:33:29] INFO: Inicio de sesión exitoso para cédula: 10000003
+[2026-03-12 17:40:19] INFO: Inicio de sesión exitoso para cédula: 10000004
+[2026-03-12 17:40:36] INFO: Costo agregado: Costos Fijos Mensuales (FIJO)
+[2026-03-12 17:40:36] INFO: Costo agregado: Costos Variables Mensuales (VARIABLE)
+[2026-03-12 17:40:36] INFO: Producción estimada de bandejas para 2026-03: 12
+[2026-03-12 17:40:36] INFO: Merma registrada para 2026-03: 11.0%
+[2026-03-12 17:41:01] INFO: Inicio de sesión exitoso para cédula: 10000003
+[2026-03-12 17:42:15] INFO: Inicio de sesión exitoso para cédula: 12345665
+[2026-03-12 17:43:13] INFO: No hay monto en reserva para 6017761, usando cálculo: $3.404000000000001
+[2026-03-12 17:43:13] INFO: Reporte generado: 1 comensales para Desayuno del 2026-03-12
+[2026-03-12 17:43:13] INFO: Reporte de comensales generado: Desayuno - 2026-03-12
+[2026-03-12 17:43:13] INFO: Total: 1 comensales, Recaudado: $3.40
