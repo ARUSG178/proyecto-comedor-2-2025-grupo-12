@@ -933,3 +933,136 @@ java.io.FileNotFoundException: menu_config.properties (El sistema no puede encon
 [2026-03-12 18:40:43] INFO: Reporte de comensales generado: Desayuno - 2026-03-12
 [2026-03-12 18:40:43] INFO: Total: 1 comensales, Recaudado: $1,06
 [2026-03-12 19:13:04] INFO: Inicio de sesión exitoso para cédula: 2000002
+[2026-03-12 20:59:59] INFO: Inicio de sesión exitoso para cédula: 10000004
+[2026-03-12 21:00:02] INFO: No hay monto en reserva para 6017761, usando cálculo: $3.404000000000001
+[2026-03-12 21:00:02] INFO: Reporte generado: 1 comensales para Desayuno del 2026-03-12
+[2026-03-12 21:00:02] INFO: Reporte de comensales generado: Desayuno - 2026-03-12
+[2026-03-12 21:00:02] INFO: Total: 1 comensales, Recaudado: $3,40
+[2026-03-12 21:00:23] INFO: No hay monto en reserva para 6017761, usando cálculo: $3.404000000000001
+[2026-03-12 21:00:23] INFO: Reporte generado: 1 comensales para Desayuno del 2026-03-12
+[2026-03-12 21:00:23] INFO: Reporte de comensales generado: Desayuno - 2026-03-12
+[2026-03-12 21:00:23] INFO: Total: 1 comensales, Recaudado: $3,40
+[2026-03-12 21:01:18] INFO: No hay monto en reserva para 6017761, usando cálculo: $3.404000000000001
+[2026-03-12 21:01:18] INFO: Reporte generado: 1 comensales para Desayuno del 2026-03-12
+[2026-03-12 21:01:18] INFO: Reporte de comensales generado: Desayuno - 2026-03-12
+[2026-03-12 21:01:18] INFO: Total: 1 comensales, Recaudado: $3,40
+[2026-03-12 21:01:37] INFO: Inicio de sesión exitoso para cédula: 29617475
+[2026-03-12 21:01:56] INFO: Turno seleccionado: 07:00 - 07:59 para usuario 29617475
+[2026-03-12 21:02:06] INFO: Inicio de sesión exitoso para cédula: 29617475
+[2026-03-12 21:02:33] INFO: Inicio de sesión exitoso para cédula: 10000004
+[2026-03-12 21:02:36] INFO: No hay monto en reserva para 6017761, usando cálculo: $3.404000000000001
+[2026-03-12 21:02:36] INFO: Monto desde reserva para 29617475: $0.4255000000000001
+[2026-03-12 21:02:36] INFO: Reporte generado: 2 comensales para Desayuno del 2026-03-12
+[2026-03-12 21:02:36] INFO: Reporte de comensales generado: Desayuno - 2026-03-12
+[2026-03-12 21:02:36] INFO: Total: 2 comensales, Recaudado: $3,83
+[2026-03-12 21:02:38] INFO: No hay monto en reserva para 6017761, usando cálculo: $3.404000000000001
+[2026-03-12 21:02:38] INFO: Monto desde reserva para 29617475: $0.4255000000000001
+[2026-03-12 21:02:38] INFO: Reporte generado: 2 comensales para Desayuno del 2026-03-12
+[2026-03-12 21:02:38] INFO: Reporte de comensales generado: Desayuno - 2026-03-12
+[2026-03-12 21:02:38] INFO: Total: 2 comensales, Recaudado: $3,83
+[2026-03-12 21:02:51] INFO: Reporte generado: 0 comensales para Almuerzo del 2026-03-12
+[2026-03-12 21:02:51] INFO: Reporte de comensales generado: Almuerzo - 2026-03-12
+[2026-03-12 21:02:51] INFO: Total: 0 comensales, Recaudado: $0,00
+[2026-03-12 21:04:37] INFO: Inicio de sesión exitoso para cédula: 10000004
+[2026-03-12 21:06:32] INFO: Costo agregado: Costos Fijos Mensuales (FIJO)
+[2026-03-12 21:06:32] INFO: Costo agregado: Costos Variables Mensuales (VARIABLE)
+[2026-03-12 21:06:32] INFO: Producción estimada de bandejas para 2026-03: 200
+[2026-03-12 21:06:32] INFO: Merma registrada para 2026-03: 15.0%
+[2026-03-12 21:07:22] INFO: Inicio de sesión exitoso para cédula: 6017761
+[2026-03-12 21:07:47] INFO: Inicio de sesión exitoso para cédula: 6017761
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2025-03: 0
+[2026-03-12 21:12:15] INFO: Merma registrada para 2025-03: 10.0%
+[2026-03-12 21:12:15] INFO: Costo agregado: Alquiler (FIJO)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2025-03: 100
+[2026-03-12 21:12:15] INFO: Costo agregado: Alquiler (FIJO)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2025-03: 100
+[2026-03-12 21:12:15] INFO: Merma registrada para 2025-03: 10.0%
+[2026-03-12 21:12:15] INFO: Costo agregado: Alquiler (FIJO)
+[2026-03-12 21:12:15] INFO: Costo agregado: Insumos (VARIABLE)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2025-03: 100
+[2026-03-12 21:12:15] INFO: Merma registrada para 2025-03: 5.0%
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos (FIJO)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2025-03: 200
+[2026-03-12 21:12:15] INFO: Merma registrada para 2025-03: 10.0%
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos (FIJO)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2025-03: 50
+[2026-03-12 21:12:15] INFO: Merma registrada para 2025-03: 20.0%
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos (FIJO)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2025-03: 150
+[2026-03-12 21:12:15] INFO: Merma registrada para 2025-03: 15.0%
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos (FIJO)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2025-03: 100
+[2026-03-12 21:12:15] INFO: Merma registrada para 2025-03: 0.0%
+[2026-03-12 21:12:15] INFO: Costo agregado: Alquiler (FIJO)
+[2026-03-12 21:12:15] INFO: Costo agregado: Alquiler (FIJO)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2025-03: 50
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos varios (FIJO)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2025-03: 200
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos varios (FIJO)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2025-03: 75
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos varios (FIJO)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2025-03: 0
+[2026-03-12 21:12:15] INFO: Costo agregado: Alquiler (FIJO)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2025-03: 100
+[2026-03-12 21:12:15] INFO: Costo agregado: Alquiler (FIJO)
+[2026-03-12 21:12:15] INFO: Costo agregado: Insumos (VARIABLE)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2025-03: 100
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Fijos Mensuales (FIJO)
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Variables Mensuales (VARIABLE)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2026-03: 100
+[2026-03-12 21:12:15] INFO: Merma registrada para 2026-03: 10.0%
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Fijos Mensuales (FIJO)
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Variables Mensuales (VARIABLE)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2026-03: 300
+[2026-03-12 21:12:15] INFO: Merma registrada para 2026-03: 0.0%
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Fijos Mensuales (FIJO)
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Variables Mensuales (VARIABLE)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2026-03: 10
+[2026-03-12 21:12:15] INFO: Merma registrada para 2026-03: 10.0%
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Fijos Mensuales (FIJO)
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Variables Mensuales (VARIABLE)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2026-03: 200
+[2026-03-12 21:12:15] INFO: Merma registrada para 2026-03: 12.0%
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Fijos Mensuales (FIJO)
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Variables Mensuales (VARIABLE)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2026-03: 100
+[2026-03-12 21:12:15] INFO: Merma registrada para 2026-03: 10.0%
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Fijos Mensuales (FIJO)
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Variables Mensuales (VARIABLE)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2026-03: 500
+[2026-03-12 21:12:15] INFO: Merma registrada para 2026-03: 20.0%
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Fijos Mensuales (FIJO)
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Variables Mensuales (VARIABLE)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2026-03: 150
+[2026-03-12 21:12:15] INFO: Merma registrada para 2026-03: 5.0%
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Fijos Mensuales (FIJO)
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Variables Mensuales (VARIABLE)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2026-03: 1000
+[2026-03-12 21:12:15] INFO: Merma registrada para 2026-03: 25.0%
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Fijos Mensuales (FIJO)
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Variables Mensuales (VARIABLE)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2026-03: 200
+[2026-03-12 21:12:15] INFO: Merma registrada para 2026-03: 15.0%
+[2026-03-12 21:12:15] INFO: Menú actualizado por administrador (Cédula): V11223344
+[2026-03-12 21:12:15] INFO: Menú actualizado por administrador (Cédula): V11223344
+[2026-03-12 21:12:15] INFO: Menú actualizado por administrador (Cédula): V11223344
+[2026-03-12 21:12:15] INFO: Menú actualizado por administrador (Cédula): V11223344
+[2026-03-12 21:12:15] INFO: Menú actualizado por administrador (Cédula): V11223344
+[2026-03-12 21:12:15] INFO: Menú actualizado por administrador (Cédula): V11223344
+[2026-03-12 21:12:15] INFO: Menú actualizado por administrador (Cédula): V11223344
+[2026-03-12 21:12:15] INFO: Menú actualizado por administrador (Cédula): V11223344
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Fijos Mensuales (FIJO)
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Variables Mensuales (VARIABLE)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2026-03: 200
+[2026-03-12 21:12:15] INFO: Merma registrada para 2026-03: 15.0%
+[2026-03-12 21:12:15] INFO: Menú actualizado por administrador (Cédula): V11223344
+[2026-03-12 21:12:15] INFO: Menú actualizado por administrador (Cédula): V11223344
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Fijos Mensuales (FIJO)
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Variables Mensuales (VARIABLE)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2026-03: 150
+[2026-03-12 21:12:15] INFO: Merma registrada para 2026-03: 10.0%
+[2026-03-12 21:12:15] INFO: Menú actualizado por administrador (Cédula): V11223344
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Fijos Mensuales (FIJO)
+[2026-03-12 21:12:15] INFO: Costo agregado: Costos Variables Mensuales (VARIABLE)
+[2026-03-12 21:12:15] INFO: Producción estimada de bandejas para 2026-03: 180
+[2026-03-12 21:12:15] INFO: Merma registrada para 2026-03: 12.0%

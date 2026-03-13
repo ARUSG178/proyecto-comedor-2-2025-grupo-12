@@ -1,10 +1,12 @@
-package com.comedor.modelo.entidades;
+package com.comedor.test.entidades;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.assertj.core.api.Assertions.*;
+
+import com.comedor.modelo.entidades.Monedero;
+import com.comedor.modelo.entidades.Estudiante;
 
 /**
  * Pruebas de caja negra para la clase Monedero
@@ -16,16 +18,16 @@ import static org.assertj.core.api.Assertions.*;
 public class MonederoTest {
 
     private Monedero monedero;
-    private Usuario usuarioPropietario;
+    private Estudiante estudiantePropietario;
     private static final double SALDO_INICIAL = 100.0;
     private static final double LIMITE_SALDO = Monedero.LIMITE_SALDO;
 
     @BeforeEach
     void setUp() {
-        // Crear un usuario de prueba con saldo inicial
-        usuarioPropietario = new Usuario("12345678", "Juan Pérez", "Estudiante");
-        usuarioPropietario.setSaldo(SALDO_INICIAL);
-        monedero = new Monedero(usuarioPropietario);
+        // Crear un estudiante de prueba con saldo inicial
+        estudiantePropietario = new Estudiante("12345678", "password", "Computacion", "Ciencias");
+        estudiantePropietario.setSaldo(SALDO_INICIAL);
+        monedero = new Monedero(estudiantePropietario);
     }
 
     // ============================================
@@ -33,7 +35,7 @@ public class MonederoTest {
     // ============================================
     
     @Nested
-    @DisplayName
+    @DisplayName("Pruebas de recargar()")
     class RecargarTests {
         
         @Test
@@ -49,7 +51,6 @@ public class MonederoTest {
             // Assert
             assertEquals(saldoEsperado, monedero.obtSaldo(), 0.001, 
                 "El saldo debe incrementarse en el monto de recarga");
-            assertThat(monedero.obtSaldo()).isEqualTo(saldoEsperado);
         }
         
         @Test

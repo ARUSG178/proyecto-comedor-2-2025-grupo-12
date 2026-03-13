@@ -32,4 +32,12 @@ public class EstudianteBecario extends Estudiante {
         // Paga el (100 - porcentajeDescuento)% del precio base
         return precioBase * ((100 - porcentajeDescuento) / 100.0);
     }
+    
+    public boolean esBecario() {
+        return true;
+    }
+    
+    public boolean esExonerado() {
+        return false;
+    }
 }

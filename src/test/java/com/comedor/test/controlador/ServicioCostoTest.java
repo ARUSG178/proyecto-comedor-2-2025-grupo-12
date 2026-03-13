@@ -1,25 +1,23 @@
-package com.comedor.controlador;
+package com.comedor.test.controlador;
 
-import com.comedor.modelo.entidades.RegistroCosto;
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import com.comedor.modelo.entidades.RegistroCosto;
+import com.comedor.controlador.ServicioCosto;
 
 /**
- * Pruebas de caja negra para la clase Monedero
+ * Pruebas de caja negra para la clase ServicioCosto
  * Técnicas aplicadas:
  * - Partición de equivalencia
  * - Análisis de valores límite
  */
-
 public class ServicioCostoTest {
 
     private ServicioCosto servicioCosto;
@@ -256,14 +254,13 @@ public class ServicioCostoTest {
             double totalCostos = fijos + variables; // 8000
             double costoUnitarioBase = totalCostos / produccion; // 80.0
             double ccbEsperado = costoUnitarioBase * (1 + merma); // 88.0
-            
             assertEquals(ccbEsperado, resultado, 0.001, 
                         "CCB calculado incorrectamente");
             
             // Verificar que se registró la producción
-            assertEquals(produccion, 
-                servicioCosto.obtenerCCBActualRelacionadoConPeriodo(), 
-                "No se registró la producción correctamente");
+            assertEquals(ccbEsperado, 
+                servicioCosto.obtenerCCBActual(), 
+                "CCB actual no se actualizó correctamente");
         }
     }
 }
