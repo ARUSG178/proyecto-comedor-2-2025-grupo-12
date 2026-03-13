@@ -1093,3 +1093,64 @@ java.io.FileNotFoundException: menu_config.properties (El sistema no puede encon
 [2026-03-12 23:31:53] INFO: Inicio de sesión exitoso para cédula: 55555555
 [2026-03-12 23:35:06] INFO: Inicio de sesión exitoso para cédula: 55555555
 [2026-03-12 23:37:07] INFO: Inicio de sesión exitoso para cédula: 10000004
+[2026-03-12 23:54:21] INFO: Inicio de sesión exitoso para cédula: 10000004
+[2026-03-12 23:54:23] INFO: No hay monto en reserva para 6017761, usando cálculo: $0.0
+[2026-03-12 23:54:23] INFO: No hay monto en reserva para 29617475, usando cálculo: $0.0
+[2026-03-12 23:54:23] INFO: No hay monto en reserva para 55555555, usando cálculo: $0.0
+[2026-03-12 23:54:23] INFO: Reporte generado: 3 comensales para Desayuno del 2026-03-12
+[2026-03-12 23:54:23] INFO: Reporte de comensales generado: Desayuno - 2026-03-12
+[2026-03-12 23:54:23] INFO: Total: 3 comensales, Recaudado: $0,00
+[2026-03-12 23:54:25] INFO: No hay monto en reserva para 6017761, usando cálculo: $0.0
+[2026-03-12 23:54:25] INFO: No hay monto en reserva para 29617475, usando cálculo: $0.0
+[2026-03-12 23:54:25] INFO: No hay monto en reserva para 55555555, usando cálculo: $0.0
+[2026-03-12 23:54:25] INFO: Reporte generado: 3 comensales para Desayuno del 2026-03-12
+[2026-03-12 23:54:25] INFO: Reporte de comensales generado: Desayuno - 2026-03-12
+[2026-03-12 23:54:25] INFO: Total: 3 comensales, Recaudado: $0,00
+[2026-03-12 23:54:29] INFO: No hay monto en reserva para 6017761, usando cálculo: $0.0
+[2026-03-12 23:54:29] INFO: No hay monto en reserva para 29617475, usando cálculo: $0.0
+[2026-03-12 23:54:29] INFO: No hay monto en reserva para 55555555, usando cálculo: $0.0
+[2026-03-12 23:54:29] INFO: Reporte generado: 3 comensales para Desayuno del 2026-03-12
+[2026-03-12 23:54:29] INFO: Reporte de comensales generado: Desayuno - 2026-03-12
+[2026-03-12 23:54:29] INFO: Total: 3 comensales, Recaudado: $0,00
+[2026-03-12 23:55:00] INFO: Inicio de sesión exitoso para cédula: 10000004
+[2026-03-12 23:55:02] INFO: No hay monto en reserva para 6017761, usando cálculo: $0.0
+[2026-03-12 23:55:02] INFO: No hay monto en reserva para 29617475, usando cálculo: $0.0
+[2026-03-12 23:55:02] INFO: No hay monto en reserva para 55555555, usando cálculo: $0.0
+[2026-03-12 23:55:02] INFO: Reporte generado: 3 comensales para Desayuno del 2026-03-12
+[2026-03-12 23:55:02] INFO: Reporte de comensales generado: Desayuno - 2026-03-12
+[2026-03-12 23:55:02] INFO: Total: 3 comensales, Recaudado: $0,00
+[2026-03-12 23:55:05] ERROR: Error al cargar datos del menú
+java.io.FileNotFoundException: menu_config.properties (El sistema no puede encontrar el archivo especificado)
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(FileInputStream.java:216)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:157)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:111)
+	at com.comedor.vista.admin.VerMenuAdminUI.cargarDatosPlatillo(VerMenuAdminUI.java:89)
+	at com.comedor.vista.admin.VerMenuAdminUI.<init>(VerMenuAdminUI.java:75)
+	at com.comedor.vista.components.SideBarNavigation.lambda$9(SideBarNavigation.java:367)
+	at com.comedor.vista.components.SideBarNavigation$4.lambda$0(SideBarNavigation.java:543)
+	at java.desktop/java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:318)
+	at java.desktop/java.awt.EventQueue.dispatchEventImpl(EventQueue.java:771)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:722)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:716)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:86)
+	at java.desktop/java.awt.EventQueue.dispatchEvent(EventQueue.java:741)
+	at java.desktop/java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:203)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:124)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:113)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:109)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.desktop/java.awt.EventDispatchThread.run(EventDispatchThread.java:90)
+[2026-03-12 23:55:19] INFO: Costo agregado: Costos Fijos Mensuales (FIJO)
+[2026-03-12 23:55:19] INFO: Costo agregado: Costos Variables Mensuales (VARIABLE)
+[2026-03-12 23:55:19] INFO: Producción estimada de bandejas para 2026-03: 2000
+[2026-03-12 23:55:19] INFO: Merma registrada para 2026-03: 10.0%
+[2026-03-12 23:55:36] INFO: Inicio de sesión exitoso para cédula: 10000001
+[2026-03-12 23:57:22] INFO: Inicio de sesión exitoso para cédula: 10000004
+[2026-03-12 23:57:30] INFO: No hay monto en reserva para 6017761, usando cálculo: $44.88
+[2026-03-12 23:57:30] INFO: No hay monto en reserva para 29617475, usando cálculo: $5.61
+[2026-03-12 23:57:30] INFO: No hay monto en reserva para 55555555, usando cálculo: $53.295
+[2026-03-12 23:57:30] INFO: Reporte generado: 3 comensales para Desayuno del 2026-03-12
+[2026-03-12 23:57:30] INFO: Reporte de comensales generado: Desayuno - 2026-03-12
+[2026-03-12 23:57:30] INFO: Total: 3 comensales, Recaudado: $103,79

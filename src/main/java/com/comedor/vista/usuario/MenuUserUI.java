@@ -228,7 +228,7 @@ public class MenuUserUI extends JFrame {
     
     private void cargarDatosPlatillo() {
         Properties props = new Properties();
-        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
+        try (FileInputStream in = new FileInputStream("src/main/resources/config/menu_config.properties")) {
             props.load(in);
             nombreDesayuno = props.getProperty("desayuno_nombre", "Desayuno no disponible");
             precioDesayuno = props.getProperty("desayuno_precio", "$ 0.00");

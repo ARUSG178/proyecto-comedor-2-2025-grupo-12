@@ -86,7 +86,7 @@ public class VerMenuAdminUI extends JFrame {
     
     private void cargarDatosPlatillo() {
         Properties props = new Properties();
-        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
+        try (FileInputStream in = new FileInputStream("src/main/resources/config/menu_config.properties")) {
             props.load(in);
             nombreDesayuno = props.getProperty("desayuno_nombre", "Desayuno");
             precioDesayuno = props.getProperty("desayuno_precio", "$ 0.00");
@@ -355,7 +355,7 @@ public class VerMenuAdminUI extends JFrame {
 
     private void guardarPlatillo(String titulo, String nombreTxt, String desc, String nut, String rutaImagen) {
         Properties props = new Properties();
-        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
+        try (FileInputStream in = new FileInputStream("src/main/resources/config/menu_config.properties")) {
             props.load(in);
         } catch (Exception e) {
             // sin archivo
@@ -373,7 +373,7 @@ public class VerMenuAdminUI extends JFrame {
             props.setProperty("almuerzo_imagen", rutaImagen != null ? rutaImagen : "");
         }
 
-        try (FileOutputStream out = new FileOutputStream("menu_config.properties")) {
+        try (FileOutputStream out = new FileOutputStream("src/main/resources/config/menu_config.properties")) {
             props.store(out, "Configuracion del Menu");
         } catch (Exception e) {
             Logger.error("Error guardando menu_config.properties", e);

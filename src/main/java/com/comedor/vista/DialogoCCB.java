@@ -153,7 +153,7 @@ public class DialogoCCB extends JDialog {
 
     private void cargarTarifasDesdeConfig() {
         Properties props = new Properties();
-        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
+        try (FileInputStream in = new FileInputStream("src/main/resources/config/menu_config.properties")) {
             props.load(in);
         } catch (Exception e) {
             // Sin archivo aún
@@ -233,13 +233,13 @@ public class DialogoCCB extends JDialog {
 
     private void guardarConfiguracionCompleta(double ccb, double pctEstudiante, double pctEmpleado, double pctProfesor) {
         Properties props = new Properties();
-        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
+        try (FileInputStream in = new FileInputStream("src/main/resources/config/menu_config.properties")) {
             props.load(in);
         } catch (Exception e) {
             // Si no existe, se crea uno nuevo
         }
 
-        try (FileOutputStream out = new FileOutputStream("menu_config.properties")) {
+        try (FileOutputStream out = new FileOutputStream("src/main/resources/config/menu_config.properties")) {
             props.setProperty("ccb_actual", String.valueOf(ccb));
             props.setProperty("tarifa_pct_estudiante", String.valueOf(pctEstudiante));
             props.setProperty("tarifa_pct_empleado", String.valueOf(pctEmpleado));
