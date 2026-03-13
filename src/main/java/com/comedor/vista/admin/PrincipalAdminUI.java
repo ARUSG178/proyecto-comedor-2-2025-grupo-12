@@ -1,18 +1,33 @@
 package com.comedor.vista.admin;
 
-import com.comedor.modelo.entidades.Usuario;
-import com.comedor.modelo.persistencia.RepoSecretaria;
-import com.comedor.vista.components.SideBarNavigation;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+
+import com.comedor.modelo.entidades.Usuario;
+import com.comedor.modelo.persistencia.RepoSecretaria;
+import com.comedor.vista.components.SideBarNavigation;
 
 public class PrincipalAdminUI extends JFrame {
 
@@ -122,12 +137,12 @@ public class PrincipalAdminUI extends JFrame {
 
         // Mensaje personalizado con nombre del administrador
         String nombreCompleto = obtenerNombreDesdeRepositorio(usuario.obtCedula());
-        JLabel welcomeTitle = new JLabel("<html><div style='text-align: center; color: white;'>!Bienvenido, " + nombreCompleto + "!</div></html>");
+        JLabel welcomeTitle = new JLabel("<html><div style='text-align: center; color: white;'>¡Bienvenido, " + nombreCompleto + "!</div></html>");
         welcomeTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
         
         JLabel welcomeMessage = new JLabel("<html><div style='text-align: center; color: #e0e0e0;'>" +
             "Como administrador del sistema, puedes gestionar todas las funciones.<br>" +
-            "Utiliza el menu de la izquierda para acceder a todas las opciones.</div></html>");
+            "Utiliza el menú de la izquierda para acceder a todas las opciones.</div></html>");
         welcomeMessage.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 
         // Panel para la foto del administrador

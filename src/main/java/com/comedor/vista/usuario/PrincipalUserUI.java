@@ -25,8 +25,8 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
-import com.comedor.modelo.entidades.Usuario;
 import com.comedor.modelo.entidades.Estudiante;
+import com.comedor.modelo.entidades.Usuario;
 import com.comedor.modelo.persistencia.RepoSecretaria;
 import com.comedor.vista.components.SideBarNavigation;
 
@@ -151,11 +151,11 @@ public class PrincipalUserUI extends JFrame {
         
         // Mensaje personalizado con nombre del usuario
         String nombreCompleto = obtenerNombreDesdeRepositorio(usuario.obtCedula());
-        JLabel welcomeTitle = new JLabel("<html><div style='text-align: center;'>!Bienvenido, " + nombreCompleto + "!</div></html>");
+        JLabel welcomeTitle = new JLabel("<html><div style='text-align: center;'>¡Bienvenido, " + nombreCompleto + "!</div></html>");
         welcomeTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
         welcomeTitle.setForeground(Color.WHITE);
         
-        JLabel welcomeSub = new JLabel("<html><div style='text-align: center;'>Utiliza el menu de la izquierda para acceder a todas las funciones.</div></html>");
+        JLabel welcomeSub = new JLabel("<html><div style='text-align: center;'>Utiliza el menú de la izquierda para acceder a todas las funciones.</div></html>");
         welcomeSub.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         welcomeSub.setForeground(new Color(220, 220, 220));
 
