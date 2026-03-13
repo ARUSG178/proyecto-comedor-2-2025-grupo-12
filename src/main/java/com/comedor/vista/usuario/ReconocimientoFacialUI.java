@@ -2,7 +2,6 @@ package com.comedor.vista.usuario;
 
 import com.comedor.controlador.ServicioBiometrico;
 import com.comedor.controlador.ServicioPago;
-import com.comedor.vista.usuario.PrincipalUserUI;
 import com.comedor.modelo.entidades.Usuario;
 
 import javax.imageio.ImageIO;

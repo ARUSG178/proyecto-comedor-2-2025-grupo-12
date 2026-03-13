@@ -4,7 +4,6 @@ import com.comedor.modelo.entidades.Monedero;
 import com.comedor.modelo.entidades.Usuario;
 import com.comedor.modelo.excepciones.SaldoInsuficienteException;
 import com.comedor.modelo.persistencia.RepoUsuarios;
-import com.comedor.controlador.ServicioMenu;
 import java.util.List;
 
 public class ServicioPago {

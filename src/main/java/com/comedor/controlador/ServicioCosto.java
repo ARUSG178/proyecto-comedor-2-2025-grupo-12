@@ -230,30 +230,4 @@ public class ServicioCosto {
             );
         }
     }
-
-    // --- MÉTODOS AGREGADOS PARA CUMPLIR CON REQUERIMIENTOS DE SERVICIOMENU ---
-
-    // Retorna el último CCB calculado para aplicar tarifas
-    public double obtenerCCBActual() {
-        return this.ccbActual;
-    }
-
-    // Método helper para registrar todo en un solo paso (usado por ServicioMenu)
-    public void registrarValoresCCB(String periodo, double fijos, double variables, int produccion) {
-        agregarCosto(periodo, RegistroCosto.TipoCosto.FIJO, "Costos Fijos Mensuales", fijos);
-        agregarCosto(periodo, RegistroCosto.TipoCosto.VARIABLE, "Costos Variables Mensuales", variables);
-        registrarProduccionBandejas(periodo, produccion);
-    }
-
-    // Calcula y guarda el CCB completo recibiendo el porcentaje de merma directo (0.0 a 1.0)
-    public double calcularRegistrarCCBCompleto(double fijos, double variables, int produccion, double porcentajeMerma) {
-        String periodo = ServicioUtil.obtenerPeriodoActual();
-        registrarValoresCCB(periodo, fijos, variables, produccion);
-        registrarMerma(periodo, porcentajeMerma);
-        return calcularCCB(periodo);
-    }
-
-    public String obtenerPeriodoActual() {
-        return ServicioUtil.obtenerPeriodoActual();
-    }
 }
