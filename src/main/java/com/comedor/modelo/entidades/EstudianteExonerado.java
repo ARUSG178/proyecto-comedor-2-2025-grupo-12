@@ -15,4 +15,12 @@ public class EstudianteExonerado extends Estudiante {
     public double calcularTarifa(double precioBase) {
         return 0.0;
     }
+    
+    public boolean esExonerado() {
+        return true;
+    }
+    
+    public boolean esBecario() {
+        return false;
+    }
 }

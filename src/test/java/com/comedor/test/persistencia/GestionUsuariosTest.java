@@ -1,4 +1,4 @@
-package com.comedor.test.gestionusuarios;
+package com.comedor.test.persistencia;
 
 import static org.junit.jupiter.api.Assertions.*;
 
