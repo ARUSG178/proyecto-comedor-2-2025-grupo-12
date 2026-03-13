@@ -159,6 +159,82 @@ public class ConsumidorTest {
     }
 
     @Nested
+    @DisplayName("Pruebas de Reconocimiento Facial")
+    class ReconocimientoFacialTests {
+
+        @Test
+        @DisplayName("RF-01: Reconocimiento facial válido - estudiante")
+        void testReconocimientoValidoEstudiante() throws IOException {
+            // Act
+            double similitud = servicioBiometrico.calcularSimilitud(estudiante, fotoValida);
+
+            // Assert
+            assertTrue(similitud >= 60.0,
+                "La similitud debe ser mayor o igual al 60% para usuario válido");
+            assertTrue(similitud <= 100.0,
+                "La similitud no puede exceder el 100%");
+        }
+
+        @Test
+        @DisplayName("RF-02: Reconocimiento facial inválido - usuario no encontrado")
+        void testReconocimientoUsuarioNoEncontrado() throws IOException {
+            // Act & Assert
+            assertThrows(IOException.class, () -> {
+                servicioBiometrico.calcularSimilitud(estudiante, fotoNoExistente);
+            }, "Debe lanzar IOException si la foto de referencia no existe");
+        }
+
+        @Test
+        @DisplayName("RF-03: Reconocimiento facial con foto nula")
+        void testReconocimientoFotoNula() throws IOException {
+            // Act & Assert
+            assertThrows(IOException.class, () -> {
+                servicioBiometrico.calcularSimilitud(estudiante, null);
+            }, "Debe lanzar IOException si la foto capturada es nula");
+        }
+
+        @Test
+        @DisplayName("RF-04: Reconocimiento facial con archivo no válido")
+        void testReconocimientoArchivoNoValido() throws IOException {
+            // Arrange - crear archivo de texto no válido
+            File archivoInvalido = Files.createFile(
+                Paths.get("src/test/resources/invalido.txt")).toFile();
+
+            // Act & Assert
+            assertThrows(IOException.class, () -> {
+                servicioBiometrico.calcularSimilitud(estudiante, archivoInvalido);
+            }, "Debe lanzar IOException para archivos no válidos");
+
+            // Cleanup
+            archivoInvalido.delete();
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"V12345678", "V87654321", "V11223344"})
+        @DisplayName("RF-05: Búsqueda de fotos de referencia por cédula")
+        void testBusquedaFotoPorCedula(String cedula) throws IOException {
+            // Arrange - crear archivo para la cédula específica
+            Path imagesDir = Paths.get("src/test/resources/images/secretaria");
+            File fotoCedula = Files.createFile(imagesDir.resolve(cedula + ".jpg")).toFile();
+            
+            Usuario usuario = cedula.equals("V12345678") ? estudiante : 
+                            cedula.equals("V87654321") ? empleado : 
+                            new Estudiante(cedula, "pass", "Test", "Test");
+
+            try {
+                // Act
+                double similitud = servicioBiometrico.calcularSimilitud(usuario, fotoCedula);
+
+                // Assert
+                assertTrue(similitud >= 60.0,
+                    "Debe encontrar y comparar la foto para cualquier cédula válida");
+            } finally {
+                fotoCedula.delete();
+            }
+        }
+    }
+
+    @Nested
     @DisplayName("Pruebas de Cobro Automático")
     class CobroAutomaticoTests {
 
@@ -265,82 +341,6 @@ public class ConsumidorTest {
 
             assertEquals(saldoInicial, estudiante.obtSaldo(), 0.001,
                 "El saldo no debe modificarse con montos inválidos");
-        }
-    }
-
-    @Nested
-    @DisplayName("Pruebas de Reconocimiento Facial")
-    class ReconocimientoFacialTests {
-
-        @Test
-        @DisplayName("RF-01: Reconocimiento facial válido - estudiante")
-        void testReconocimientoValidoEstudiante() throws IOException {
-            // Act
-            double similitud = servicioBiometrico.calcularSimilitud(estudiante, fotoValida);
-
-            // Assert
-            assertTrue(similitud >= 60.0,
-                "La similitud debe ser mayor o igual al 60% para usuario válido");
-            assertTrue(similitud <= 100.0,
-                "La similitud no puede exceder el 100%");
-        }
-
-        @Test
-        @DisplayName("RF-02: Reconocimiento facial inválido - usuario no encontrado")
-        void testReconocimientoUsuarioNoEncontrado() throws IOException {
-            // Act & Assert
-            assertThrows(IOException.class, () -> {
-                servicioBiometrico.calcularSimilitud(estudiante, fotoNoExistente);
-            }, "Debe lanzar IOException si la foto de referencia no existe");
-        }
-
-        @Test
-        @DisplayName("RF-03: Reconocimiento facial con foto nula")
-        void testReconocimientoFotoNula() throws IOException {
-            // Act & Assert
-            assertThrows(IOException.class, () -> {
-                servicioBiometrico.calcularSimilitud(estudiante, null);
-            }, "Debe lanzar IOException si la foto capturada es nula");
-        }
-
-        @Test
-        @DisplayName("RF-04: Reconocimiento facial con archivo no válido")
-        void testReconocimientoArchivoNoValido() throws IOException {
-            // Arrange - crear archivo de texto no válido
-            File archivoInvalido = Files.createFile(
-                Paths.get("src/test/resources/invalido.txt")).toFile();
-
-            // Act & Assert
-            assertThrows(IOException.class, () -> {
-                servicioBiometrico.calcularSimilitud(estudiante, archivoInvalido);
-            }, "Debe lanzar IOException para archivos no válidos");
-
-            // Cleanup
-            archivoInvalido.delete();
-        }
-
-        @ParameterizedTest
-        @ValueSource(strings = {"V12345678", "V87654321", "V11223344"})
-        @DisplayName("RF-05: Búsqueda de fotos de referencia por cédula")
-        void testBusquedaFotoPorCedula(String cedula) throws IOException {
-            // Arrange - crear archivo para la cédula específica
-            Path imagesDir = Paths.get("src/test/resources/images/secretaria");
-            File fotoCedula = Files.createFile(imagesDir.resolve(cedula + ".jpg")).toFile();
-            
-            Usuario usuario = cedula.equals("V12345678") ? estudiante : 
-                            cedula.equals("V87654321") ? empleado : 
-                            new Estudiante(cedula, "pass", "Test", "Test");
-
-            try {
-                // Act
-                double similitud = servicioBiometrico.calcularSimilitud(usuario, fotoCedula);
-
-                // Assert
-                assertTrue(similitud >= 60.0,
-                    "Debe encontrar y comparar la foto para cualquier cédula válida");
-            } finally {
-                fotoCedula.delete();
-            }
         }
     }
 
