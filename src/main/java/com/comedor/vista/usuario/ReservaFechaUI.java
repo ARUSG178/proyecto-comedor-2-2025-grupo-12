@@ -1,5 +1,6 @@
 package com.comedor.vista.usuario;
 
+import com.comedor.vista.auth.ReconocimientoFacialUI;
 import com.comedor.modelo.entidades.Usuario;
 
 import javax.swing.*;
@@ -48,7 +49,7 @@ public class ReservaFechaUI extends JFrame {
         headerPanel.setPreferredSize(new Dimension(getWidth(), 60));
         
         JLabel lblTitulo = new JLabel("Fecha de Reserva", SwingConstants.CENTER);
-        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 24));
         lblTitulo.setForeground(Color.WHITE);
         headerPanel.add(lblTitulo, BorderLayout.CENTER);
 

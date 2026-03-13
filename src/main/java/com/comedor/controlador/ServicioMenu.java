@@ -1,32 +1,99 @@
 package com.comedor.controlador;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 
 import com.comedor.modelo.entidades.Menu;
 import com.comedor.modelo.entidades.Platillo;
 import com.comedor.modelo.entidades.Usuario;
 import com.comedor.modelo.entidades.Estudiante;
+import com.comedor.modelo.entidades.EstudianteBecario;
+import com.comedor.modelo.entidades.EstudianteExonerado;
 import com.comedor.modelo.entidades.Empleado;
+import com.comedor.modelo.entidades.Profesor;
 import com.comedor.modelo.entidades.Administrador;
+import com.comedor.util.Logger;
 
 public class ServicioMenu {
     private final Menu menuDesayuno = new Menu("Desayuno");
     private final Menu menuAlmuerzo = new Menu("Almuerzo");
     private final ServicioCosto servicioCosto = new ServicioCosto();
 
-    // Factores de cobro según tipo de usuario (1.0 = 100%, 0.2 = 20%)
-    private static final double FACTOR_PAGO_ESTUDIANTE = 0.20; // Estudiante paga 20%
-    private static final double FACTOR_PAGO_EMPLEADO = 0.50;   // Empleado paga 50%
+    public ServicioMenu() {
+        cargarMenuDesdeArchivo();
+    }
+
+    
+    //Convierte un porcentaje en formato string a factor decimal (ej: "20" -> 0.20)
+     
+    private double parseFactor(String pct, double fallback) {
+        if (pct == null || pct.trim().isEmpty()) {
+            // Se divide entre 100 para convertir el porcentaje por defecto (ej. 20.0) a factor (0.20)
+            return fallback / 100.0;
+        }
+        try {
+            return Double.parseDouble(pct.trim()) / 100.0;
+        } catch (Exception e) {
+            return fallback / 100.0;
+        }
+    }
+
+    public double factorParaUsuario(Usuario usuario) {
+        Properties props = new Properties();
+        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
+            props.load(in);
+        } catch (Exception e) {
+            // Sin config
+        }
+
+        if (usuario instanceof EstudianteExonerado) {
+            return 0.0;
+        }
+        if (usuario instanceof EstudianteBecario) {
+            EstudianteBecario becario = (EstudianteBecario) usuario;
+            // Usar el porcentaje real del becario: si tiene 95% descuento, paga 5%
+            return (100.0 - becario.obtPorcentajeDescuento()) / 100.0;
+        }
+        if (usuario instanceof Estudiante) {
+            // Los estudiantes tienen un subsidio del 80%, pagan solo el 20%
+            return parseFactor(props.getProperty("tarifa_pct_estudiante"), 20.0);
+        }
+        if (usuario instanceof Profesor) {
+            // Profesores pagan tarifa completa (100%)
+            return parseFactor(props.getProperty("tarifa_pct_profesor"), 100.0);
+        }
+        if (usuario instanceof Empleado) {
+            // Los empleados tienen un subsidio del 50%, pagan la mitad
+            return parseFactor(props.getProperty("tarifa_pct_empleado"), 50.0);
+        }
+        if (usuario instanceof Administrador) {
+            // Administradores pagan la misma tarifa que los empleados
+            return parseFactor(props.getProperty("tarifa_pct_empleado"), 50.0);
+        }
+        return 1.0; // Tipo desconocido paga 100%
+    }
 
     // Permite a un administrador actualizar la configuración del menú semanal
     public void configurarMenu(Usuario actor, Menu nuevoMenu) {
         if (!(actor instanceof Administrador)) {
-            System.out.println("Acceso denegado: solo administradores pueden modificar el menú.");
+            Logger.warning("Acceso denegado: solo administradores pueden modificar el menú.");
             return;
         }
 
         // Seleccionamos qué menú actualizar según el tipo del nuevo menú
-        Menu menu = "Desayuno".equalsIgnoreCase(nuevoMenu.obtTipo()) ? menuDesayuno : menuAlmuerzo;
+        // Se valida explícitamente Desayuno y Almuerzo. Cena no está disponible.
+        Menu menu;
+        if ("Desayuno".equalsIgnoreCase(nuevoMenu.obtTipo())) {
+            menu = menuDesayuno;
+        } else if ("Almuerzo".equalsIgnoreCase(nuevoMenu.obtTipo())) {
+            menu = menuAlmuerzo;
+        } else {
+            Logger.warning("Error: El servicio '" + nuevoMenu.obtTipo() + "' no está disponible (Solo Desayuno y Almuerzo).");
+            return;
+        }
 
         menu.setNombre(nuevoMenu.obtNombre());
         menu.setMenuID(nuevoMenu.obtMenuID());
@@ -42,119 +109,264 @@ public class ServicioMenu {
             }
         }
 
-        System.out.println("Menú actualizado por administrador (Cédula): " + actor.obtCedula());
+        Logger.info("Menú actualizado por administrador (Cédula): " + actor.obtCedula());
+        guardarMenuEnArchivo();
     }
 
     // Agrega un nuevo platillo al menú actual si el usuario es administrador
     public void agregarPlatillo(Usuario actor, Platillo p, String tipoMenu) {
         if (!(actor instanceof Administrador)) {
-            System.out.println("Acceso denegado: solo administradores pueden agregar platillos.");
+            Logger.warning("Acceso denegado: solo administradores pueden agregar platillos.");
             return;
         }
         if (p == null) {
-            System.out.println("Platillo nulo.");
+            Logger.warning("Platillo nulo.");
             return;
         }
         
-        Menu menu = "Desayuno".equalsIgnoreCase(tipoMenu) ? menuDesayuno : menuAlmuerzo;
+        Menu menu;
+        if ("Desayuno".equalsIgnoreCase(tipoMenu)) {
+            menu = menuDesayuno;
+        } else if ("Almuerzo".equalsIgnoreCase(tipoMenu)) {
+            menu = menuAlmuerzo;
+        } else {
+            Logger.warning("Error: Servicio no disponible para agregar platillo: " + tipoMenu);
+            return;
+        }
+
         // REQUERIMIENTO: Solo un platillo diario. Se limpia la lista antes de agregar.
         menu.obtPlatillos().clear();
         menu.agregarPlatillo(p);
-        System.out.println("Platillo agregado a " + menu.obtTipo() + ": " + p.obtNombre());
+        Logger.info("Platillo agregado a " + menu.obtTipo() + ": " + p.obtNombre());
+        guardarMenuEnArchivo();
     }
 
     // Elimina un platillo del menú por su nombre si el usuario es administrador
     public void quitarPlatillo(Usuario actor, String nombrePlatillo, String tipoMenu) {
         if (!(actor instanceof Administrador)) {
-            System.out.println("Acceso denegado: solo administradores pueden quitar platillos.");
+            Logger.warning("Acceso denegado: solo administradores pueden quitar platillos.");
             return;
         }
         if (nombrePlatillo == null || nombrePlatillo.isEmpty()) {
-            System.out.println("Nombre de platillo inválido.");
+            Logger.warning("Nombre de platillo inválido.");
             return;
         }
-        Menu menu = "Desayuno".equalsIgnoreCase(tipoMenu) ? menuDesayuno : menuAlmuerzo;
+        Menu menu;
+        if ("Desayuno".equalsIgnoreCase(tipoMenu)) {
+            menu = menuDesayuno;
+        } else if ("Almuerzo".equalsIgnoreCase(tipoMenu)) {
+            menu = menuAlmuerzo;
+        } else {
+            Logger.warning("Error: Servicio no disponible para quitar platillo: " + tipoMenu);
+            return;
+        }
+
         boolean removed = menu.obtPlatillos().removeIf(p -> nombrePlatillo.equalsIgnoreCase(p.obtNombre()));
         if (removed) {
-            System.out.println("Platillo eliminado: " + nombrePlatillo);
+            Logger.info("Platillo eliminado: " + nombrePlatillo);
         } else {
-            System.out.println("No se encontró el platillo: " + nombrePlatillo);
+            Logger.warning("No se encontró el platillo: " + nombrePlatillo);
         }
+        guardarMenuEnArchivo();
     }
 
     // Actualiza el precio de un platillo y registra el cambio en costos si el usuario es administrador
     public void actualizarPrecioPlatillo(Usuario actor, String nombrePlatillo, double nuevoPrecio, String tipoMenu) {
         if (!(actor instanceof Administrador)) {
-            System.out.println("Acceso denegado: solo administradores pueden actualizar precios.");
+            Logger.warning("Acceso denegado: solo administradores pueden actualizar precios.");
             return;
         }
         if (nombrePlatillo == null || nombrePlatillo.isEmpty()) {
-            System.out.println("Nombre de platillo inválido.");
+            Logger.warning("Nombre de platillo inválido.");
             return;
         }
-        Menu menu = "Desayuno".equalsIgnoreCase(tipoMenu) ? menuDesayuno : menuAlmuerzo;
+        Menu menu;
+        if ("Desayuno".equalsIgnoreCase(tipoMenu)) {
+            menu = menuDesayuno;
+        } else if ("Almuerzo".equalsIgnoreCase(tipoMenu)) {
+            menu = menuAlmuerzo;
+        } else {
+            Logger.warning("Error: Servicio no disponible para actualizar precio: " + tipoMenu);
+            return;
+        }
+
         for (Platillo p : menu.obtPlatillos()) {
             if (nombrePlatillo.equalsIgnoreCase(p.obtNombre())) {
                 double anterior = p.obtPrecio();
                 servicioCosto.registrarCambioPrecio(p.obtNombre(), anterior, nuevoPrecio, actor.obtCedula());
                 p.setPrecio(nuevoPrecio);
-                System.out.println("Precio actualizado para " + p.obtNombre() + ": " + nuevoPrecio);
+                Logger.info("Precio actualizado para " + p.obtNombre() + ": " + nuevoPrecio);
+                guardarMenuEnArchivo();
                 return;
             }
         }
-        System.out.println("No se encontró el platillo: " + nombrePlatillo);
+        Logger.warning("No se encontró el platillo: " + nombrePlatillo);
     }
 
     // Permite al administrador registrar los costos fijos, variables y producción del mes para el cálculo del CCB
+    // Sobrecarga para mantener compatibilidad con versiones anteriores
     public void registrarCostosMensuales(Usuario actor, double fijos, double variables, int produccion) {
+        registrarCostosMensuales(actor, fijos, variables, produccion, 0, 20, 100, 50);
+    }
+
+    // Permite al administrador registrar costos, merma y tarifas personalizadas
+    public void registrarCostosMensuales(Usuario actor, double fijos, double variables, int produccion, 
+                                         double mermaPct, double pctEstudiante, double pctProfesor, double pctEmpleado) {
         if (!(actor instanceof Administrador)) {
-            System.out.println("Acceso denegado: solo administradores pueden registrar costos.");
+            Logger.warning("Acceso denegado: solo administradores pueden registrar costos.");
             return;
         }
-        // Se elimina la llamada redundante a registrarValoresCCB porque calcularRegistrarCCBCompleto ya lo hace internamente
-        // Se asume 0 merma para este registro manual simplificado
-        servicioCosto.calcularRegistrarCCBCompleto(fijos, variables, produccion, 0);
-        System.out.println("Costos mensuales actualizados por: " + actor.obtCedula());
+
+        // 1. Guardar porcentajes de tarifas en la configuración
+        Properties props = new Properties();
+        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
+            props.load(in);
+        } catch (IOException e) { /* crear nuevo */ }
+
+        props.setProperty("tarifa_pct_estudiante", String.valueOf(pctEstudiante));
+        props.setProperty("tarifa_pct_profesor", String.valueOf(pctProfesor));
+        props.setProperty("tarifa_pct_empleado", String.valueOf(pctEmpleado));
+
+        try (FileOutputStream out = new FileOutputStream("menu_config.properties")) {
+            props.store(out, null);
+        } catch (IOException e) { Logger.warning("Error guardando tarifas: " + e.getMessage()); }
+
+        // 2. Calcular CCB con la merma especificada (convertir % a factor 0-1)
+        servicioCosto.calcularRegistrarCCBCompleto(fijos, variables, produccion, mermaPct / 100.0);
+        
+        Logger.info("Costos y tarifas actualizados por: " + actor.obtCedula());
+        guardarMenuEnArchivo();
     }
 
     // Calcula la tarifa automática basada en el rol del usuario y el precio base del platillo.
     public double calcularTarifaPorUsuario(Usuario usuario, Platillo p) {
-        // 1. Obtenemos el CCB real del periodo. Si es 0 (no hay datos), usamos el precio referencial del platillo.
-        double ccb = servicioCosto.obtenerCCBActual();
-        // Corrección: Eliminada declaración duplicada y uso de método correcto obtPrecio()
+        // 1. Intentamos leer el CCB real desde el archivo de configuración
+        double ccb = 0.0;
+        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
+            Properties props = new Properties();
+            props.load(in);
+            ccb = Double.parseDouble(props.getProperty("ccb_actual", "0.0"));
+        } catch (Exception e) {
+            ccb = 0.0;
+        }
+
+        // 2. Si hay CCB (> 0), se usa como base. Si no, se usa el precio manual del platillo.
         double precioBase = (ccb > 0) ? ccb : p.obtPrecio();
         
-        if (usuario instanceof Estudiante) {
-            return precioBase * FACTOR_PAGO_ESTUDIANTE;
-        } else if (usuario instanceof Empleado) {
-            return precioBase * FACTOR_PAGO_EMPLEADO;
-        } else {
-            return precioBase; // Administradores o externos pagan completo
-        }
+        return precioBase * factorParaUsuario(usuario);
     }
 
     // Muestra en consola la información del menú actual y sus platillos
     public void visualizarMenu(Usuario actor) {
         visualizarMenuIndividual(menuDesayuno);
-        System.out.println("-------------------------");
+        Logger.info("-------------------------");
         visualizarMenuIndividual(menuAlmuerzo);
     }
 
     private void visualizarMenuIndividual(Menu m) {
         if (m.obtPlatillos() == null || m.obtPlatillos().isEmpty()) {
-            System.out.println("Menú " + m.obtTipo() + ": No configurado.");
+            Logger.info("Menú " + m.obtTipo() + ": No configurado.");
             return;
         }
-        System.out.println("Menú " + m.obtTipo() + ": " + (m.obtNombre() != null ? m.obtNombre() : "(sin nombre)"));
-        System.out.println("Periodo: " + m.obtFechaInicio() + " - " + m.obtFechaFin());
-        System.out.println("Platillos:");
+        Logger.info("Menú " + m.obtTipo() + ": " + (m.obtNombre() != null ? m.obtNombre() : "(sin nombre)"));
+        Logger.info("Periodo: " + m.obtFechaInicio() + " - " + m.obtFechaFin());
+        Logger.info("Platillos:");
         for (Platillo p : m.obtPlatillos()) {
-            System.out.println(" - " + p);
+            Logger.info(" - " + p);
         }
     }
 
     // Retorna la instancia del menú solicitado
     public Menu obtenerMenu(String tipo) { 
-        return "Desayuno".equalsIgnoreCase(tipo) ? menuDesayuno : menuAlmuerzo; 
+        if ("Desayuno".equalsIgnoreCase(tipo)) {
+            return menuDesayuno;
+        } else if ("Almuerzo".equalsIgnoreCase(tipo)) {
+            return menuAlmuerzo;
+        }
+        return null; // Cena u otros no disponibles
+    }
+
+    // --- PERSISTENCIA DE DATOS ---
+
+    private void guardarMenuEnArchivo() {
+        Properties props = new Properties();
+        
+        // 1. Cargar configuración existente para NO borrar tarifas ni el CCB del Admin
+        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
+            props.load(in);
+        } catch (IOException e) {
+            // Si no existe, se inicia vacío
+        }
+        
+        // Guardar Desayuno
+        if (!menuDesayuno.obtPlatillos().isEmpty()) {
+            Platillo p = menuDesayuno.obtPlatillos().get(0);
+            props.setProperty("desayuno_nombre", p.obtNombre());
+            props.setProperty("desayuno_precio", String.valueOf(p.obtPrecio()));
+            props.setProperty("desayuno_imagen", p.obtImagen() != null ? p.obtImagen() : "");
+            props.setProperty("desayuno_descripcion", p.obtDescripcion() != null ? p.obtDescripcion() : "");
+            props.setProperty("desayuno_nutricion", p.obtInfoNutricional() != null ? p.obtInfoNutricional() : "");
+        }
+
+        // Guardar Almuerzo
+        if (!menuAlmuerzo.obtPlatillos().isEmpty()) {
+            Platillo p = menuAlmuerzo.obtPlatillos().get(0);
+            props.setProperty("almuerzo_nombre", p.obtNombre());
+            props.setProperty("almuerzo_precio", String.valueOf(p.obtPrecio()));
+            props.setProperty("almuerzo_imagen", p.obtImagen() != null ? p.obtImagen() : "");
+            props.setProperty("almuerzo_descripcion", p.obtDescripcion() != null ? p.obtDescripcion() : "");
+            props.setProperty("almuerzo_nutricion", p.obtInfoNutricional() != null ? p.obtInfoNutricional() : "");
+        }
+
+        // Guardar CCB
+        // CORRECCIÓN: Solo sobrescribimos ccb_actual si este servicio calculó un nuevo valor (> 0).
+        // Si es 0.0 (porque solo estamos editando el menú), mantenemos el valor que ya estaba en el archivo.
+        if (servicioCosto.obtenerCCBActual() > 0) {
+            props.setProperty("ccb_actual", String.valueOf(servicioCosto.obtenerCCBActual()));
+        }
+
+        try (FileOutputStream out = new FileOutputStream("menu_config.properties")) {
+            props.store(out, "Configuracion del Menu - SAGC");
+        } catch (IOException e) {
+            Logger.warning("Error guardando configuración");
+        }
+    }
+
+    private void cargarMenuDesdeArchivo() {
+        Properties props = new Properties();
+        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
+            props.load(in);
+            
+            cargarPlatilloEnMenu(menuDesayuno, props, "desayuno");
+            cargarPlatilloEnMenu(menuAlmuerzo, props, "almuerzo");
+            
+        } catch (IOException e) {
+            // Archivo no existe, se inicia vacío
+        }
+    }
+
+    private void cargarPlatilloEnMenu(Menu menu, Properties props, String prefijo) {
+        String nombre = props.getProperty(prefijo + "_nombre");
+        if (nombre != null && !nombre.isEmpty()) {
+            String precioStr = props.getProperty(prefijo + "_precio", "0.0");
+            // Limpieza: Reemplazar comas por puntos y eliminar símbolos (como $)
+            precioStr = precioStr.replace(",", ".");
+            precioStr = precioStr.replaceAll("[^\\d.]", "");
+            
+            double precio = 0.0;
+            try {
+                if (!precioStr.isEmpty()) precio = Double.parseDouble(precioStr);
+            } catch (NumberFormatException e) {
+                Logger.warning("Error formato precio en config (" + prefijo + "): " + precioStr);
+            }
+            
+            String imagen = props.getProperty(prefijo + "_imagen", "");
+            String desc = props.getProperty(prefijo + "_descripcion", "");
+            String nutri = props.getProperty(prefijo + "_nutricion", "");
+            
+            Platillo p = new Platillo(nombre, desc, precio, imagen, nutri);
+            menu.obtPlatillos().clear();
+            menu.agregarPlatillo(p);
+        }
     }
 }

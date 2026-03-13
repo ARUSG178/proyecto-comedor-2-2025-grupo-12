@@ -3,26 +3,42 @@ package com.comedor.modelo.validaciones;
 import com.comedor.modelo.entidades.Empleado;
 import com.comedor.modelo.entidades.Estudiante;
 import com.comedor.modelo.entidades.Usuario;
+import com.comedor.modelo.entidades.Profesor;
 import com.comedor.modelo.excepciones.*;
 import com.comedor.util.ValidacionUtil;
 import com.comedor.modelo.entidades.Administrador;
-import com.comedor.modelo.persistencia.RepoAdminCdg;
-import com.comedor.modelo.persistencia.RepoSecretaria;
+import com.comedor.modelo.persistencia.IRepositorioAdminCdg;
+import com.comedor.modelo.persistencia.IRepositorioSecretaria;
 
 import java.io.IOException;
 import java.util.List;
 
+// Validador de registro que aplica el Principio de Inversión de Dependencias (DIP). Recibe los repositorios por constructor en lugar de instanciarlos directamente.
 public class VRegistro {
     private final Usuario uIngresado;
     private final List<Usuario> usBaseDatos;
+    private final IRepositorioSecretaria repoSecretaria;
+    private final IRepositorioAdminCdg repoAdminCdg;
 
-    // Inicializa el validador de registro con el usuario a registrar y la lista existente
-    public VRegistro(Usuario uIngresado, List<Usuario> usBaseDatos) {
+    // Constructor que permite inyección de dependencias.
+    public VRegistro(Usuario uIngresado, List<Usuario> usBaseDatos, 
+                     IRepositorioSecretaria repoSecretaria, 
+                     IRepositorioAdminCdg repoAdminCdg) {
         if (uIngresado == null || usBaseDatos == null) {
             throw new IllegalArgumentException("El usuario y la lista no pueden ser nulos");
         }
         this.uIngresado = uIngresado;
         this.usBaseDatos = usBaseDatos;
+        this.repoSecretaria = repoSecretaria;
+        this.repoAdminCdg = repoAdminCdg;
+    }
+    
+    // Constructor de compatibilidad para transición gradual. @deprecated Usar constructor con inyección de dependencias
+    @Deprecated
+    public VRegistro(Usuario uIngresado, List<Usuario> usBaseDatos) {
+        this(uIngresado, usBaseDatos, 
+             new com.comedor.modelo.persistencia.RepoSecretaria(), 
+             new com.comedor.modelo.persistencia.RepoAdminCdg());
     }
 
     // Verifica que no exista otro usuario con la misma cédula
@@ -52,13 +68,21 @@ public class VRegistro {
         return true;
     }
 
+    // Valida que los campos específicos de profesor no estén vacíos
+    boolean validarProfesor() {
+        if (uIngresado instanceof Profesor) {
+            Profesor prof = (Profesor) uIngresado;
+            return prof.obtDepartamento() != null && !prof.obtDepartamento().isEmpty();
+        }
+        return true;
+    }
+
     // Verifica que la cédula exista en la base de datos de la UCV y coincida el tipo de usuario
     void validarInscripcionUCV() throws InvalidCredentialsException, IOException {
         // Los administradores tienen su propio mecanismo de validación (código)
         if (uIngresado instanceof Administrador) return;
 
-        RepoSecretaria repoSec = new RepoSecretaria();
-        Usuario uSecretaria = repoSec.buscarRegistroUCV(uIngresado.obtCedula());
+        Usuario uSecretaria = repoSecretaria.buscarRegistroUCV(uIngresado.obtCedula());
 
         if (uSecretaria == null) {
             throw new InvalidCredentialsException(
@@ -74,7 +98,23 @@ public class VRegistro {
             );
         }
 
-        // Aquí podrías agregar validaciones extra, como que la Carrera coincida con la de secretaría, etc.
+        // AUTOFILL: Copiar datos de Secretaría al usuario ingresado para completar el registro
+        // Esto permite que la UI envíe solo Cédula y Contraseña.
+        // También copiamos el nombre, que ahora se lee desde secretaria.txt
+        uIngresado.setNombre(uSecretaria.obtNombre());
+
+        if (uIngresado instanceof Estudiante && uSecretaria instanceof Estudiante) {
+            ((Estudiante) uIngresado).setCarrera(((Estudiante) uSecretaria).obtCarrera());
+            ((Estudiante) uIngresado).setFacultad(((Estudiante) uSecretaria).obtFacultad());
+        } else if (uIngresado instanceof Empleado && uSecretaria instanceof Empleado) {
+            ((Empleado) uIngresado).setCargo(((Empleado) uSecretaria).obtCargo());
+            ((Empleado) uIngresado).setDepartamento(((Empleado) uSecretaria).obtDepartamento());
+            ((Empleado) uIngresado).setCodigoEmpleado(((Empleado) uSecretaria).obtCodigoEmpleado());
+        } else if (uIngresado instanceof Profesor && uSecretaria instanceof Profesor) {
+            ((Profesor) uIngresado).setDepartamento(((Profesor) uSecretaria).obtDepartamento());
+            ((Profesor) uIngresado).setCodigo(((Profesor) uSecretaria).obtCodigo());
+        }
+
     }
 
     // Ejecuta todas las validaciones necesarias para registrar un usuario
@@ -97,8 +137,7 @@ public class VRegistro {
             if (codigo == null || !codigo.trim().matches("[A-Za-z0-9]{8}")) {
                 throw new InvalidCredentialsException("Error en el campo Código Admin: El código debe ser alfanumérico de 8 caracteres.");
             }
-            RepoAdminCdg repoCdg = new RepoAdminCdg();
-            if (!repoCdg.existeCodigo(codigo.trim())) {
+            if (!repoAdminCdg.codigoValido(codigo.trim())) {
                 throw new InvalidCredentialsException("Error en el campo Código Admin: El código de administrador no fue encontrado o no es válido.");
             }
         }
@@ -108,7 +147,8 @@ public class VRegistro {
         if (!validarEmpleado()) {
             throw new InvalidCredentialsException("Error en los datos de Empleado: El Cargo y/o Departamento no pueden estar vacíos.");
         }
+        if (!validarProfesor()) {
+            throw new InvalidCredentialsException("Error en los datos de Profesor: El Departamento no puede estar vacío.");
+        }
     }
-
-
 }

@@ -7,95 +7,129 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 public class ServicioBiometrico {
 
     // Compara la foto capturada con la almacenada y retorna el porcentaje de similitud
     public double calcularSimilitud(Usuario usuario, File fotoCapturada) throws IOException {
-        if (fotoCapturada == null) return 0.0;
-
-        BufferedImage imgSubida = ImageIO.read(fotoCapturada);
+        if (fotoCapturada == null) throw new IOException("No se ha proporcionado una foto para comparar.");
         
-        System.out.println("Procesando biometría para usuario: " + usuario.obtCedula());
+        BufferedImage imgReferencia = cargarFotoDeReferencia(usuario.obtCedula());
+        
+        // 2. Leer foto actual (Captura)
+        BufferedImage imgCapturada = ImageIO.read(fotoCapturada);
+        if (imgCapturada == null) throw new IOException("El archivo subido no es una imagen válida.");
 
-        BufferedImage imgBaseDatos = cargarFotoPorCedula(usuario.obtCedula());
-
-        if (imgBaseDatos == null) {
-            System.out.println("⚠️ No se encontró foto específica para " + usuario.obtCedula() + " en /imagenes/usuarios/. Usando imagen de referencia genérica.");
-            imgBaseDatos = cargarFotoReferenciaSimulada();
-        } else {
-            System.out.println("✅ Foto de referencia encontrada en base de datos para: " + usuario.obtCedula());
-        }
-
-        if (imgBaseDatos == null) return 100.0;
-
-        double similitud = compararImagenes(imgSubida, imgBaseDatos);
-        System.out.println("📊 Similitud biométrica calculada: " + String.format("%.2f", similitud) + "%");
+        double similitud = compararImagenes(imgCapturada, imgReferencia);
         return similitud;
     }
 
     // Simula la consulta a la BD de Secretaría buscando un archivo con el nombre de la cédula
-    private BufferedImage cargarFotoPorCedula(String cedula) {
-        try {
-            String[] extensiones = {".jpg", ".png", ".jpeg"};
-            
-            for (String ext : extensiones) {
-                String ruta = "/imagenes/usuarios/" + cedula + ext;
-                URL url = getClass().getResource(ruta);
-                if (url != null) {
-                    return ImageIO.read(url);
-                }
-            }
-        } catch (IOException e) {
-            System.err.println("Error leyendo foto de BD para: " + cedula);
+    private BufferedImage cargarFotoDeReferencia(String cedula) throws IOException {
+        File root = new File("src/main/resources/images/secretaria");
+        
+        if (!root.exists()) {
+            root.mkdirs();
         }
-        return null;
-    }
 
-    // Carga una imagen de referencia por defecto si no se encuentra la del usuario
-    private BufferedImage cargarFotoReferenciaSimulada() {
-        try {
-            URL url = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_reg_bg.jpg");
-            if (url != null) return ImageIO.read(url);
-        } catch (IOException e) {
-            e.printStackTrace();
+        String[] extensiones = {".jpg", ".jpeg", ".png"};
+        File archivoEncontrado = null;
+
+        for (String ext : extensiones) {
+            File f = new File(root, cedula + ext);
+            if (f.exists()) {
+                archivoEncontrado = f;
+                break;
+            }
         }
-        return null;
+        
+        if (archivoEncontrado == null) {
+            String[] rutasLegacy = {
+                "src/main/resources/imagenes/usuarios/"
+            };
+            for (String ruta : rutasLegacy) {
+                for (String ext : extensiones) {
+                    File f = new File(ruta + cedula + ext);
+                    if (f.exists()) {
+                        archivoEncontrado = f;
+                        break;
+                    }
+                }
+                if (archivoEncontrado != null) break;
+            }
+        }
+
+        if (archivoEncontrado != null && archivoEncontrado.exists()) {
+            BufferedImage img = ImageIO.read(archivoEncontrado);
+            if (img == null) throw new IOException("El archivo encontrado está dañado o no es una imagen.");
+            return img;
+        } else {
+            throw new IOException("ERROR: No se encuentra la foto de referencia para la cédula " + cedula + 
+                ".\n\nSOLUCIÓN: Copie una foto llamada '" + cedula + ".jpg' en la carpeta:\n" + root.getAbsolutePath());
+        }
     }
 
     // Compara dos imágenes píxel a píxel y retorna el porcentaje de similitud
+    // Esto valida no solo los colores, sino dónde están ubicados (ej. cabello arriba, cara centro).
     private double compararImagenes(BufferedImage imgA, BufferedImage imgB) {
-        int width = 100;
-        int height = 100;
-        BufferedImage a = resize(imgA, width, height);
-        BufferedImage b = resize(imgB, width, height);
+        // Normalización de tamaño (150x150)
+        int size = 150;
+        BufferedImage fixedA = resize(imgA, size, size);
+        BufferedImage fixedB = resize(imgB, size, size);
 
-        long diff = 0;
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                int rgbA = a.getRGB(x, y);
-                int rgbB = b.getRGB(x, y);
-                
-                int rA = (rgbA >> 16) & 0xFF;
-                int gA = (rgbA >> 8) & 0xFF;
-                int bA = rgbA & 0xFF;
+        // Comparación por cuadrantes (2x2)
+        int rows = 2;
+        int cols = 2;
+        int chunkW = size / cols;
+        int chunkH = size / rows;
 
-                int rB = (rgbB >> 16) & 0xFF;
-                int gB = (rgbB >> 8) & 0xFF;
-                int bB = rgbB & 0xFF;
+        double similitudAcumulada = 0;
 
-                int diffR = Math.abs(rA - rB);
-                int diffG = Math.abs(gA - gB);
-                int diffB = Math.abs(bA - bB);
-
-                diff += (diffR < 30 ? 0 : diffR);
-                diff += (diffG < 30 ? 0 : diffG);
-                diff += (diffB < 30 ? 0 : diffB);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                BufferedImage subA = fixedA.getSubimage(j * chunkW, i * chunkH, chunkW, chunkH);
+                BufferedImage subB = fixedB.getSubimage(j * chunkW, i * chunkH, chunkW, chunkH);
+                similitudAcumulada += compararHistogramaGlobal(subA, subB);
             }
         }
-        long maxDiff = 3L * 255 * width * height;
-        return 100.0 - (100.0 * diff / maxDiff);
+
+        return similitudAcumulada / (rows * cols);
+    }
+
+    // Compara el histograma global de un fragmento de imagen
+    private double compararHistogramaGlobal(BufferedImage imgA, BufferedImage imgB) {
+        long[][] histA = calcularHistograma(imgA);
+        long[][] histB = calcularHistograma(imgB);
+
+        double simR = interseccionHistograma(histA[0], histB[0]);
+        double simG = interseccionHistograma(histA[1], histB[1]);
+        double simB = interseccionHistograma(histA[2], histB[2]);
+
+        return (simR + simG + simB) / 3.0 * 100.0;
+    }
+
+    private long[][] calcularHistograma(BufferedImage img) {
+        long[][] hist = new long[3][256];
+        for (int y = 0; y < img.getHeight(); y++) {
+            for (int x = 0; x < img.getWidth(); x++) {
+                int rgb = img.getRGB(x, y);
+                hist[0][(rgb >> 16) & 0xFF]++; // R
+                hist[1][(rgb >> 8) & 0xFF]++;  // G
+                hist[2][rgb & 0xFF]++;         // B
+            }
+        }
+        return hist;
+    }
+
+    private double interseccionHistograma(long[] histA, long[] histB) {
+        double interseccion = 0;
+        long totalPixeles = 0;
+
+        for (int i = 0; i < 256; i++) {
+            interseccion += Math.min(histA[i], histB[i]);
+            totalPixeles += histA[i]; // El total es el mismo para ambas imágenes redimensionadas
+        }
+        return interseccion / totalPixeles;
     }
 
     // Redimensiona una imagen a las dimensiones especificadas con alta calidad

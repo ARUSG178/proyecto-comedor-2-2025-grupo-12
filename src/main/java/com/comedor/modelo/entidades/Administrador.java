@@ -33,7 +33,7 @@ public class Administrador extends Usuario {
 
     @Override
     public double calcularTarifa(double precioBase) {
-        // Los administradores pagan la tarifa completa (o la lógica que aplique)
-        return precioBase;
+        // Se iguala la tarifa a la de empleado (50% del precio base)
+        return precioBase * 0.50;
     }
 }

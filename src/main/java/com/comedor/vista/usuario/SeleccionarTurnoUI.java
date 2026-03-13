@@ -1,19 +1,21 @@
 package com.comedor.vista.usuario;
 
 import com.comedor.modelo.entidades.Usuario;
+import com.comedor.vista.components.FondoSemitransparentePanel;
+import com.comedor.vista.components.TurnoToggleButton;
+import com.comedor.vista.components.SideBarNavigation;
+import com.comedor.controlador.listeners.SeleccionarTurnoListener;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
+import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 public class SeleccionarTurnoUI extends JFrame {
 
@@ -32,10 +34,10 @@ public class SeleccionarTurnoUI extends JFrame {
         this.tipoComida = tipoComida;
 
         try {
-            URL imageUrl = getClass().getResource("/com/comedor/resources/images/registro_e_inicio_sesion/com_reg_bg.jpg");
+            URL imageUrl = getClass().getResource("/images/ui/com_reg_bg.jpg");
             if (imageUrl != null) backgroundImage = ImageIO.read(imageUrl);
         } catch (IOException e) {
-            System.err.println("Imagen de fondo no encontrada.");
+            // Imagen de fondo opcional
         }
 
         configurarVentana();
@@ -52,7 +54,8 @@ public class SeleccionarTurnoUI extends JFrame {
     }
 
     private void initUI() {
-        JPanel mainPanel = new JPanel() {
+        // Panel principal con fondo - IGUAL que MenuUserUI
+        JPanel backgroundPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -62,177 +65,163 @@ public class SeleccionarTurnoUI extends JFrame {
                 }
                 g2d.setColor(COLOR_OVERLAY);
                 g2d.fillRect(0, 0, getWidth(), getHeight());
-                g2d.setColor(COLOR_AZUL_INST);
-                int barHeight = 80;
-                g2d.fillRect(0, 0, getWidth(), barHeight);
-                g2d.fillRect(0, getHeight() - barHeight, getWidth(), barHeight);
+
+                // Barras azules - IGUAL que MenuUserUI
+                int topBarHeight = 60;
+                int bottomBarHeight = 30;
+                g2d.setColor(new Color(0, 51, 102));
+                g2d.fillRect(0, 0, getWidth(), topBarHeight);
+                g2d.fillRect(0, getHeight() - bottomBarHeight, getWidth(), bottomBarHeight);
             }
         };
-        mainPanel.setLayout(new BorderLayout());
+        backgroundPanel.setLayout(new BorderLayout());
+        setContentPane(backgroundPanel);
 
-        // --- HEADER ---
+        // BARRA LATERAL - IGUAL estructura que HistorialReservasUI
+        SideBarNavigation sideBar = new SideBarNavigation(usuario, () -> {
+            new MenuUserUI(usuario).setVisible(true);
+            dispose();
+        });
+        backgroundPanel.add(sideBar, BorderLayout.WEST);
+
+        // HEADER - IGUAL que MenuUserUI
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setOpaque(false);
-        headerPanel.setPreferredSize(new Dimension(getWidth(), 80));
+        headerPanel.setPreferredSize(new Dimension(getWidth(), 60));
 
-        JLabel lblTitulo = new JLabel("Seleccionar Turno de " + tipoComida, SwingConstants.CENTER);
-        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        lblTitulo.setForeground(Color.WHITE);
-        headerPanel.add(lblTitulo, BorderLayout.CENTER);
+        JLabel menuTitle = new JLabel("Seleccionar Turno de " + tipoComida, SwingConstants.CENTER);
+        menuTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        menuTitle.setForeground(Color.WHITE);
+        headerPanel.add(menuTitle, BorderLayout.CENTER);
 
-        JLabel btnVolver = new JLabel("  < Volver al Menú");
-        btnVolver.setForeground(Color.WHITE);
-        btnVolver.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        btnVolver.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnVolver.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                new MenuUserUI(usuario).setVisible(true);
-                dispose();
-            }
-        });
-        headerPanel.add(btnVolver, BorderLayout.WEST);
+        backgroundPanel.add(headerPanel, BorderLayout.NORTH);
 
-        // --- CONTENIDO ---
+        // --- CONTENIDO DERECHO (Para evitar superposición) ---
+        JPanel rightPanel = new JPanel(new BorderLayout());
+        rightPanel.setOpaque(false);
+
+        // --- CONTENIDO CENTRAL CON TURNOS ---
         JPanel centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setOpaque(false);
 
-        // Panel que contendrá los turnos, con un fondo semitransparente y redondeado
-        JPanel turnosContainer = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(new Color(0, 0, 0, 80)); // Fondo negro semitransparente
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25);
-                g2.dispose();
-            }
-        };
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        centerPanel.add(Box.createGlue(), gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 1;
+        gbc.weighty = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setOpaque(false);
+        contentPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Panel de turnos
+        JPanel turnosContainer = new FondoSemitransparentePanel();
         turnosContainer.setLayout(new BoxLayout(turnosContainer, BoxLayout.Y_AXIS));
         turnosContainer.setOpaque(false);
-        turnosContainer.setBorder(new EmptyBorder(30, 40, 30, 40));
+        turnosContainer.setBorder(new EmptyBorder(40, 50, 40, 50));
+        turnosContainer.setAlignmentX(Component.CENTER_ALIGNMENT);
+        turnosContainer.setMaximumSize(new Dimension(400, 450));
 
         JLabel turnosTitle = new JLabel("Turnos Disponibles");
         turnosTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
         turnosTitle.setForeground(Color.WHITE);
         turnosTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        turnosTitle.setBorder(new EmptyBorder(0, 0, 20, 0));
+        turnosTitle.setBorder(new EmptyBorder(0, 0, 25, 0));
         turnosContainer.add(turnosTitle);
 
+        // Turnos - Cargar desde configuración
         turnosGroup = new ButtonGroup();
-        String[] turnos;
-        if ("Desayuno".equalsIgnoreCase(tipoComida)) {
-            turnos = new String[]{"07:00 - 08:00", "08:00 - 09:00", "09:00 - 10:00"};
-        } else { // Almuerzo
-            turnos = new String[]{"12:00 - 13:00", "13:00 - 14:00", "14:00 - 15:00"};
-        }
+        String[] turnos = cargarTurnosDesdeConfiguracion();
 
         for (String turno : turnos) {
             JToggleButton turnoButton = createTurnoButton(turno);
+            turnoButton.setAlignmentX(Component.CENTER_ALIGNMENT);
             turnosGroup.add(turnoButton);
             turnosContainer.add(turnoButton);
-            turnosContainer.add(Box.createRigidArea(new Dimension(0, 15)));
+            turnosContainer.add(Box.createRigidArea(new Dimension(0, 12)));
         }
-        
-        centerPanel.add(turnosContainer);
 
-        // --- FOOTER ---
-        JPanel footerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
-        footerPanel.setOpaque(false);
+        contentPanel.add(turnosContainer);
+        contentPanel.add(Box.createRigidArea(new Dimension(0, 30)));
 
+        // Botón Continuar
         JButton btnContinuar = new JButton("Continuar a Verificación");
         btnContinuar.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        btnContinuar.setBackground(Color.WHITE);
-        btnContinuar.setForeground(COLOR_AZUL_INST);
+        btnContinuar.setBackground(COLOR_AZUL_INST);
+        btnContinuar.setForeground(Color.WHITE);
         btnContinuar.setFocusPainted(false);
         btnContinuar.setPreferredSize(new Dimension(250, 50));
+        btnContinuar.setMaximumSize(new Dimension(250, 50));
         btnContinuar.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
-        btnContinuar.addActionListener(e -> irAReconocimiento());
-        
-        footerPanel.add(btnContinuar);
+        btnContinuar.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnContinuar.addActionListener(new SeleccionarTurnoListener(usuario, costoPlatillo, tipoComida, turnosGroup, this));
+        contentPanel.add(btnContinuar);
 
-        mainPanel.add(headerPanel, BorderLayout.NORTH);
-        mainPanel.add(centerPanel, BorderLayout.CENTER);
-        mainPanel.add(footerPanel, BorderLayout.SOUTH);
+        centerPanel.add(contentPanel, gbc);
 
-        setContentPane(mainPanel);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        centerPanel.add(Box.createGlue(), gbc);
+
+        rightPanel.add(centerPanel, BorderLayout.CENTER);
+        backgroundPanel.add(rightPanel, BorderLayout.CENTER);
     }
 
-    private JToggleButton createTurnoButton(String text) {
-        JToggleButton button = new JToggleButton(text) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                
-                // Determinar colores basados en el estado
-                Color bgColor = new Color(255, 255, 255, 40); // Fondo por defecto (transparente)
-                Color borderColor = new Color(255, 255, 255, 100); // Borde por defecto
-                
-                if (isSelected()) {
-                    bgColor = new Color(255, 255, 255, 230); // Fondo seleccionado (blanco sólido)
-                    borderColor = Color.WHITE;
-                } else if (getModel().isRollover()) {
-                    bgColor = new Color(255, 255, 255, 70); // Fondo hover
-                    borderColor = new Color(255, 255, 255, 180);
-                }
-                
-                g2.setColor(bgColor);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
-                
-                g2.setColor(borderColor);
-                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 15, 15);
-                
-                super.paintComponent(g);
-                g2.dispose();
-            }
-        };
-        
-        button.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        button.setForeground(Color.WHITE);
-        button.setPreferredSize(new Dimension(300, 60));
-        button.setMinimumSize(new Dimension(300, 60));
-        button.setMaximumSize(new Dimension(300, 60));
-        button.setFocusPainted(false);
-        button.setContentAreaFilled(false);
-        button.setBorderPainted(false);
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+    private TurnoToggleButton createTurnoButton(String text) {
+        TurnoToggleButton button = new TurnoToggleButton(text);
         button.setActionCommand(text);
-
-        button.addChangeListener(e -> button.setForeground(button.isSelected() ? COLOR_AZUL_INST : Color.WHITE));
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
         return button;
     }
 
-    private void irAReconocimiento() {
-        if (turnosGroup.getSelection() == null) {
-            JOptionPane.showMessageDialog(this, "Debe seleccionar un turno.", "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
+    private String[] cargarTurnosDesdeConfiguracion() {
+        Properties props = new Properties();
+        File configFile = new File("src/main/resources/config/turnos_config.properties");
+
+        // Valores por defecto
+        String[] turnosDefault;
+        if ("Desayuno".equalsIgnoreCase(tipoComida)) {
+            turnosDefault = new String[]{"07:00 - 08:00", "08:00 - 09:00", "09:00 - 10:00"};
+        } else {
+            turnosDefault = new String[]{"12:00 - 13:00", "13:00 - 14:00", "14:00 - 15:00"};
         }
 
-        try {
-            String turnoSeleccionado = turnosGroup.getSelection().getActionCommand();
-            // Extraer la hora de inicio del string "HH:mm - HH:mm"
-            String horaInicioStr = turnoSeleccionado.split(" - ")[0].trim();
-            
-            // Asegurar formato HH:mm (agregar 0 si es necesario por seguridad)
-            if (horaInicioStr.indexOf(':') == 1) {
-                horaInicioStr = "0" + horaInicioStr;
-            }
+        if (!configFile.exists()) {
+            return turnosDefault;
+        }
 
-            LocalTime horaInicio = LocalTime.parse(horaInicioStr);
-            
-            // Combinar con la fecha de hoy
-            LocalDateTime fechaReserva = LocalDateTime.of(LocalDate.now(), horaInicio);
-            
-            // Pasamos al siguiente paso: Reconocimiento Facial
-            new ReconocimientoFacialUI(usuario, costoPlatillo, fechaReserva).setVisible(true);
-            this.dispose();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error al procesar el turno: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
+        try (FileInputStream in = new FileInputStream(configFile)) {
+            props.load(in);
+
+            if ("Desayuno".equalsIgnoreCase(tipoComida)) {
+                return new String[]{
+                    props.getProperty("desayuno.turno1", turnosDefault[0]),
+                    props.getProperty("desayuno.turno2", turnosDefault[1]),
+                    props.getProperty("desayuno.turno3", turnosDefault[2])
+                };
+            } else {
+                return new String[]{
+                    props.getProperty("almuerzo.turno1", turnosDefault[0]),
+                    props.getProperty("almuerzo.turno2", turnosDefault[1]),
+                    props.getProperty("almuerzo.turno3", turnosDefault[2])
+                };
+            }
+        } catch (IOException e) {
+            // Error silenciado cargando configuración de turnos
+            return turnosDefault;
         }
     }
 }
