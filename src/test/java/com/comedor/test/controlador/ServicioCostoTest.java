@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import com.comedor.modelo.entidades.RegistroCosto;
 import com.comedor.controlador.ServicioCosto;
+import com.comedor.modelo.entidades.RegistroCosto;
 
 /**
  * Pruebas de caja negra para la clase ServicioCosto

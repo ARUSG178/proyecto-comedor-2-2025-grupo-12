@@ -1088,4 +1088,8 @@ java.io.FileNotFoundException: menu_config.properties (El sistema no puede encon
 [2026-03-12 22:55:52] INFO: Producción estimada de bandejas para 2026-03: 1000
 [2026-03-12 22:55:52] INFO: Merma registrada para 2026-03: 10.0%
 [2026-03-12 22:56:01] INFO: Inicio de sesión exitoso para cédula: 10000001
-[2026-03-12 23:11:52] INFO: Inicio de sesión exitoso para cédula: 29617475
+[2026-03-12 23:14:08] INFO: Inicio de sesión exitoso para cédula: 55555555
+[2026-03-12 23:31:08] INFO: Inicio de sesión exitoso para cédula: 66666666
+[2026-03-12 23:31:53] INFO: Inicio de sesión exitoso para cédula: 55555555
+[2026-03-12 23:35:06] INFO: Inicio de sesión exitoso para cédula: 55555555
+[2026-03-12 23:37:07] INFO: Inicio de sesión exitoso para cédula: 10000004
