@@ -101,41 +101,10 @@ public class ServicioReportes {
     
     // Calcula la tarifa según tipo de usuario
     private double calcularTarifaPorUsuario(Usuario usuario, double ccb) {
-        String tipoUsuario = usuario.obtTipo();
-        
-        switch (tipoUsuario) {
-            case "EstudianteExonerado":
-                return 0.0;
-            case "EstudianteBecario":
-                // Para becarios, necesitamos obtener el porcentaje de descuento
-                double porcentajeDescuento = 90.0; // Valor por defecto
-                try {
-                    // Buscar el porcentaje real desde usuarios.txt
-                    RepoUsuarios repoUsuarios = new RepoUsuarios();
-                    List<Usuario> usuarios = repoUsuarios.listarUsuarios();
-                    for (Usuario u : usuarios) {
-                        if (u.obtCedula().equals(usuario.obtCedula())) {
-                            if (u instanceof EstudianteBecario) {
-                                porcentajeDescuento = ((EstudianteBecario) u).obtPorcentajeDescuento();
-                            }
-                            break;
-                        }
-                    }
-                } catch (Exception e) {
-                    // Error silenciado, usar valor por defecto
-                }
-                return ccb * ((100.0 - porcentajeDescuento) / 100.0);
-            case "Estudiante":
-                return ccb * 0.20;
-            case "Profesor":
-                return ccb * 0.80;
-            case "Empleado":
-                return ccb * 0.50;
-            case "Administrador":
-                return ccb * 0.50; // Se ajusta para igualar la tarifa de Empleado
-            default:
-                return ccb; // Valor por defecto
-        }
+        // Usar la lógica centralizada en ServicioMenu para respetar las tarifas configuradas por el admin
+        ServicioMenu servicioMenu = new ServicioMenu();
+        double factor = servicioMenu.factorParaUsuario(usuario);
+        return ccb * factor;
     }
     
     // Clase interna para representar el reporte de comensales

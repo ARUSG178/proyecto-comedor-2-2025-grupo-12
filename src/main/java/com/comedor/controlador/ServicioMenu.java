@@ -43,7 +43,7 @@ public class ServicioMenu {
 
     public double factorParaUsuario(Usuario usuario) {
         Properties props = new Properties();
-        try (FileInputStream in = new FileInputStream("config/menu_config.properties")) {
+        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
             props.load(in);
         } catch (Exception e) {
             // Sin config
@@ -204,15 +204,37 @@ public class ServicioMenu {
     }
 
     // Permite al administrador registrar los costos fijos, variables y producción del mes para el cálculo del CCB
+    // Sobrecarga para mantener compatibilidad con versiones anteriores
     public void registrarCostosMensuales(Usuario actor, double fijos, double variables, int produccion) {
+        registrarCostosMensuales(actor, fijos, variables, produccion, 0, 20, 100, 50);
+    }
+
+    // Permite al administrador registrar costos, merma y tarifas personalizadas
+    public void registrarCostosMensuales(Usuario actor, double fijos, double variables, int produccion, 
+                                         double mermaPct, double pctEstudiante, double pctProfesor, double pctEmpleado) {
         if (!(actor instanceof Administrador)) {
             Logger.warning("Acceso denegado: solo administradores pueden registrar costos.");
             return;
         }
-        // Se elimina la llamada redundante a registrarValoresCCB porque calcularRegistrarCCBCompleto ya lo hace internamente
-        // Se asume 0 merma para este registro manual simplificado
-        servicioCosto.calcularRegistrarCCBCompleto(fijos, variables, produccion, 0);
-        Logger.info("Costos mensuales actualizados por: " + actor.obtCedula());
+
+        // 1. Guardar porcentajes de tarifas en la configuración
+        Properties props = new Properties();
+        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
+            props.load(in);
+        } catch (IOException e) { /* crear nuevo */ }
+
+        props.setProperty("tarifa_pct_estudiante", String.valueOf(pctEstudiante));
+        props.setProperty("tarifa_pct_profesor", String.valueOf(pctProfesor));
+        props.setProperty("tarifa_pct_empleado", String.valueOf(pctEmpleado));
+
+        try (FileOutputStream out = new FileOutputStream("menu_config.properties")) {
+            props.store(out, null);
+        } catch (IOException e) { Logger.warning("Error guardando tarifas: " + e.getMessage()); }
+
+        // 2. Calcular CCB con la merma especificada (convertir % a factor 0-1)
+        servicioCosto.calcularRegistrarCCBCompleto(fijos, variables, produccion, mermaPct / 100.0);
+        
+        Logger.info("Costos y tarifas actualizados por: " + actor.obtCedula());
         guardarMenuEnArchivo();
     }
 
@@ -220,7 +242,7 @@ public class ServicioMenu {
     public double calcularTarifaPorUsuario(Usuario usuario, Platillo p) {
         // 1. Intentamos leer el CCB real desde el archivo de configuración
         double ccb = 0.0;
-        try (FileInputStream in = new FileInputStream("config/menu_config.properties")) {
+        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
             Properties props = new Properties();
             props.load(in);
             ccb = Double.parseDouble(props.getProperty("ccb_actual", "0.0"));
@@ -270,7 +292,7 @@ public class ServicioMenu {
         Properties props = new Properties();
         
         // 1. Cargar configuración existente para NO borrar tarifas ni el CCB del Admin
-        try (FileInputStream in = new FileInputStream("config/menu_config.properties")) {
+        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
             props.load(in);
         } catch (IOException e) {
             // Si no existe, se inicia vacío
@@ -303,7 +325,7 @@ public class ServicioMenu {
             props.setProperty("ccb_actual", String.valueOf(servicioCosto.obtenerCCBActual()));
         }
 
-        try (FileOutputStream out = new FileOutputStream("config/menu_config.properties")) {
+        try (FileOutputStream out = new FileOutputStream("menu_config.properties")) {
             props.store(out, "Configuracion del Menu - SAGC");
         } catch (IOException e) {
             Logger.warning("Error guardando configuración");
@@ -312,7 +334,7 @@ public class ServicioMenu {
 
     private void cargarMenuDesdeArchivo() {
         Properties props = new Properties();
-        try (FileInputStream in = new FileInputStream("config/menu_config.properties")) {
+        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
             props.load(in);
             
             cargarPlatilloEnMenu(menuDesayuno, props, "desayuno");
