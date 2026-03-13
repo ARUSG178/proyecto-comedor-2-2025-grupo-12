@@ -43,7 +43,7 @@ public class ServicioMenu {
 
     public double factorParaUsuario(Usuario usuario) {
         Properties props = new Properties();
-        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
+        try (FileInputStream in = new FileInputStream("config/menu_config.properties")) {
             props.load(in);
         } catch (Exception e) {
             // Sin config
@@ -220,7 +220,7 @@ public class ServicioMenu {
     public double calcularTarifaPorUsuario(Usuario usuario, Platillo p) {
         // 1. Intentamos leer el CCB real desde el archivo de configuración
         double ccb = 0.0;
-        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
+        try (FileInputStream in = new FileInputStream("config/menu_config.properties")) {
             Properties props = new Properties();
             props.load(in);
             ccb = Double.parseDouble(props.getProperty("ccb_actual", "0.0"));
@@ -270,7 +270,7 @@ public class ServicioMenu {
         Properties props = new Properties();
         
         // 1. Cargar configuración existente para NO borrar tarifas ni el CCB del Admin
-        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
+        try (FileInputStream in = new FileInputStream("config/menu_config.properties")) {
             props.load(in);
         } catch (IOException e) {
             // Si no existe, se inicia vacío
@@ -303,7 +303,7 @@ public class ServicioMenu {
             props.setProperty("ccb_actual", String.valueOf(servicioCosto.obtenerCCBActual()));
         }
 
-        try (FileOutputStream out = new FileOutputStream("menu_config.properties")) {
+        try (FileOutputStream out = new FileOutputStream("config/menu_config.properties")) {
             props.store(out, "Configuracion del Menu - SAGC");
         } catch (IOException e) {
             Logger.warning("Error guardando configuración");
@@ -312,7 +312,7 @@ public class ServicioMenu {
 
     private void cargarMenuDesdeArchivo() {
         Properties props = new Properties();
-        try (FileInputStream in = new FileInputStream("menu_config.properties")) {
+        try (FileInputStream in = new FileInputStream("config/menu_config.properties")) {
             props.load(in);
             
             cargarPlatilloEnMenu(menuDesayuno, props, "desayuno");
